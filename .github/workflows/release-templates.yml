@@ -1,0 +1,75 @@
+name: Release Templates
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Package templates
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          shopt -s nullglob
+
+          mkdir -p dist
+
+          VERSION="${GITHUB_REF_NAME#v}"
+
+          for dir in src/templates/*/; do
+            name=$(basename "$dir")
+
+            echo "Packaging template: $name"
+
+            zip_name="Resume.Template.${name}-${VERSION}.zip"
+
+            git archive \
+              --format=zip \
+              --prefix="${name}/" \
+              -o "dist/${zip_name}" \
+              "${GITHUB_REF_NAME}:src/templates/${name}"
+
+          done
+
+          echo "Generated files:"
+          ls -lh dist
+
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            echo "Release exists, uploading assets..."
+
+            gh release upload \
+              "$GITHUB_REF_NAME" \
+              dist/*.zip \
+              --clobber
+
+          else
+            echo "Creating release..."
+
+            gh release create \
+              "$GITHUB_REF_NAME" \
+              dist/*.zip \
+              --title "Release $GITHUB_REF_NAME" \
+              --generate-notes \
+              --verify-tag
+          fi
