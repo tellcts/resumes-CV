@@ -1,0 +1,52 @@
+% ============================================================
+% tzcan-skill.sty —— 技能分类条目（键值接口）
+% ============================================================
+%
+% 提供：\cvskillcategory
+% 依赖：tzcan-common（\__cv_if_notblank:Nn）
+%
+% 键名      含义        写法
+% ────────────────────────────────────────────────────────
+% name      分类名称     name    = {计算机基础与编程}   （加粗，自动补「：」）
+% content   分类内容     content = {掌握数据结构、操作系统，……}
+%
+% 用法：\cvskillcategory{ name = {...}, content = {...} }
+%
+% 说明：content 为空时整条不输出（只有名称没有内容的分类没有意义）；
+%       name 省略时只输出内容，不带「名称：」前缀。
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tzcan-skill}[2026/10/12 专业技能]
+
+% 实现说明：下面是 expl3 语法，故包在 \ExplSyntaxOn / \ExplSyntaxOff 之间。
+\ExplSyntaxOn
+
+\tl_new:N \l__cv_skill_name_tl
+\tl_new:N \l__cv_skill_content_tl
+
+\keys_define:nn { cv / skill }
+{
+  name    .tl_set:N  = \l__cv_skill_name_tl,
+  content .tl_set:N  = \l__cv_skill_content_tl,
+  % 未给出的键默认为空 —— 空值即“不显示”
+  name    .initial:n = {},
+  content .initial:n = {},
+}
+
+\NewDocumentCommand{\cvskillcategory}{ m }{
+  \group_begin:
+  \keys_set:nn { cv / skill } {#1}
+  \__cv_if_notblank:Nn \l__cv_skill_content_tl
+  {
+    \noindent
+    {\small
+      \__cv_if_notblank:Nn \l__cv_skill_name_tl { \textbf{\l__cv_skill_name_tl}：}
+      \l__cv_skill_content_tl
+    }
+    \par
+    \vspace{0.15ex}
+  }
+  \group_end:
+}
+
+\ExplSyntaxOff

@@ -1,0 +1,46 @@
+% ============================================================
+% tzcan-section.sty —— 模块标题（图标 + 文字 + 下划线）
+% ============================================================
+%
+% 提供：\cvsection、\cvsectiontitlesep、\cvsectionrulesep
+% 依赖：tzcan-common（cvsection / cvicon / cvrule 三色）、fontawesome5
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tzcan-section}[2026/10/12 模块标题]
+
+% --- 模块标题的间距旋钮 ---
+% 关键点：标题那一行结束后，LaTeX 会在它和下一行之间自动塞进一整行行距
+% （\baselineskip，本文档约 14pt），所以「标题 ↔ 分割线」看着很空。
+% 下面用 \nointerlineskip 取消这段自动行距，改由这两个长度显式控制：
+% 想更紧就调小（可以用负值），想更松就调大。
+\newlength{\cvsectiontitlesep}   % 标题文字 ↕ 分割线
+\newlength{\cvsectionrulesep}    % 分割线 ↕ 正文内容
+% 1.2ex ≈ 5.6pt。参考：0.6ex 偏挤；纯靠自动行距时等效约 2.7ex
+\setlength{\cvsectiontitlesep}{1.2ex}
+\setlength{\cvsectionrulesep}{1ex}
+
+% 模块标题：图标 + 文字 + 下划线
+% 图标放进固定宽度（1.3em）的盒子里居中放置 —— FontAwesome 各图标占位宽度不同
+% （award 384、cog 512、graduation-cap / laptop-code 640，单位是 512 的视框宽度），
+% 不固定宽度的话，图标后面的标题文字会随图标宽窄左右错开。
+% 想让图标靠左对齐左边界，把 [c] 改成 [l]；靠右改 [r]。
+\newcommand{\cvsection}[2]{%
+  \vspace{0.8ex}%
+  \noindent%
+  {%
+    \large\bfseries\color{cvsection}%
+    \makebox[1.3em][c]{\color{cvicon}#1}%
+    \hspace{0.5em}%
+    #2%
+  }%
+  % --- 标题 → 分割线 ---
+  \par
+  \nointerlineskip
+  \vspace{\cvsectiontitlesep}%
+  \noindent%
+  {\color{cvrule}\rule{\textwidth}{0.6pt}}%
+  % --- 分割线 → 正文 ---
+  \par
+  \nointerlineskip
+  \vspace{\cvsectionrulesep}%
+}

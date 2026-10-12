@@ -1,0 +1,20 @@
+% ============================================================
+% tzcan-selfassessment.sty —— 自我评价条目
+% ============================================================
+%
+% 提供：\cvselfassessment
+% 依赖：tzcan-common（\cvbulletlist）
+%
+% 注意：本文件不含 expl3，故不需要 \ExplSyntaxOn / \ExplSyntaxOff。
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tzcan-selfassessment}[2026/10/12 自我评价]
+
+% 自我评价条目：· 开头的列表样式
+\newcommand{\cvselfassessment}[1]{%
+  \noindent%
+  \small
+  \cvbulletlist{#1}%
+  \vspace{0.15ex}%
+  \par%
+}

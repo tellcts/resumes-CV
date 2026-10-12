@@ -1,0 +1,70 @@
+% ============================================================
+% tzcan-common.sty —— 全模块共用的底座
+% ============================================================
+%
+% 这是唯一一个「被所有模块依赖」的组件，必须最先加载。
+%
+% 提供：
+%   · 四个主题色：cvsection / cvicon / cvrule / cvtext
+%   · \midbullet            行内居中圆点
+%   · 全局文字颜色          \color{cvtext}
+%   · \__cv_if_notblank:Nn  两个 expl3 工具，各模块的键值接口共用
+%     \__cv_collect:Nnn
+%   · \cvbulletlist         统一的圆点列表
+%
+% 依赖：由文档类 resume-tzcan 先行加载 xcolor 与 expl3，本文件不重复加载第三方宏包。
+% 被依赖：其余 11 个组件全部依赖本文件，改动前先确认影响面。
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tzcan-common}[2026/10/12 全模块共用的底座：颜色 / 工具 / 圆点列表]
+
+% --- 颜色 ---
+\definecolor{cvsection}{HTML}{2C3E50}
+\definecolor{cvicon}{HTML}{2980B9}
+\definecolor{cvrule}{HTML}{BDC3C7}
+\definecolor{cvtext}{HTML}{333333}
+
+% 行内居中圆点（在 ctex 默认字体下垂直居中）
+\newcommand{\midbullet}{\raisebox{+0.25ex}{\textbullet}}
+
+% --- 全局设置 ---
+% 默认行距，ctex 已处理中文行距
+\color{cvtext}
+
+% 实现说明：下面是 expl3 语法，名字里的 ":" 和 "_" 必须被当作字母，
+% 所以必须包在 \ExplSyntaxOn / \ExplSyntaxOff 之间；漏掉的话会报
+% "Undefined control sequence \__cv_if_notblank:Nn"。
+% 同样因为它们含 "_" 和 ":"，**调用方也必须处在 \ExplSyntaxOn 里**，
+% 所以 personalinfo / education / honor / skill / project / internship / work
+% 七个文件各自包了一对。
+\ExplSyntaxOn
+
+% ---- 内部通用工具（各模块的键值接口共用）----
+
+% 若 tl 变量 #1 的值非空，则执行 #2；为空则什么都不做
+\cs_new_protected:Npn \__cv_if_notblank:Nn #1#2
+{
+  \exp_args:NV \tl_if_blank:nF #1
+  {#2}
+}
+
+% 值非空时，把整条 #2 加入序列 #3（用于“只在确有内容的条目之间插分隔符”）
+\cs_new_protected:Npn \__cv_collect:Nnn #1#2#3
+{
+  \__cv_if_notblank:Nn #1 { \seq_put_right:Nn #3 {#2} }
+}
+
+\ExplSyntaxOff
+
+% 内部：统一的圆点列表（个人职责 / 项目亮点 / 自我总结共用）
+\newcommand{\cvbulletlist}[1]{%
+  \begin{itemize}[
+        leftmargin=1.2em,
+        itemsep=0.15ex,
+        topsep=0.15ex,
+        parsep=0pt,
+        label=\midbullet
+      ]
+      #1
+  \end{itemize}%
+}

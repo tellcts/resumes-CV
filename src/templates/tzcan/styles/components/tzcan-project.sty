@@ -1,0 +1,135 @@
+% ============================================================
+% tzcan-project.sty —— 项目经历条目（键值接口）
+% ============================================================
+%
+% 提供：\cvprojectlabel、\cvprojectlabelblock、\cvproject
+% 依赖：tzcan-common（\midbullet、\cvbulletlist、两个 expl3 工具）、
+%       hyperref（\href）、fontawesome5（\faGithub）
+%
+% 每一项都可以省略。没写的项不会出现在简历上，也不会留下孤零零的标签。
+%
+% 键名        含义        写法
+% ──────────────────────────────────────────────────────────
+% name       项目名称     name      = {LaTeX 简历模板生成}
+% date       项目时间     date      = {2026.05 -- 2026.09}
+% link       项目链接     link      = {https://github.com/your-github/your-repo}
+% intro      项目介绍     intro     = {使用 LaTeX 生成简历，支持多模板、组合式调用、键值接口。}
+% tech       技术栈       tech      = {LaTeX、Docker}
+% duty       个人职责     duty      = {\item …… \item ……}
+% highlight  项目亮点     highlight = {\item …… \item ……}
+%
+% 显示顺序固定：标题行 → 项目介绍 → 技术栈 → 个人职责 → 项目亮点。
+% 标题行为“名称居左 / 链接居中 / 时间居右”，三段全空时整行不输出。
+%
+% 用法：
+%   \cvproject{
+%     name = {...}, date = {...}, link = {...},
+%     intro = {...}, tech = {...},
+%     duty = {\item ... \item ...},
+%     highlight = {\item ... \item ...},
+%   }
+%
+% 提示：值一律用花括号包住；键名拼错会直接报错，不会静默丢内容。
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tzcan-project}[2026/10/12 项目经历]
+
+% 内部：项目条目标题 —— 行内式：标签与内容同行（项目介绍 / 技术栈）
+% 注意：这两个 \newcommand 的名字不含 "_" 和 ":"，必须留在下面的
+% \ExplSyntaxOn 之外，否则名字会被 expl3 的 catcode 规则处理。
+\newcommand{\cvprojectlabel}[1]{%
+  \vspace{0.4ex}%
+  \noindent{\small\textbf{#1：}}%
+}
+
+% 内部：项目条目标题 —— 块式：标签独占一行（个人职责 / 项目亮点，后接圆点列表）
+\newcommand{\cvprojectlabelblock}[1]{%
+  \vspace{0.4ex}%
+  \noindent{\small\textbf{#1}}\par
+}
+
+% 实现说明：下面是 expl3 语法，故包在 \ExplSyntaxOn / \ExplSyntaxOff 之间。
+\ExplSyntaxOn
+
+% 每个键对应的变量：显式声明并初始化为空
+\tl_new:N \l__cv_pj_name_tl
+\tl_new:N \l__cv_pj_date_tl
+\tl_new:N \l__cv_pj_link_tl
+\tl_new:N \l__cv_pj_intro_tl
+\tl_new:N \l__cv_pj_tech_tl
+\tl_new:N \l__cv_pj_duty_tl
+\tl_new:N \l__cv_pj_highlight_tl
+% 标题行是否有内容（决定整行是否输出）
+\bool_new:N \l__cv_pj_head_bool
+
+\keys_define:nn { cv / project }
+{
+  name      .tl_set:N  = \l__cv_pj_name_tl,
+  date      .tl_set:N  = \l__cv_pj_date_tl,
+  link      .tl_set:N  = \l__cv_pj_link_tl,
+  intro     .tl_set:N  = \l__cv_pj_intro_tl,
+  tech      .tl_set:N  = \l__cv_pj_tech_tl,
+  duty      .tl_set:N  = \l__cv_pj_duty_tl,
+  highlight .tl_set:N  = \l__cv_pj_highlight_tl,
+  % 未给出的键默认为空 —— 空值即“不显示”
+  name      .initial:n = {},
+  date      .initial:n = {},
+  link      .initial:n = {},
+  intro     .initial:n = {},
+  tech      .initial:n = {},
+  duty      .initial:n = {},
+  highlight .initial:n = {},
+}
+
+\NewDocumentCommand{\cvproject}{ m }{
+  \group_begin:
+  \keys_set:nn { cv / project } {#1}
+  % --- 标题行：名称居左，链接居中，时间居右 ---
+  % 两个 \hfill 均分中间的空白，链接即落在名称与时间的中间
+  \bool_set_false:N \l__cv_pj_head_bool
+  \__cv_if_notblank:Nn \l__cv_pj_name_tl { \bool_set_true:N
+  \l__cv_pj_head_bool }
+  \__cv_if_notblank:Nn \l__cv_pj_date_tl { \bool_set_true:N
+  \l__cv_pj_head_bool }
+  \__cv_if_notblank:Nn \l__cv_pj_link_tl { \bool_set_true:N
+  \l__cv_pj_head_bool }
+  \bool_if:NT \l__cv_pj_head_bool
+  {
+    {\parfillskip=0pt\relax
+      \noindent{\textbf{\l__cv_pj_name_tl}}
+      \__cv_if_notblank:Nn \l__cv_pj_link_tl
+      { \hfill\href{\l__cv_pj_link_tl}{\small\faGithub\ GitHub} }
+      \hfill{\small \l__cv_pj_date_tl}\par
+    }
+  }
+  % --- 项目介绍 ---
+  \__cv_if_notblank:Nn \l__cv_pj_intro_tl
+  {
+    \cvprojectlabel{项目介绍}
+    {\small \l__cv_pj_intro_tl}\par
+  }
+  % --- 技术栈 ---
+  \__cv_if_notblank:Nn \l__cv_pj_tech_tl
+  {
+    \cvprojectlabel{技术栈}
+    {\small \l__cv_pj_tech_tl}\par
+  }
+  % --- 个人职责 ---
+  \__cv_if_notblank:Nn \l__cv_pj_duty_tl
+  {
+    \cvprojectlabelblock{个人职责}
+    \small
+    \cvbulletlist{\l__cv_pj_duty_tl}
+  }
+  % --- 项目亮点 ---
+  \__cv_if_notblank:Nn \l__cv_pj_highlight_tl
+  {
+    \cvprojectlabelblock{项目亮点}
+    \small
+    \cvbulletlist{\l__cv_pj_highlight_tl}
+  }
+  \vspace{0.5ex}
+  \group_end:
+}
+
+\ExplSyntaxOff

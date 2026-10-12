@@ -1,0 +1,29 @@
+% ============================================================
+% tzcan-watermark.sty —— 校徽水印
+% ============================================================
+%
+% 提供：\addwatermark
+% 依赖：graphicx（\includegraphics）、eso-pic（\AddToShipoutPictureBG）、
+%       tikz（\tikzpicture）、\paperwidth
+%
+% 注意：图片路径的查找由 kpathsea 决定，相对的是编译进程的 cwd 与 TEXINPUTS，
+%       与 main.tex 的位置无关。图片路径由调用处写全（如 assets/badges/ecjtu.png），
+%       本文件只负责画，不参与路径解析。
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tzcan-watermark}[2026/10/12 校徽水印]
+
+% 添加校徽水印水印
+% usage: \addwatermark[opacity=0.08]{logo.png}{center}
+\newcommand{\addwatermark}[3][]{
+  % #1: 透明度
+  % #2: 水印图片文件名
+  % #3: 水印图片位置
+  \AddToShipoutPictureBG{
+    \begin{tikzpicture}[remember picture,overlay]
+      \node[#1,anchor=center] at (current page.#3){
+        \includegraphics[width=0.7\paperwidth]{#2}
+      };
+    \end{tikzpicture}
+  }
+}

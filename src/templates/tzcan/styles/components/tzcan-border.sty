@@ -1,0 +1,51 @@
+% ============================================================
+% tzcan-border.sty —— 页面双矩形边框
+% ============================================================
+%
+% 提供：\cvborderframe，以及三个几何旋钮
+% 依赖：eso-pic（\AddToShipoutPictureBG）、tikz（\tikzpicture）
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tzcan-border}[2026/10/12 页面双矩形边框]
+
+% --- 三个几何旋钮 ---
+% 只暴露三个互相独立的量，两个偏移量由它们推出，
+% 这样「外框外边缘紧贴纸张边缘」这个关系不会被调参破坏。
+\newlength{\cvborderouterwidth}   % 外框线宽
+\newlength{\cvborderinnerwidth}   % 内框线宽
+\newlength{\cvbordergap}          % 内外两框之间可见的空隙
+\setlength{\cvborderouterwidth}{0.3cm}
+\setlength{\cvborderinnerwidth}{0.15cm}
+\setlength{\cvbordergap}{0.175cm}
+
+% 由旋钮推出的两个偏移量（内部使用，每次 shipout 重算，改旋钮即时生效）
+\newlength{\cvborder@outeroff}
+\newlength{\cvborder@inneroff}
+
+% 页面双矩形边框：在导言区调用一次 \cvborderframe
+%
+% 偏移量的来历：
+%   外框偏移 = 外线宽的一半
+%     ⇒ 线宽以中心线为准向两侧各扩一半，外边缘正好落在纸张边缘；
+%   内框偏移 = 外框偏移 + 外线宽的一半 + 空隙 + 内线宽的一半
+%     ⇒ 两框之间恰好留出 \cvbordergap 的可见空隙。
+%
+% 两个偏移量都由上面三个旋钮推出，改旋钮即时生效，无需手调偏移值；
+% 「外框外边缘紧贴纸张边缘」这个关系也不会被调参破坏。
+\newcommand{\cvborderframe}{%
+  \AddToShipoutPictureBG{%
+    \setlength{\cvborder@outeroff}{\dimexpr\cvborderouterwidth/2\relax}%
+    \setlength{\cvborder@inneroff}{\dimexpr\cvborder@outeroff+\cvborderouterwidth/2+\cvbordergap+\cvborderinnerwidth/2\relax}%
+    \begin{tikzpicture}[remember picture, overlay]
+      % 外侧边框
+      \draw[line width=\cvborderouterwidth, black]
+      ([xshift=\cvborder@outeroff, yshift=\cvborder@outeroff]current page.south west)
+      rectangle
+      ([xshift=-\cvborder@outeroff, yshift=-\cvborder@outeroff]current page.north east);
+      % 内侧边框
+      \draw[line width=\cvborderinnerwidth, black]
+      ([xshift=\cvborder@inneroff, yshift=\cvborder@inneroff]current page.south west)
+      rectangle
+      ([xshift=-\cvborder@inneroff, yshift=-\cvborder@inneroff]current page.north east);
+    \end{tikzpicture}%
+  }%
+}

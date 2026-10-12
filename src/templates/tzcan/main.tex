@@ -1,0 +1,195 @@
+% ============================================================
+% main.tex —— 简历内容
+% ============================================================
+% 排版全部由文档类 resume-tzcan 提供，这里只写内容。
+% 想改字号 / 纸张 / 页边距 / 字体 / 边框 / 图片查找目录等版式设置，
+% 请改 styles/resume-tzcan.cls。
+%
+% 编译（必须在 src/templates/tzcan/ 目录下执行，产物为 build/main.pdf）：
+%   latexmk main.tex          单次编译
+%   latexmk -pvc main.tex     常驻编译，保存自动重编
+% ============================================================
+
+\documentclass{styles/resume-tzcan}
+
+% 添加校徽水印。图片路径写全（相对 cwd，即 src/templates/tzcan/）：
+% 校徽在 assets/badges/，证件照在 assets/images/。
+\addwatermark[opacity=0.09]{assets/badges/ecjtu.png}{center}
+
+\begin{document}
+
+% ============================================
+% 个人信息区
+% ============================================
+
+\cvname{张~三}
+
+\cvpersonalinfo{
+  phone    = {+86 188--8888--8888},
+  email    = {you@example.com},
+  github   = {tellcts},
+  age      = {21岁},
+  gender   = {男},
+  identity = {xx应届生}, % Or identity = {21应届生 | 中共党员 | 共青团员 | 硕士在读},
+  target   = {数字化工程师},
+}
+
+% 右上角一寸照片（路径相对 cwd，即 src/templates/tzcan/）
+\cvphototopright[2.5cm]{assets/images/person.png}
+
+\cvhorizontalline
+
+% ============================================
+% 项目经历
+% ============================================
+\cvsection{\faLaptopCode}{项目经历}
+\cvproject{
+  name = {制造产线品质数据可视化分析},
+  date = {2026.06 --- 2026.08},
+  link = {https://github.com/your-github/your-project},
+  intro = {面向制造产线品质分析，构造产线口径的测试数据并以 SQLite 存储，基于 Pandas 完成良率统计、SPC 过程控制与缺陷趋势分析，输出图表与 PDF 报告，并提供 CLI 与 Streamlit 看板。},
+  tech = {Python~\midbullet~Pandas~\midbullet~NumPy~\midbullet~Matplotlib~\midbullet~SQLite~\midbullet~Streamlit~\midbullet~ReportLab},
+  duty = {
+  \item 数据建模与统计： 设计 SQLite 表结构，定义插损/回损判定阈值，按批次统计良率与缺陷分布。
+  \item SPC 过程控制： 实现 X-bar-R 控制图与 Cpk 计算，落地 Western Electric 判异规则。
+  },
+  highlight = {
+  \item 一键报告： CLI 一条命令完成「分析 → 图表 → PDF 报告」全链路，结果可复现。
+  \item 看板复用： Web 看板与 CLI 共用一套分析逻辑，免代码即可自助查看。
+  },
+}
+
+\cvproject{
+  name = {基于 Prometheus + Grafana 的 Linux 主机监控平台建设},
+  date = {2026.02 --- 2026.04},
+  intro = {针对企业 Linux 服务器数量增加后，人工巡检难以及时发现 CPU、内存、磁盘、网络等资源异常的问题，基于 Docker Compose 搭建轻量化监控平台，用 Prometheus 采集和存储指标、Node Exporter 采集主机运行状态、Grafana 做可视化展示，并配置告警规则实现异常快速发现与定位。},
+  tech = {Docker Compose~\midbullet~Prometheus~\midbullet~Node Exporter~\midbullet~Grafana~\midbullet~PromQL},
+  duty = {
+  \item 组件部署： 用 Docker Compose 部署 Prometheus、Grafana 与 Node Exporter。
+  \item 指标采集： 在 Linux 主机部署 Node Exporter，采集主机运行状态指标。
+  \item 可视化面板： 在 Grafana 配置资源面板，展示 CPU、内存、磁盘与网络趋势。
+  \item 查询分析： 编写 PromQL 查询分析服务器资源状态，定位高负载与异常主机。
+  \item 告警规则： 配置 CPU 高负载、磁盘不足与主机异常告警规则并接入通知。
+  },
+}
+
+% ============================================
+% 实习经历
+% ============================================
+% 以下为演示用的示例内容（公司名等均为占位），看完效果后请替换或删除。
+% 排版约束：岗位职责 / 产出成果走 \cvbulletlist，与项目经历的个人职责同一套格式；
+%           \small(10pt) 下每条可用行宽约 50 个汉字宽，
+%           整体（含行首「标签：」）控制在 46 字以内即可单行显示。
+\cvsection{\faBriefcase}{实习经历}
+
+\cvinternship{
+  position = {运维开发实习生},
+  company  = {某某信息技术有限公司},
+  date     = {2026.07 --- 2026.09},
+  duty = {
+  \item 设备巡检： 按计划巡检在用终端与服务器，记录状态并上报隐患。
+  \item 故障处理： 受理报修并按现象—原因—处置定位处理，记入处理台账。
+  \item 脚本开发： 用 Shell 与 Python 编写巡检、备份脚本，替代手工操作。
+  \item 监控维护： 在 Prometheus 与 Grafana 上补充面板与告警规则。
+  \item 文档沉淀： 整理常见问题与操作步骤，沉淀成手册供同事查询。
+  },
+  achievement = {
+  \item 巡检提效： 日常巡检由 20 分钟缩短到 2 分钟，异常自动留痕。
+  \item 告警完善： 补齐磁盘与负载告警规则，异常发现到定位在 10 分钟内。
+  },
+}
+
+% ============================================
+% 工作经历
+% ============================================
+% 以下为演示用的示例内容（公司名等均为占位），看完效果后请替换或删除。
+% 排版约束：工作职责 / 工作成果走 \cvbulletlist，与实习经历同一套格式；
+%           \small(10pt) 下每条可用行宽约 50 个汉字宽，
+%           整体（含行首「标签：」）控制在 46 字以内即可单行显示。
+% 说明：achievement 为可选键，不写则该块（含标签与间距）整块不输出。
+\cvsection{\faBuilding}{工作经历}
+
+\cvwork{
+  position = {系统运维工程师},
+  company  = {某某网络科技有限公司},
+  date     = {2026.10 --- 2027.06},
+  duty = {
+  \item 日常运维： 负责公司内网服务器与办公终端的日常巡检与维护。
+  \item 故障响应： 受理并处理系统与网络故障，按流程记录并跟踪闭环。
+  \item 脚本开发： 用 Shell 与 Python 编写自动化脚本，减少重复人工操作。
+  \item 监控告警： 维护 Prometheus 与 Grafana 监控体系，完善告警规则。
+  \item 备份恢复： 制定并执行数据备份计划，定期验证备份的可恢复性。
+  },
+  achievement = {
+  \item 监控覆盖： 监控覆盖率由 60\% 提升到 95\%，故障发现时间缩短一半。
+  \item 效率提升： 自动化脚本替代 3 项日常人工操作，每周节省约 4 小时。
+  },
+}
+
+% ============================================
+% 教育背景
+% ============================================
+\cvsection{\faGraduationCap}{教育背景}
+\cveducation{
+  date    = {2023.09 --- 2027.06},
+  school  = {某某大学},
+  major   = {某某专业},
+  degree  = {本科},
+  gpa     = {GPA:~x.xx~/~5.0 --- 专业排名前 xx\%},
+  courses = {软件工程，数据库系统原理，数据结构，计算机网络，操作系统，Linux操作系统},
+}
+
+% ============================================
+% 专业技能
+% ============================================
+\cvsection{\faCog}{专业技能}
+\cvskillcategory{
+  name    = {文档与沟通},
+  content = {习惯用 LaTeX 与 Markdown 写技术文档，能读写英文邮件，沟通时乐于配合。},
+}
+\cvskillcategory{
+  name    = {编程与脚本},
+  content = {掌握 Python 及常用库，有 C\# 基础，能读懂代码，借助 AI 完成中高难度开发。},
+}
+\cvskillcategory{
+  name    = {开发与集成},
+  content = {熟悉开发流程与系统集成，善用 FastAPI 开发Web接口，Nginx、Apache托管Web服务。},
+}
+\cvskillcategory{
+  name    = {数据库与 SQL},
+  content = {熟悉Oracle数据库，掌握 SQL 常用查询与多表关联，理解索引、事务等数据库基本原理。},
+}
+
+% ============================================
+% 荣誉证书
+% ============================================
+\cvsection{\faAward}{荣誉证书}
+\cvhonor{
+  date  = {2025.06},
+  award = {全国大学生英语六级(CET-6)},
+}
+
+\cvhonor{
+  date  = {2025.12},
+  award = {全国计算机技术与软件专业技术资格证书~\midbullet~信息安全工程师},
+}
+
+\cvhonor{
+  date  = {2026.06},
+  award = {全国计算机技术与软件专业技术资格证书~\midbullet~数据库系统工程师},
+}
+
+% ============================================
+% 自我评价
+% ============================================
+\cvsection{\faUserCircle}{自我评价}
+\cvselfassessment
+{
+\item 解决问题： 遇到故障先复现定位，再查日志与文档找根因，处理过程记入台账避免重复排查。
+\item 沟通协作： 习惯把操作步骤整理成文档与人共享，说明问题先讲现象与影响、再讲处置。
+\item 抗压与责任心： 任务集中时按优先级列清单推进，交付前确认自测通过，不把未验证结论当结果。
+}
+
+% \vspace*{-1cm}
+
+\end{document}
