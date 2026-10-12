@@ -1,0 +1,122 @@
+% ============================================================
+% tzcan-work.sty —— 工作经历条目（键值接口）
+% ============================================================
+%
+% 提供：\cvworklabel、\cvworklabelblock、\cvwork
+% 依赖：tzcan-common（\midbullet、\cvbulletlist、两个 expl3 工具）
+%
+% 结构对齐 tzcan-internship：标题行同为「左 / 中 / 右」三段，
+% 左段为职位名称、中段为公司名称（无外链，故不用 \href），
+% 仅下方两个块式标签换成「工作职责 / 工作成果」。
+%
+% 每一项都可以省略。没写的项不会出现在简历上，也不会留下孤零零的标签；
+% 例如不写 achievement，则「工作成果」整块（含标签与间距）都不输出。
+%
+% 键名         含义        写法
+% ──────────────────────────────────────────────────────────
+% position    职位名称     position    = {运维工程师}
+% company     公司名称     company     = {某某科技有限公司}
+% date        任职时间     date        = {2024.07 -- 2025.06}
+% duty        工作职责     duty        = {\item …… \item ……}
+% achievement 工作成果     achievement = {\item …… \item ……}
+%
+% 显示顺序固定：标题行 → 工作职责 → 工作成果。
+% 标题行为“职位居左 / 公司居中 / 时间居右”，三段全空时整行不输出。
+%
+% 用法：
+%   \cvwork{
+%     position = {...}, company = {...}, date = {...},
+%     duty        = {\item ... \item ...},
+%     achievement = {\item ... \item ...},
+%   }
+%
+% 排版约束：duty / achievement 走 \cvbulletlist（左缩进 1.2em），
+%           \small(10pt) 下每条可用行宽约 50 个汉字宽；
+%           要让每条 \item 单行显示，整体（含行首「标签：」）控制在 46 字以内。
+%
+% 提示：值一律用花括号包住；键名拼错会直接报错，不会静默丢内容。
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tzcan-workship}[2026/10/12 工作经历]
+
+% 内部：工作条目标题 —— 行内式（此处暂无使用，与 project 保持一致备用）
+% 注意：这两个 \newcommand 的名字不含 "_" 和 ":"，必须留在下面的
+% \ExplSyntaxOn 之外，否则名字会被 expl3 的 catcode 规则处理。
+\newcommand{\cvworklabel}[1]{%
+  \vspace{0.4ex}%
+  \noindent{\small\textbf{#1：}}%
+}
+
+% 内部：工作条目标题 —— 块式：标签独占一行（工作职责 / 工作成果，后接圆点列表）
+\newcommand{\cvworklabelblock}[1]{%
+  \vspace{0.4ex}%
+  \noindent{\small\textbf{#1}}\par
+}
+
+% 实现说明：下面是 expl3 语法，故包在 \ExplSyntaxOn / \ExplSyntaxOff 之间。
+\ExplSyntaxOn
+
+% 每个键对应的变量：显式声明并初始化为空
+\tl_new:N \l__cv_wk_position_tl
+\tl_new:N \l__cv_wk_company_tl
+\tl_new:N \l__cv_wk_date_tl
+\tl_new:N \l__cv_wk_duty_tl
+\tl_new:N \l__cv_wk_achievement_tl
+% 标题行是否有内容（决定整行是否输出）
+\bool_new:N \l__cv_wk_head_bool
+
+\keys_define:nn { cv / work }
+{
+  position    .tl_set:N  = \l__cv_wk_position_tl,
+  company     .tl_set:N  = \l__cv_wk_company_tl,
+  date        .tl_set:N  = \l__cv_wk_date_tl,
+  duty        .tl_set:N  = \l__cv_wk_duty_tl,
+  achievement .tl_set:N  = \l__cv_wk_achievement_tl,
+  % 未给出的键默认为空 —— 空值即“不显示”
+  position    .initial:n = {},
+  company     .initial:n = {},
+  date        .initial:n = {},
+  duty        .initial:n = {},
+  achievement .initial:n = {},
+}
+
+\NewDocumentCommand{\cvwork}{ m }{
+  \group_begin:
+  \keys_set:nn { cv / work } {#1}
+  % --- 标题行：职位居左，公司居中，时间居右 ---
+  % 两个 \hfill 均分中间的空白，公司名称即落在职位与时间的中间
+  \bool_set_false:N \l__cv_wk_head_bool
+  \__cv_if_notblank:Nn \l__cv_wk_position_tl { \bool_set_true:N
+  \l__cv_wk_head_bool }
+  \__cv_if_notblank:Nn \l__cv_wk_company_tl { \bool_set_true:N
+  \l__cv_wk_head_bool }
+  \__cv_if_notblank:Nn \l__cv_wk_date_tl { \bool_set_true:N
+  \l__cv_wk_head_bool }
+  \bool_if:NT \l__cv_wk_head_bool
+  {
+    {\parfillskip=0pt\relax
+      \noindent{\small\textbf{\l__cv_wk_position_tl}}
+      \__cv_if_notblank:Nn \l__cv_wk_company_tl
+      { \hfill{\small\textbf{\l__cv_wk_company_tl}} }
+      \hfill{\small \l__cv_wk_date_tl}\par
+    }
+  }
+  % --- 工作职责 ---
+  \__cv_if_notblank:Nn \l__cv_wk_duty_tl
+  {
+    \cvworklabelblock{工作职责}
+    \small
+    \cvbulletlist{\l__cv_wk_duty_tl}
+  }
+  % --- 工作成果 ---
+  \__cv_if_notblank:Nn \l__cv_wk_achievement_tl
+  {
+    \cvworklabelblock{工作成果}
+    \small
+    \cvbulletlist{\l__cv_wk_achievement_tl}
+  }
+  \vspace{0.5ex}
+  \group_end:
+}
+
+\ExplSyntaxOff

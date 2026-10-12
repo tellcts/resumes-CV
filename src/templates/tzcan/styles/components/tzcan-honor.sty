@@ -1,0 +1,56 @@
+% ============================================================
+% tzcan-honor.sty —— 荣誉证书条目（键值接口）
+% ============================================================
+%
+% 提供：\cvhonor
+% 依赖：tzcan-common（\__cv_if_notblank:Nn）、tabularx
+%
+% 键名      含义              写法
+% ────────────────────────────────────────────────────────
+% date      时间              date   = {2025.06}
+% award     奖项 / 证书名称    award  = {全国大学生英语六级(CET-6)}
+% detail    详情（第二行）     detail = {……}
+%
+% 用法：\cvhonor{ date = {...}, award = {...}, detail = {...} }
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tzcan-honor}[2026/10/12 荣誉证书]
+
+% 实现说明：下面是 expl3 语法，故包在 \ExplSyntaxOn / \ExplSyntaxOff 之间。
+\ExplSyntaxOn
+
+\tl_new:N \l__cv_hn_date_tl
+\tl_new:N \l__cv_hn_award_tl
+\tl_new:N \l__cv_hn_detail_tl
+% 第二行（有内容才攒进来）
+\tl_new:N \l__cv_hn_rows_tl
+
+\keys_define:nn { cv / honor }
+{
+  date   .tl_set:N  = \l__cv_hn_date_tl,
+  award  .tl_set:N  = \l__cv_hn_award_tl,
+  detail .tl_set:N  = \l__cv_hn_detail_tl,
+  % 未给出的键默认为空 —— 空值即“不显示”
+  date   .initial:n = {},
+  award  .initial:n = {},
+  detail .initial:n = {},
+}
+
+\NewDocumentCommand{\cvhonor}{ m }{
+  \group_begin:
+  \keys_set:nn { cv / honor } {#1}
+  % --- 有内容的行先攒起来，最后整体插进表格 ---
+  \tl_clear:N \l__cv_hn_rows_tl
+  \__cv_if_notblank:Nn \l__cv_hn_detail_tl
+  { \tl_put_right:Nn \l__cv_hn_rows_tl { & {\small \l__cv_hn_detail_tl} \\ } }
+  \noindent
+  \begin{tabularx}{\textwidth}{@{}p{3.5cm} X@{}}
+    {\small \l__cv_hn_date_tl} & {\textbf{\l__cv_hn_award_tl}} \\
+    \tl_use:N \l__cv_hn_rows_tl
+  \end{tabularx}
+  \vspace{0.15ex}
+  \par
+  \group_end:
+}
+
+\ExplSyntaxOff

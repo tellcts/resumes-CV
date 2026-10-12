@@ -1,0 +1,115 @@
+% ============================================================
+% tzcan-internship.sty —— 实习经历条目（键值接口）
+% ============================================================
+%
+% 提供：\cvinternshiplabel、\cvinternshiplabelblock、\cvinternship
+% 依赖：tzcan-common（\midbullet、\cvbulletlist、两个 expl3 工具）
+%
+% 键名         含义        写法
+% ──────────────────────────────────────────────────────────
+% position    职位名称     position    = {运维开发实习生}
+% company     公司名称     company     = {某某科技有限公司}
+% date        实习时间     date        = {2026.07 -- 2026.09}
+% duty        岗位职责     duty        = {\item …… \item ……}
+% achievement 产出成果     achievement = {\item …… \item ……}
+%
+% 显示顺序固定：标题行 → 岗位职责 → 产出成果。
+% 标题行为“职位居左 / 公司居中 / 时间居右”，三段全空时整行不输出。
+%
+% 用法：
+%   \cvinternship{
+%     position = {...}, company = {...}, date = {...},
+%     duty        = {\item ... \item ...},
+%     achievement = {\item ... \item ...},
+%   }
+%
+% 排版约束：duty / achievement 走 \cvbulletlist（左缩进 1.2em），
+%           \small(10pt) 下每条可用行宽约 50 个汉字宽；
+%           要让每条 \item 单行显示，整体（含行首「标签：」）控制在 46 字以内。
+%
+% 提示：值一律用花括号包住；键名拼错会直接报错，不会静默丢内容。
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tzcan-internship}[2026/10/12 实习经历]
+
+% 内部：实习条目标题 —— 行内式（此处暂无使用，与 project 保持一致备用）
+% 注意：这两个 \newcommand 的名字不含 "_" 和 ":"，必须留在下面的
+% \ExplSyntaxOn 之外，否则名字会被 expl3 的 catcode 规则处理。
+\newcommand{\cvinternshiplabel}[1]{%
+  \vspace{0.4ex}%
+  \noindent{\small\textbf{#1：}}%
+}
+
+% 内部：实习条目标题 —— 块式：标签独占一行（岗位职责 / 产出成果，后接圆点列表）
+\newcommand{\cvinternshiplabelblock}[1]{%
+  \vspace{0.4ex}%
+  \noindent{\small\textbf{#1}}\par
+}
+
+% 实现说明：下面是 expl3 语法，故包在 \ExplSyntaxOn / \ExplSyntaxOff 之间。
+\ExplSyntaxOn
+
+% 每个键对应的变量：显式声明并初始化为空
+\tl_new:N \l__cv_in_position_tl
+\tl_new:N \l__cv_in_company_tl
+\tl_new:N \l__cv_in_date_tl
+\tl_new:N \l__cv_in_duty_tl
+\tl_new:N \l__cv_in_achievement_tl
+% 标题行是否有内容（决定整行是否输出）
+\bool_new:N \l__cv_in_head_bool
+
+\keys_define:nn { cv / internship }
+{
+  position    .tl_set:N  = \l__cv_in_position_tl,
+  company     .tl_set:N  = \l__cv_in_company_tl,
+  date        .tl_set:N  = \l__cv_in_date_tl,
+  duty        .tl_set:N  = \l__cv_in_duty_tl,
+  achievement .tl_set:N  = \l__cv_in_achievement_tl,
+  % 未给出的键默认为空 —— 空值即“不显示”
+  position    .initial:n = {},
+  company     .initial:n = {},
+  date        .initial:n = {},
+  duty        .initial:n = {},
+  achievement .initial:n = {},
+}
+
+\NewDocumentCommand{\cvinternship}{ m }{
+  \group_begin:
+  \keys_set:nn { cv / internship } {#1}
+  % --- 标题行：职位居左，公司居中，时间居右 ---
+  % 两个 \hfill 均分中间的空白，公司名称即落在职位与时间的中间
+  \bool_set_false:N \l__cv_in_head_bool
+  \__cv_if_notblank:Nn \l__cv_in_position_tl { \bool_set_true:N
+  \l__cv_in_head_bool }
+  \__cv_if_notblank:Nn \l__cv_in_company_tl { \bool_set_true:N
+  \l__cv_in_head_bool }
+  \__cv_if_notblank:Nn \l__cv_in_date_tl { \bool_set_true:N
+  \l__cv_in_head_bool }
+  \bool_if:NT \l__cv_in_head_bool
+  {
+    {\parfillskip=0pt\relax
+      \noindent{\small\textbf{\l__cv_in_position_tl}}
+      \__cv_if_notblank:Nn \l__cv_in_company_tl
+      { \hfill{\small\textbf{\l__cv_in_company_tl}} }
+      \hfill{\small \l__cv_in_date_tl}\par
+    }
+  }
+  % --- 岗位职责 ---
+  \__cv_if_notblank:Nn \l__cv_in_duty_tl
+  {
+    \cvinternshiplabelblock{岗位职责}
+    \small
+    \cvbulletlist{\l__cv_in_duty_tl}
+  }
+  % --- 产出成果 ---
+  \__cv_if_notblank:Nn \l__cv_in_achievement_tl
+  {
+    \cvinternshiplabelblock{产出成果}
+    \small
+    \cvbulletlist{\l__cv_in_achievement_tl}
+  }
+  \vspace{0.5ex}
+  \group_end:
+}
+
+\ExplSyntaxOff

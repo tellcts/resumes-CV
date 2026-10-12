@@ -1,0 +1,247 @@
+% ============================================================
+% tzcan-personalinfo.sty —— 个人信息区
+% ============================================================
+%
+% 提供：\cvname、\cvphoto、\cvphototopright、\cvhorizontallinesep + \cvhorizontalline、
+%       \infoitem、\hrefmail、\hrefphone、\hrefgithub、\cvpersonalinfo
+% 依赖：tzcan-common（cvicon / cvrule 色、\midbullet、\__cv_collect:Nnn）、
+%       graphicx（\includegraphics、\framebox）、tikz（\cvphototopright）、
+%       hyperref（\href）、fontawesome5（\faPhone 等）
+%
+% 本文件覆盖整个「个人信息区」。main.tex 里的调用顺序是：
+%   \cvname → \cvpersonalinfo → \cvphototopright → \cvhorizontalline
+% 四块各自独立，按需取用；但 \cvhorizontalline 依赖 \cvphototopright 留下的尺寸，
+% 所以这两个的顺序不能颠倒（见下）。
+%
+% 为什么收在一个文件里：照片的位置与分隔线的位置是耦合的（线右端对齐照片右边界、
+% 线顶部让开照片底边），拆开反而把一件耦合的事拆散了。耦合点集中在下面那组
+% 「照片几何」长度里，两处都读同一组值，改一处即可。
+%
+% 实现说明：\cvname / \cvphoto / \cvphototopright / \cvhorizontalline 四个命令
+% 名字不含 "_" 和 ":"，必须留在下面的 \ExplSyntaxOn 之外。
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tzcan-personalinfo}[2026/10/12 个人信息区]
+
+% 姓名：居中、Huge、加粗
+% 顶部使用负间距抵消 center 环境的默认间距
+\newcommand{\cvname}[1]{%
+  \vspace*{-0.8em}%
+  \begin{center}%
+    {\Huge\bfseries #1}%
+  \end{center}%
+  \vspace{-0.3em}%
+}
+
+% 照片：带细边框，默认宽度 2.5cm（标准一寸照）
+\newcommand{\cvphoto}[2][2.5cm]{%
+  \framebox{%
+    \includegraphics[width=#1]{#2}%
+  }%
+}
+
+% ============================================================
+% 照片几何 —— 照片与分隔线唯一的耦合点，都在这里调
+% ============================================================
+% 这两个元素都用「页面坐标」定位，只要读同一组长度，就永远对得上：
+%   · \cvphototopright 决定照片钉在哪；
+%   · \cvhorizontalline 由 \cvphotobottom 算出线该画在哪。
+% 换照片 / 改照片宽度时 \cvphotobottom 自动重算，不需要再手工试数值。
+\newlength{\cvphotoright}   % 照片右边缘距页面右边缘
+\newlength{\cvphototop}     % 照片上边缘距页面顶边
+\newlength{\cvlinegap}      % 分隔线与照片底边的空隙 ← 想调间距改这一个就够
+\newlength{\cvphotobottom}  % 派生：照片底边距页面顶边（放照片时自动算出）
+\newlength{\cvphotowidth}   % 派生：照片实际宽度
+\newlength{\cvruletop}      % 派生：分隔线距页面顶边
+\newlength{\cvruleleft}     % 派生：分隔线左端 = 正文左边界
+\setlength{\cvphotoright}{1.5cm}  % ⚠ 必须与 main.tex 的 geometry 左右页边距一致
+\setlength{\cvphototop}{0.65cm}   % ⚠ 不能小于内框线带下沿(cm)，否则照片会压住边框
+\setlength{\cvlinegap}{0.18cm}    % 越小线越贴照片；必须 > 0，否则穿插
+\setlength{\cvphotobottom}{0pt}   % 0pt = 尚未放照片（\cvhorizontalline 会退回行内画法）
+\newsavebox{\cvphotobox}
+
+% 右上角放置照片（页面坐标定位，位置不受正文间距影响）
+%
+% 注意 [inner sep=0pt]：tikz node 默认有 0.3333em 的内边距，会把照片四周撑开约
+% 0.13cm —— 照片实际边界因此与外框锚点错位，分隔线也就对不齐。归零后，
+% 「照片边界」就等于「锚点 + 下面这几个长度」，几何变得干净且与字号无关。
+%
+% 副作用：把照片尺寸记进 \cvphotobottom / \cvphotowidth 供分隔线使用。
+%         因此调用顺序必须是 \cvphototopright 在前、\cvhorizontalline 在后。
+\newcommand{\cvphototopright}[2][2.5cm]{%
+  \sbox{\cvphotobox}{\includegraphics[width=#1]{#2}}%
+  \setlength{\cvphotowidth}{\wd\cvphotobox}%
+  \setlength{\cvphotobottom}{\dimexpr\cvphototop+\ht\cvphotobox\relax}%
+  \begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=north east, inner sep=0pt] at ([xshift=-\cvphotoright,
+    yshift=-\cvphototop]current page.north east) {\usebox{\cvphotobox}};
+  \end{tikzpicture}%
+}
+
+% 个人信息区与正文之间的分隔线
+%
+% ⚠ 为什么不能走行内排版流：
+%   照片锚定 current page.north east —— 页面坐标，只受 yshift 影响；
+%   而行内 \rule 的位置受 \vspace*{-1.5cm}、\cvname 的负间距、\cvpersonalinfo
+%   的行数**全部**影响。动页眉上任何一处间距，正文流整体上下移、照片却一步不走，
+%   线相对照片的位置就被改掉了。症状看着像「改 0.1em 跳一大截」，其实那 0.1em
+%   只值 3px（实测 em = 10.95pt = 0.386cm），剩下全是页眉位移。
+%
+%   故本组件把线也用页面坐标画：纵坐标 = 照片底边 + \cvlinegap，与页眉排版彻底解耦。
+%   间距只由 \cvlinegap 一个旋钮控制；换照片、增删信息栏都不会撞。
+%
+%   流程上保留一段占位（\phantom，尺寸与行内线一致），使正文位置不变。
+%   于是 \cvhorizontallinesep 只剩下「正文从哪里开始」这一个作用，不影响线的位置。
+%
+%   两个旋钮，互不干扰，换算关系（实测 1em = 10.95pt = 0.386cm）：
+%     \cvlinegap          分隔线到照片底边的距离，1mm ≈ 2.83pt，调整量=位移量
+%     \cvhorizontallinesep  正文整体上下移，1em = 0.386cm；越负越靠上
+%   ⚠ 正文上提有下限：线到「项目经历」标题的空隙低于约 10pt 就会挤在一起。
+%     当前取值下该空隙约 11.8pt，只剩约 1.8pt（0.06cm）的上提余量。
+\newlength{\cvhorizontallinesep}
+\setlength{\cvhorizontallinesep}{-3em}
+
+\newcommand{\cvhorizontalline}{%
+  \vspace{\cvhorizontallinesep}%
+  \ifdim\cvphotobottom=0pt
+  % 没放过照片：退回行内画法（此时谈不上「让开照片」）
+  \noindent{\color{cvrule}\rule{\textwidth}{0.4pt}}%
+  \else
+  \setlength{\cvruletop}{\dimexpr\cvphotobottom+\cvlinegap\relax}%
+  \setlength{\cvruleleft}{\dimexpr 1in+\hoffset+\oddsidemargin\relax}%
+  \noindent\phantom{\rule{\textwidth}{0.4pt}}%
+  \begin{tikzpicture}[remember picture, overlay]
+    \draw[draw=cvrule, line width=0.4pt]
+    ([xshift=\cvruleleft, yshift=-\cvruletop]current page.north west)
+    -- ([xshift=-\cvphotoright, yshift=-\cvruletop]current page.north east);
+  \end{tikzpicture}%
+  \fi
+  \vspace{0.2ex}%
+  \par%
+}
+
+% 图标+文字（原子组件，不可断行）
+\newcommand{\infoitem}[2]{%
+  \mbox{%
+    {\color{cvicon}#1}%
+    \hspace{0.35em}%
+    {#2}%
+  }%
+}
+
+% 可点击的邮箱链接
+\newcommand{\hrefmail}[1]{%
+  \href{mailto:#1}{#1}%
+}
+
+% 可点击的电话链接
+\newcommand{\hrefphone}[1]{%
+  \href{tel:#1}{#1}%
+}
+
+% 可点击的 GitHub 主页链接（#1 为用户名）
+% 链接指向 https://github.com/#1，但正文里只显示用户名本身
+\newcommand{\hrefgithub}[1]{%
+  \href{https://github.com/#1}{#1}%
+}
+
+% ============================================================
+% 信息栏（两行）—— 键值接口
+% ============================================================
+%
+% 所有键都可以省略，没写的键不会出现在简历上，
+% 也不会留下多余的分隔符（分隔符只出现在两个确有内容的条目之间）。
+%
+% 键名        含义                 写法示例
+% ────────────────────────────────────────────────────────────
+% phone      电话                 phone    = {+86 188-8888-8888}
+% email      邮箱                 email    = {example@email.com}
+% github     GitHub 用户名        github   = {your-github} （只填用户名，不含域名）
+% age        年龄                 age      = {22岁}
+% gender     性别                 gender   = {男}
+% identity   身份 / 学历状态      identity = {27应届生 | 中共党员 | 共青团员 | 硕士在读}
+% target     求职目标岗位         target   = {数字化工程师}
+%
+% 用法（第一行放联系方式，第二行放个人详情，顺序固定）：
+%   \cvpersonalinfo{
+%     phone = {...}, email = {...}, github = {...},
+%     age = {...}, gender = {...}, identity = {...}, target = {...},
+%   }
+
+% 实现说明：下面这一块用的是 expl3 语法（\keys_define:nn、\seq_use:Nn ...），
+% 名字里的 ":" 和 "_" 必须被当作字母，所以整块必须包在 \ExplSyntaxOn / \ExplSyntaxOff
+% 之间；漏掉的话会报 "Undefined control sequence \keys_define"。
+% 在 expl3 环境中空格会被忽略，因此这里的间距一律用 \hspace 显式给出。
+\ExplSyntaxOn
+
+% 每个键对应的变量：显式声明并初始化为空，
+% 保证「没写这个键」时变量一定存在且为空，而不是未定义
+\tl_new:N \l__cv_pi_phone_tl
+\tl_new:N \l__cv_pi_email_tl
+\tl_new:N \l__cv_pi_github_tl
+\tl_new:N \l__cv_pi_age_tl
+\tl_new:N \l__cv_pi_gender_tl
+\tl_new:N \l__cv_pi_identity_tl
+\tl_new:N \l__cv_pi_target_tl
+
+\keys_define:nn { cv / personalinfo }
+{
+  phone    .tl_set:N  = \l__cv_pi_phone_tl,
+  email    .tl_set:N  = \l__cv_pi_email_tl,
+  github   .tl_set:N  = \l__cv_pi_github_tl,
+  age      .tl_set:N  = \l__cv_pi_age_tl,
+  gender   .tl_set:N  = \l__cv_pi_gender_tl,
+  identity .tl_set:N  = \l__cv_pi_identity_tl,
+  target   .tl_set:N  = \l__cv_pi_target_tl,
+  % 未给出的键默认为空 —— 空值即“不显示”
+  phone    .initial:n = {},
+  email    .initial:n = {},
+  github   .initial:n = {},
+  age      .initial:n = {},
+  gender   .initial:n = {},
+  identity .initial:n = {},
+  target   .initial:n = {},
+}
+
+% 内部：一行中的条目收集队列
+\seq_new:N \l__cv_pi_contact_seq
+\seq_new:N \l__cv_pi_detail_seq
+
+\NewDocumentCommand{\cvpersonalinfo}{ m }{
+  \group_begin:
+  \keys_set:nn { cv / personalinfo } {#1}
+  \begin{center}
+    % --- 第一行：联系方式 ---
+    \seq_clear:N \l__cv_pi_contact_seq
+    \__cv_collect:Nnn \l__cv_pi_phone_tl
+    { \infoitem{\faPhone}{\hrefphone{\l__cv_pi_phone_tl}} }
+    \l__cv_pi_contact_seq
+    \__cv_collect:Nnn \l__cv_pi_email_tl
+    { \infoitem{\faEnvelope}{\hrefmail{\l__cv_pi_email_tl}} }
+    \l__cv_pi_contact_seq
+    \seq_if_empty:NF \l__cv_pi_contact_seq
+    {
+      \seq_use:Nn \l__cv_pi_contact_seq { \hspace{1em}|\hspace{1em} }
+      \par\vspace{0.2em}
+    }
+    % --- 第二行：个人详情 ---
+    \seq_clear:N \l__cv_pi_detail_seq
+    \__cv_collect:Nnn \l__cv_pi_age_tl
+    { \infoitem{\faCalendar}{\l__cv_pi_age_tl} } \l__cv_pi_detail_seq
+    \__cv_collect:Nnn \l__cv_pi_gender_tl
+    { \infoitem{\faMars}{\l__cv_pi_gender_tl} } \l__cv_pi_detail_seq
+    \__cv_collect:Nnn \l__cv_pi_identity_tl
+    { \infoitem{\faUserGraduate}{\l__cv_pi_identity_tl} } \l__cv_pi_detail_seq
+    \__cv_collect:Nnn \l__cv_pi_target_tl
+    { \infoitem{\faBullseye}{\l__cv_pi_target_tl} } \l__cv_pi_detail_seq
+    \__cv_collect:Nnn \l__cv_pi_github_tl
+    { \infoitem{\faGithub}{\hrefgithub{\l__cv_pi_github_tl}} }
+    \l__cv_pi_detail_seq
+    \seq_if_empty:NF \l__cv_pi_detail_seq
+    { {\small \seq_use:Nn \l__cv_pi_detail_seq {
+    \hspace{0.8em}\midbullet\hspace{0.8em} }} }
+  \end{center}
+  \group_end:
+}
+
+\ExplSyntaxOff
