@@ -6,12 +6,14 @@
 
 把简历当代码写：内容归内容，排版归排版，改一行字不会让整个版面塌掉。
 
-[![License](https://img.shields.io/badge/License-PolyForm%20Noncommercial%201.0.0-orange.svg)](LICENSE)
 ![TeX Live](https://img.shields.io/badge/TeX%20Live-2026-3D6117?logo=latex&logoColor=white)
 ![Engine](https://img.shields.io/badge/engine-XeLaTeX-blue)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
+[![Overleaf](https://img.shields.io/badge/Overleaf-online-47A141?logo=overleaf&logoColor=white)](src/templates/tzcan/USAGE.md#首选-overleaf-在线编译)
+[![Docker](https://img.shields.io/badge/Docker-supported-2496ED?logo=docker&logoColor=white)](src/templates/tzcan/USAGE.md#方式二docker-容器编译)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](#-参与贡献)
 [![GitHub stars](https://img.shields.io/github/stars/tellcts/resumes-CV?style=social)](https://github.com/tellcts/resumes-CV)
+[![License](https://img.shields.io/badge/License-PolyForm%20Noncommercial%201.0.0-orange.svg)](LICENSE)
 
 </div>
 
@@ -45,16 +47,16 @@
 
 ### 一张表看懂
 
-|                    | 简历制作网站            | Word / 在线模板            | **本模板（LaTeX）**          |
-| ------------------ | ----------------------- | -------------------------- | ---------------------------- |
-| **排版精确度**     | ❌ 模板写死，改不动      | ⚠️ 拖拽易跑位，换设备错版  | ✅ 代码控制，结果**可复现**   |
-| **内容与版式**     | ❌ 混在一起              | ❌ 混在一起                 | ✅ **彻底分离**               |
-| **版本管理**       | ❌ 无历史，改错回不去    | ⚠️ 靠另存为堆文件名        | ✅ Git 友好，纯文本可 diff    |
-| **隐私**           | ❌ 简历上传到第三方服务器 | ⚠️ 本地，但可能带云同步    | ✅ **全本地，数据不出机器**   |
-| **多版本投递**     | ⚠️ 手动改一遍            | ⚠️ 手动改一遍               | ✅ 复制目录 / 按需增删模块    |
-| **格式规范**       | ⚠️ 看模板作者心情        | ⚠️ 靠手动对齐               | ✅ 统一组件，全篇风格一致     |
-| **学习成本**       | ✅ 最低                  | ✅ 低                       | ⚠️ 中（已封装成键值对降低门槛）|
-| **费用**           | ❌ 导出 PDF 常要会员     | ⚠️ 部分模板收费             | ✅ **非商业用途免费**          |
+|                | 简历制作网站             | Word / 在线模板          | **本模板（LaTeX）**            |
+| -------------- | ------------------------ | ------------------------ | ------------------------------ |
+| **排版精确度** | ❌ 模板写死，改不动       | ⚠️ 拖拽易跑位，换设备错版 | ✅ 代码控制，结果**可复现**     |
+| **内容与版式** | ❌ 混在一起               | ❌ 混在一起               | ✅ **彻底分离**                 |
+| **版本管理**   | ❌ 无历史，改错回不去     | ⚠️ 靠另存为堆文件名       | ✅ Git 友好，纯文本可 diff      |
+| **隐私**       | ❌ 简历上传到第三方服务器 | ⚠️ 本地，但可能带云同步   | ✅ **全本地，数据不出机器**     |
+| **多版本投递** | ⚠️ 手动改一遍             | ⚠️ 手动改一遍             | ✅ 复制目录 / 按需增删模块      |
+| **格式规范**   | ⚠️ 看模板作者心情         | ⚠️ 靠手动对齐             | ✅ 统一组件，全篇风格一致       |
+| **学习成本**   | ✅ 最低                   | ✅ 低                     | ⚠️ 中（已封装成键值对降低门槛） |
+| **费用**       | ❌ 导出 PDF 常要会员      | ⚠️ 部分模板收费           | ✅ **非商业用途免费**           |
 
 ### 🔒 数据不出本地
 
@@ -87,9 +89,9 @@
 
 ## 🎨 可用模板
 
-| 模板                                    | 风格                                                                     | 使用说明                                        |
-| --------------------------------------- | ------------------------------------------------------------------------ | ----------------------------------------------- |
-| **tzcan** <br/>*(目前已实现)*           | 双矩形边框 · 校徽水印 · 两行信息栏 · 内容/版式分离 · 全组件键值对接口    | [📖 **USAGE.md**](src/templates/tzcan/USAGE.md) |
+| 模板                          | 风格                                                                  | 使用说明                                       |
+| ----------------------------- | --------------------------------------------------------------------- | ---------------------------------------------- |
+| **tzcan** <br/>*(目前已实现)* | 双矩形边框 · 校徽水印 · 两行信息栏 · 内容/版式分离 · 全组件键值对接口 | [📖 **USAGE.md**](src/templates/tzcan/USAGE.md) |
 
 > [!NOTE]
 > 更多模板开发中，欢迎[参与贡献](#-参与贡献)。
@@ -153,11 +155,11 @@ resumes-CV/
 
 ## 🔧 环境要求
 
-| 项目     | 要求                                                    |
-| -------- | ------------------------------------------------------- |
-| 发行版   | **TeX Live 2026**（旧版本可能缺宏包）                    |
-| 引擎     | **XeLaTeX**（中文依赖 `ctex`，`pdflatex` 编译不出来）    |
-| 构建工具 | **latexmk**（随 TeX Live 一起安装）                      |
+| 项目     | 要求                                                          |
+| -------- | ------------------------------------------------------------- |
+| 发行版   | **TeX Live 2026**（旧版本可能缺宏包）                         |
+| 引擎     | **XeLaTeX**（中文依赖 `ctex`，`pdflatex` 编译不出来）         |
+| 构建工具 | **latexmk**（随 TeX Live 一起安装）                           |
 | 宏包     | `fontawesome5` / `ctex` / `tikz` / `tabularx` / `hyperref` 等 |
 
 安装请参照 **清华镜像站官方指导**：<https://mirrors.tuna.tsinghua.edu.cn/help/CTAN/>
