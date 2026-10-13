@@ -4,29 +4,31 @@
 
 **用 LaTeX 模块化构建属于你的精美简历 💖**
 
-[![License](https://img.shields.io/badge/License-PolyForm%20Noncommercial%201.0.0-orange.svg)](../../../LICENSE)
-![TeX Live](https://img.shields.io/badge/TeX%20Live-2026-3D6117)
-![Engine](https://img.shields.io/badge/engine-XeLaTeX-blue)
-![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
-
 </div>
 
 ---
 
-本文档面向**模板使用者**，讲解这个模板本身怎么用 —— 从克隆仓库、编译出 PDF，
+本文档面向**模板使用者**，讲解这个模板本身怎么用 —— 从拿到模板、编译出 PDF，
 到每个组件的每个字段说明。
 
 排版全部由文档类 `styles/resume-tzcan.cls` 与 `styles/components/` 下的 12 个组件提供，
 `main.tex` 里**只写内容、不写版式** —— 你不需要懂 LaTeX 宏包开发，只要会填键值对。
 
-> 📦 **还没装 LaTeX 环境？** 安装步骤在根目录的 [README](../../../README.md#-环境要求) 里。
->
-> 💡 **只想赶紧看到效果？** 跳到 [🔨 编译](#-编译) 和 [🖼️ 替换素材](#-替换素材) 两节就够了。
+> [!TIP]
+> **只想用这个模板做一份自己的简历？** 先看 [🚀 选择编译方式](#-选择编译方式) ——
+> 首选 **Overleaf 在线编译**（不用装 LaTeX，浏览器里就能出 PDF），其次 **本地安装 TeX Live**（数据不出本机）。
+
+> [!NOTE]
+> **只想赶紧看到效果？** 跳到 [首选 Overleaf 在线编译](#首选-overleaf-在线编译)
+> 和 [🖼️ 替换素材](#-替换素材) 两节就够了。
 
 ## 📑 目录
 
 - [📥 获取模板](#-获取模板)
-- [🔨 编译](#-编译)
+- [🚀 选择编译方式](#-选择编译方式)
+  - [首选 Overleaf 在线编译](#首选-overleaf-在线编译)
+  - [次选 本地安装 TeX Live](#次选-本地安装-tex-live)
+- [🔨 本地编译](#-本地编译)
 - [🖼️ 替换素材](#-替换素材)
   - [证件照](#证件照)
   - [校徽](#校徽)
@@ -52,10 +54,76 @@ git clone git@github.com:tellcts/resumes-CV.git
 
 ---
 
-## 🔨 编译
+## 🚀 选择编译方式
 
-> ⚠️ **必须在模板目录下执行编译。** `main.tex` 里写的是 `\documentclass{styles/resume-tzcan}`
+**如果你只想用这个模板做一份简历**，第一件事是选编译方式 —— 两条路通向同一份 PDF，
+区别只在「快不快」和「数据留在哪」：
+
+| 方式                            | 适合谁                           | 优点                                             | 缺点                                                                   |
+| ------------------------------- | -------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------- |
+| **① Overleaf 在线编译（首选）** | 只想填内容、尽快看到简历效果的人 | 不用装任何软件，浏览器里改完就出 PDF，上手最快   | ⚠️ **简历会上传到服务器**：姓名、电话、邮箱、证件照都存在 Overleaf 云端 |
+| **② 本地安装 TeX Live（次选）** | 在意隐私，或要长期反复改简历的人 | 数据全程留在自己电脑上，离线可用，编译结果可复现 | 完整版 TeX Live 好几个 GB，安装 + 配环境慢，第一次上手门槛高           |
+
+> [!TIP]
+> **一句话选型**：图快、图省事 → Overleaf；简历里有不想上传的信息 → 本地装 TeX Live。
+> 两者还能混用：在 Overleaf 上把内容改到满意，再回本地用同一份 `main.tex` 编出最终版。
+
+### 首选 Overleaf 在线编译
+
+- ✅ **优点**：不用装 LaTeX、不用配环境，注册后几分钟就能看到简历效果；换电脑、换系统都一样。
+- ⚠️ **缺点**：**个人数据上传到服务器** —— `main.tex` 里的姓名、手机号、邮箱、教育经历，
+  以及 `assets/` 下的证件照，都会保存在 Overleaf 的云端。介意的话请走下面的本地方案。
+
+操作步骤：
+
+1. **拿到模板**：克隆仓库后把 `src/templates/tzcan/` 压成 ZIP；
+   或从 [Releases](https://github.com/tellcts/resumes-CV/releases) 直接下载打包好的 `Resume.Template.tzcan-*.zip`；
+2. **上传**：打开 <https://www.overleaf.com> 注册 / 登录（免费账号够用）→ `New Project` → `Upload Project` → 选择压缩包；
+3. **确认文件层级**：项目**根目录**下要直接能看到 `main.tex`、`styles/`、`assets/`，**不能**被套在 `tzcan/` 文件夹里 ——
+   `main.tex` 用的是相对路径 `\documentclass{styles/resume-tzcan}`，多一层就报找不到文档类。
+   真被套了一层，就在 Overleaf 文件树里全选拖到根目录（或删掉那层文件夹）；
+4. **切换编译器**：左上角 `Menu` → `Compiler` 选 **XeLaTeX**。Overleaf 默认是 pdfLaTeX，**不改这一步中文编不出来**；
+5. **点 `Recompile`**：首次编译要预热中文字体，稍慢属正常；免费账号有编译时长上限，万一超时，再点一次通常就过了；
+6. **导出成品**：右上角 `Download PDF`。
+
+几点说明：
+
+- Overleaf 自己接管输出目录，`.latexmkrc` 里的 `$out_dir = 'build'` 在那边**不生效**，这是正常现象，
+  不用去找 `build/main.pdf`，直接点 `Download PDF` 即可。
+- `ctex`、`fontawesome5`、`tikz` 等宏包 Overleaf 都已内置，不需要额外安装。
+- 换证件照：在文件树里进 `assets/images/` 上传你自己的 `person.png` 覆盖同名文件，`main.tex` 一个字都不用改；
+  校徽同理，放进 `assets/badges/`。
+
+### 次选 本地安装 TeX Live
+
+- ✅ **优点**：简历**全程留在自己电脑上**，不联网、不上传、不注册；改完本地立刻重编，
+  长期反复改简历反而更顺手。
+- ⚠️ **缺点**：安装包大、耗时长 —— 完整版 TeX Live 好几个 GB，下载 + 安装常常要半小时以上，
+  初次还可能踩到中文字体或宏包缺失的坑。
+
+安装步骤与中文字体配置见根目录 [README 的环境要求](../../../README.md#-环境要求)，
+装完直接看下一节 [🔨 本地编译](#-本地编译)：
+
+```bash
+# 确认装好了（各应输出一行 TeX / latexmk 版本号）
+xelatex --version
+latexmk --version
+
+cd resumes-CV/src/templates/tzcan
+latexmk main.tex          # → build/main.pdf
+latexmk -pvc main.tex     # 常驻模式，保存 .tex 自动重编
+```
+
+---
+
+## 🔨 本地编译
+
+> [!WARNING]
+> **必须在模板目录下执行编译。** `main.tex` 里写的是 `\documentclass{styles/resume-tzcan}`
 > ——相对路径，在别的目录下编译会直接报找不到文档类。
+
+> [!NOTE]
+> **用 Overleaf 的话，本节整节跳过** —— 见上面的 [首选 Overleaf 在线编译](#首选-overleaf-在线编译)。
 
 ```bash
 cd resumes-CV/src/templates/tzcan
@@ -75,7 +143,8 @@ latexmk -C main.tex       # 连 PDF 一起清理
 
 ### `.latexmkrc` 已经替你配好了
 
-模板目录下的 `.latexmkrc` 会让 `latexmk` 自动做这几件事，不需要你传额外参数：
+模板目录下的 `.latexmkrc` 会让 `latexmk` 自动做这几件事，不需要你传额外参数
+（Overleaf 会自己接管这些参数，见上一节说明）：
 
 | 配置                           | 作用                                                 |
 | ------------------------------ | ---------------------------------------------------- |
@@ -96,7 +165,8 @@ latexmk -C main.tex       # 连 PDF 一起清理
 | 证件照   | `assets/images/person.png` | PNG / JPG，竖版一寸照，比例约 5:7        |
 | 校徽水印 | `assets/badges/*.png`      | **PNG 透明背景**，正方形，分辨率越高越好 |
 
-> 💡 最简单的做法：**保持文件名不变，直接覆盖原文件**。这样 `main.tex` 一个字都不用改。
+> [!TIP]
+> 最简单的做法：**保持文件名不变，直接覆盖原文件**。这样 `main.tex` 一个字都不用改。
 
 ### 证件照
 
@@ -128,7 +198,8 @@ latexmk -C main.tex       # 连 PDF 一起清理
 
 模板已自带两张示例校徽：`ecjtu.png`（华东交大）、`tsinghua.png`（清华），可直接删掉。
 
-> ⚠️ **路径是相对「编译进程的当前目录」解析的，不是相对 `main.tex` 的位置。**
+> [!WARNING]
+> **路径是相对「编译进程的当前目录」解析的，不是相对 `main.tex` 的位置。**
 > 所以务必在 `src/templates/tzcan/` 目录下执行 `latexmk`，并且把路径写完整
 > （`assets/badges/xxx.png`，而不是 `xxx.png`）。这是新手最常见的 `File not found` 原因。
 
@@ -191,9 +262,11 @@ latexmk -C main.tex       # 连 PDF 一起清理
 \end{document}
 ```
 
-> ⚠️ **⑤ 和 ⑥ 的顺序不能颠倒。** `\cvhorizontalline` 要读 `\cvphototopright` 记录下来的
+> [!WARNING]
+> **⑤ 和 ⑥ 的顺序不能颠倒。** `\cvhorizontalline` 要读 `\cvphototopright` 记录下来的
 > 照片尺寸才能算出自己该画在哪；先画线再放照片，线就会退化成「不考虑照片」的行内画法。
->
+
+> [!NOTE]
 > ③④⑤⑥ 四块**各自独立**，按需取用；不用照片的话，直接删掉 ⑤，⑥ 会自动退回普通行内直线。
 
 ### 各组件详解
@@ -309,6 +382,7 @@ latexmk -C main.tex       # 连 PDF 一起清理
 
 `\cvproject{ ... }` —— 键值接口，**全部键可选**。
 
+> [!NOTE]
 > 显示顺序固定：**标题行 → 项目介绍 → 技术栈 → 个人职责 → 项目亮点**，传入顺序不影响排版。
 
 | 键          | 含义     | 必填 | 说明                                                   |
@@ -353,6 +427,7 @@ latexmk -C main.tex       # 连 PDF 一起清理
 
 `\cvinternship{ ... }` —— 键值接口，**全部键可选**。
 
+> [!NOTE]
 > 显示顺序固定：**标题行 → 岗位职责 → 产出成果**。
 
 | 键            | 含义     | 必填 | 说明                                                        |
@@ -387,6 +462,7 @@ latexmk -C main.tex       # 连 PDF 一起清理
 `\cvwork{ ... }` —— 键值接口，**全部键可选**。结构与 `\cvinternship` **完全对齐**，
 只有两个块式标签换成了「工作职责 / 工作成果」。
 
+> [!NOTE]
 > 显示顺序固定：**标题行 → 工作职责 → 工作成果**。
 
 | 键            | 含义     | 必填 | 说明                                  |
@@ -411,7 +487,8 @@ latexmk -C main.tex       # 连 PDF 一起清理
 }
 ```
 
-> 💡 **求职阶段不必硬填此项。** 没有正式工作经历就整段删掉（连 `\cvsection{\faBuilding}{工作经历}`
+> [!TIP]
+> **求职阶段不必硬填此项。** 没有正式工作经历就整段删掉（连 `\cvsection{\faBuilding}{工作经历}`
 > 一起删），排版不会留下空洞。
 
 ---
@@ -609,7 +686,8 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 \definecolor{cvtext}{HTML}{333333}
 ```
 
-> ⚠️ **改动前先读源码注释。** 页边距、照片位置、分隔线位置三者互相咬合 ——
+> [!WARNING]
+> **改动前先读源码注释。** 页边距、照片位置、分隔线位置三者互相咬合 ——
 > `\cvphotoright`（照片距页右缘）必须与 `geometry` 的左右页边距保持一致，
 > 否则分割线右端就对不上照片右边界。相关约束在 `.cls` 和 `tzcan-personalinfo.sty`
 > 的注释里都写清楚了。
@@ -654,6 +732,21 @@ src/templates/tzcan/
 ---
 
 ## ❓ 常见问题
+
+<details>
+<summary><b>Q：在 Overleaf 上编译失败，或报找不到 <code>styles/resume-tzcan.cls</code>？</b></summary>
+
+按顺序检查三件事：
+
+1. **编译器是不是 XeLaTeX** —— `Menu` → `Compiler` 里改，Overleaf 默认的 pdfLaTeX 编不出中文。
+2. **文件层级对不对** —— 项目根目录必须直接看到 `main.tex`、`styles/`、`assets/`，
+   不能套在 `tzcan/` 文件夹里（相对路径会因为多一层而失效）。
+3. **首次编译慢 / 超时** —— 预热中文字体要时间，免费账号有编译时长上限，再点一次 `Recompile` 通常就过了。
+
+另外，Overleaf 用自己的输出目录，`.latexmkrc` 里的 `$out_dir = 'build'` 在那边不生效，
+这是正常现象 —— PDF 直接点右上角 `Download PDF` 拿。
+
+</details>
 
 <details>
 <summary><b>Q：编译报 <code>File not found</code> / 图片显示不出来？</b></summary>
