@@ -91,7 +91,8 @@
 | --------------------------------------- | ------------------------------------------------------------------------ | ----------------------------------------------- |
 | **tzcan** <br/>*(目前已实现)*           | 双矩形边框 · 校徽水印 · 两行信息栏 · 内容/版式分离 · 全组件键值对接口    | [📖 **USAGE.md**](src/templates/tzcan/USAGE.md) |
 
-> 🚧 更多模板开发中，欢迎[参与贡献](#-参与贡献)。
+> [!NOTE]
+> 更多模板开发中，欢迎[参与贡献](#-参与贡献)。
 
 **每个模板的 `USAGE.md` 都是一份完整中文手册**，包含：
 
@@ -122,7 +123,8 @@ latexmk main.tex        # 产物：build/main.pdf
 latexmk -pvc main.tex   # 常驻模式，保存自动重编
 ```
 
-> ⚠️ **必须在 `src/templates/<模板名>/` 目录下执行编译** —— `main.tex` 里的文档类是
+> [!WARNING]
+> **必须在 `src/templates/<模板名>/` 目录下执行编译** —— `main.tex` 里的文档类是
 > 相对路径，在仓库根目录编译会报找不到文档类。
 
 ## 📁 项目结构
@@ -167,10 +169,12 @@ xelatex --version    # 应输出 XeTeX 3.141592653-...，TeX Live 2026
 latexmk --version    # 应输出 Latexmk, John Collins, ...
 ```
 
-> 💡 **安装时记得把 Default paper size 设为 A4**（在安装界面点 `Advanced` 才看得到）——
+> [!IMPORTANT]
+> **安装时记得把 Default paper size 设为 A4**（在安装界面点 `Advanced` 才看得到）——
 > 模板用 `a4paper`，不设的话部分宏包会按 Letter 排版，版式会整体跑偏。
->
-> 📦 若编译时提示缺宏包（如 `fontawesome5`），**不用重装 TeX Live**，缺什么补什么：
+
+> [!TIP]
+> 若编译时提示缺宏包（如 `fontawesome5`），**不用重装 TeX Live**，缺什么补什么：
 > `tlmgr install fontawesome5`
 
 ## 🤝 参与贡献
