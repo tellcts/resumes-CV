@@ -24,21 +24,44 @@
 
 ## 📑 目录
 
-- [📥 获取模板](#-获取模板)
-- [🚀 选择编译方式](#-选择编译方式)
-  - [首选 Overleaf 在线编译](#首选-overleaf-在线编译)
-  - [次选 本地安装 TeX Live](#次选-本地安装-tex-live)
-- [🔨 本地编译](#-本地编译)
-- [🖼️ 替换素材](#-替换素材)
-  - [证件照](#证件照)
-  - [校徽](#校徽)
-- [🧩 组件参考手册](#-组件参考手册)
-  - [组件可选项总览](#组件可选项总览)
-  - [顶层骨架](#顶层骨架)
-  - [各组件详解](#各组件详解)
-- [🎨 版式与配色定制](#-版式与配色定制)
-- [📁 目录结构](#-目录结构)
-- [❓ 常见问题](#-常见问题)
+- [📄 resumes-CV · tzcan 模板](#-resumes-cv--tzcan-模板)
+  - [📑 目录](#-目录)
+  - [📥 获取模板](#-获取模板)
+  - [🚀 选择编译方式](#-选择编译方式)
+    - [首选 Overleaf 在线编译](#首选-overleaf-在线编译)
+    - [次选 本地安装 TeX Live](#次选-本地安装-tex-live)
+    - [三选 Docker 容器编译（免装 LaTeX）](#三选-docker-容器编译免装-latex)
+  - [🔨 本地编译](#-本地编译)
+    - [方式一：本地安装 TeX Live](#方式一本地安装-tex-live)
+    - [方式二：Docker 容器编译](#方式二docker-容器编译)
+      - [拉不下镜像？](#拉不下镜像)
+    - [常用清理命令](#常用清理命令)
+    - [`.latexmkrc` 已经替你配好了](#latexmkrc-已经替你配好了)
+  - [🖼️ 替换素材](#️-替换素材)
+    - [证件照](#证件照)
+    - [校徽](#校徽)
+  - [🧩 组件参考手册](#-组件参考手册)
+    - [组件可选项总览](#组件可选项总览)
+    - [顶层骨架](#顶层骨架)
+    - [各组件详解](#各组件详解)
+      - [`\cvsection` 模块标题](#cvsection-模块标题)
+      - [`\cvname` 姓名](#cvname-姓名)
+      - [`\cvpersonalinfo` 个人信息栏](#cvpersonalinfo-个人信息栏)
+      - [`\cvphototopright` / `\cvphoto` 证件照](#cvphototopright--cvphoto-证件照)
+      - [`\cvhorizontalline` 信息区分隔线](#cvhorizontalline-信息区分隔线)
+      - [`\cvproject` 项目经历](#cvproject-项目经历)
+      - [`\cvinternship` 实习经历](#cvinternship-实习经历)
+      - [`\cvwork` 工作经历](#cvwork-工作经历)
+      - [`\cveducation` 教育背景](#cveducation-教育背景)
+      - [`\cvskillcategory` 专业技能](#cvskillcategory-专业技能)
+      - [`\cvhonor` 荣誉证书](#cvhonor-荣誉证书)
+      - [`\cvselfassessment` 自我评价](#cvselfassessment-自我评价)
+      - [`\addwatermark` 校徽水印](#addwatermark-校徽水印)
+      - [`\midbullet` 行内圆点](#midbullet-行内圆点)
+    - [🔧 内部命令（仅供版式定制）](#-内部命令仅供版式定制)
+  - [🎨 版式与配色定制](#-版式与配色定制)
+  - [📁 目录结构](#-目录结构)
+  - [❓ 常见问题](#-常见问题)
 
 ---
 
@@ -56,17 +79,19 @@ git clone git@github.com:tellcts/resumes-CV.git
 
 ## 🚀 选择编译方式
 
-**如果你只想用这个模板做一份简历**，第一件事是选编译方式 —— 两条路通向同一份 PDF，
+**如果你只想用这个模板做一份简历**，第一件事是选编译方式 —— 三条路通向同一份 PDF，
 区别只在「快不快」和「数据留在哪」：
 
 | 方式                            | 适合谁                           | 优点                                             | 缺点                                                                   |
 | ------------------------------- | -------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------- |
 | **① Overleaf 在线编译（首选）** | 只想填内容、尽快看到简历效果的人 | 不用装任何软件，浏览器里改完就出 PDF，上手最快   | ⚠️ **简历会上传到服务器**：姓名、电话、邮箱、证件照都存在 Overleaf 云端 |
 | **② 本地安装 TeX Live（次选）** | 在意隐私，或要长期反复改简历的人 | 数据全程留在自己电脑上，离线可用，编译结果可复现 | 完整版 TeX Live 好几个 GB，安装 + 配环境慢，第一次上手门槛高           |
+| **③ Docker 容器编译（备选）**   | 装了 Docker、不想装 LaTeX 的人   | 免装 TeX Live，源码仍在本机，产物也在本机        | 首次拉镜像约 2.5 GB；容器内中文字体与系统字体不同，外观略有差异        |
 
 > [!TIP]
-> **一句话选型**：图快、图省事 → Overleaf；简历里有不想上传的信息 → 本地装 TeX Live。
-> 两者还能混用：在 Overleaf 上把内容改到满意，再回本地用同一份 `main.tex` 编出最终版。
+> **一句话选型**：图快、图省事 → Overleaf；简历里有不想上传的信息 → 本机装 TeX Live，
+> 或者走 [三选 Docker 容器编译](#三选-docker-容器编译免装-latex)（不想在本机装10 GB 的 TeX Live 就选它）。
+> 三者可以混用：在 Overleaf 上把内容改到满意，再回本地用同一份 `main.tex` 编出最终版。
 
 ### 首选 Overleaf 在线编译
 
@@ -98,11 +123,11 @@ git clone git@github.com:tellcts/resumes-CV.git
 
 - ✅ **优点**：简历**全程留在自己电脑上**，不联网、不上传、不注册；改完本地立刻重编，
   长期反复改简历反而更顺手。
-- ⚠️ **缺点**：安装包大、耗时长 —— 完整版 TeX Live 好几个 GB，下载 + 安装常常要半小时以上，
+- ⚠️ **缺点**：安装包大、耗时长 —— 完整版 TeX Live 10 GB，下载 + 安装常常要半小时以上，
   初次还可能踩到中文字体或宏包缺失的坑。
 
 安装步骤与中文字体配置见根目录 [README 的环境要求](../../../README.md#-环境要求)，
-装完直接看下一节 [🔨 本地编译](#-本地编译)：
+装完直接看下一节 [方式一：本地安装 TeX Live](#方式一本地安装-tex-live)：
 
 ```bash
 # 确认装好了（各应输出一行 TeX / latexmk 版本号）
@@ -114,16 +139,35 @@ latexmk main.tex          # → build/main.pdf
 latexmk -pvc main.tex     # 常驻模式，保存 .tex 自动重编
 ```
 
+### 三选 Docker 容器编译（免装 LaTeX）
+
+- ✅ **优点**：本机**不用装几个 GB 的 TeX Live**，只要装了 Docker 就能编；源码、图片、产物
+  全在你自己的目录里，容器只借用「编译」这一步；镜像只拉一次，之后每次编译都是几秒钟的事。
+- ⚠️ **缺点**：需要先装 Docker（Desktop / Engine 都行）并保持运行；首次要拉约 2.5 GB 的镜像，
+  直连 Docker Hub 可能失败（见 [拉不下镜像？](#拉不下镜像)）；容器里没有你系统的中文字体，
+  中文外观与「本地安装 TeX Live」版略有差异。
+
+操作只有一行命令，详见 [方式二：Docker 容器编译](#方式二docker-容器编译)。
+
 ---
 
 ## 🔨 本地编译
 
+本地编译有两条路，编出来的是**同一份 `build/main.pdf`**，按你本机装了什么挑一条：
+
+| 方式                          | 前提                             | 适合谁                               |
+| ----------------------------- | -------------------------------- | ------------------------------------ |
+| **方式一：本地安装 TeX Live** | 装好 TeX Live 2026（含 XeLaTeX） | 长期反复改简历，想要最顺手的编辑体验 |
+| **方式二：Docker 容器编译**   | 装好并启动 Docker，能拉一次镜像  | 不想在本机装几个 GB 的 TeX Live      |
+
 > [!WARNING]
-> **必须在模板目录下执行编译。** `main.tex` 里写的是 `\documentclass{styles/resume-tzcan}`
+> **两条路都必须在模板目录下执行编译。** `main.tex` 里写的是 `\documentclass{styles/resume-tzcan}`
 > ——相对路径，在别的目录下编译会直接报找不到文档类。
 
 > [!NOTE]
 > **用 Overleaf 的话，本节整节跳过** —— 见上面的 [首选 Overleaf 在线编译](#首选-overleaf-在线编译)。
+
+### 方式一：本地安装 TeX Live
 
 ```bash
 cd resumes-CV/src/templates/tzcan
@@ -134,17 +178,121 @@ latexmk -pvc main.tex     # 常驻模式，保存 .tex 自动重编，适合边�
 
 产物是 **`build/main.pdf`**，不在项目根目录，别找错地方 👀
 
+### 方式二：Docker 容器编译
+
+本机没装 TeX Live、也不想装？只要装了 Docker，用官方 `texlive/texlive` 镜像就能编 ——
+**源码始终留在你自己的目录里**，容器只是把「编译」这一步借走，简历数据不出本机。
+
+**第一步：进模板目录**（和方式一一样，绕不开）：
+
+```bash
+cd resumes-CV/src/templates/tzcan
+```
+
+**第二步：一条命令编出 PDF**：
+
+```bash
+# macOS / Linux（bash / zsh）
+docker run --rm \
+  -v "$PWD":/workdir \
+  -w /workdir \
+  texlive/texlive \
+  latexmk main.tex
+```
+
+```powershell
+# Windows（PowerShell）
+docker run --rm `
+  -v "${PWD}:/workdir" `
+  -w /workdir `
+  texlive/texlive `
+  latexmk main.tex
+```
+
+命令逐段拆开看：
+
+| 片段                 | 作用                                                                |
+| -------------------- | ------------------------------------------------------------------- |
+| `docker run --rm`    | 开一个一次性容器，编译完自动删除，不在本机留垃圾                    |
+| `-v "$PWD":/workdir` | 把**当前所在目录**（也就是模板目录）挂进容器的 `/workdir`           |
+| `-w /workdir`        | 让容器的当前目录就是 `/workdir` —— 相对路径和 `.latexmkrc` 才找得到 |
+| `texlive/texlive`    | 官方 TeX Live 镜像（等同于 `texlive/texlive:latest`）               |
+| `latexmk main.tex`   | 容器里执行的命令，和方式一完全一致                                  |
+
+> [!NOTE]
+> 容器的工作目录就是 `/workdir`，`.latexmkrc` 会被自动读到 —— 引擎（XeLaTeX）和输出目录（`build/`）
+> 都不用额外传参数，产物照样落在**本机**的 `build/main.pdf`。
+
+> [!TIP]
+> **首次运行要拉镜像**（约 2.5 GB），这一次慢是正常的；之后每次编译只是启动一个容器，几秒就出结果。
+
+想边改边看，在 `docker run` 后面加 `-it` 跑常驻模式（会占住一个终端，`Ctrl+C` 退出）：
+
+```bash
+docker run --rm -it -v "$PWD":/workdir -w /workdir texlive/texlive latexmk -pvc main.tex
+```
+
+#### 拉不下镜像？
+
+Docker Hub 在国内直连经常超时，第一次 `docker run` 就卡在拉取：
+
+```text
+Error response from daemon: Get "https://registry-1.docker.io/v2/": dial tcp ...: i/o timeout
+```
+
+按顺序试这两个办法：
+
+1. **你已经配了镜像加速器**（Docker Desktop 的 `Settings → Docker Engine` 里加了 `registry-mirrors`，
+   或走了代理）—— 那就不用改命令，继续用官方的 `texlive/texlive`；
+2. **没配加速、也不想折腾** —— 换成作者从官方同步的 `ghcr.io/tellcts/texlive:latest`，
+   只改镜像名，其余参数一个字不用动：
+
+```bash
+docker run --rm \
+  -v "$PWD":/workdir \
+  -w /workdir \
+  ghcr.io/tellcts/texlive:latest \
+  latexmk main.tex
+```
+
+```powershell
+docker run --rm `
+  -v "${PWD}:/workdir" `
+  -w /workdir `
+  ghcr.io/tellcts/texlive:latest `
+  latexmk main.tex
+```
+
+这份镜像的内容与官方 `texlive/texlive` 一致（作者定期同步），只是换了个仓库 —— 所以本文档里凡是
+出现 `texlive/texlive` 的地方，都可以直接替换成 `ghcr.io/tellcts/texlive:latest`。
+
+> [!IMPORTANT]
+> **容器里没有你系统的中文字体**，`ctex` 会自动退回 TeX Live 自带的 **Fandol（方正）** 字体族。
+> 内容和版式都一样，但中文观感（尤其**加粗标题**）会和方式一编出来的有细微差异，个别行还可能折行位置不同。
+
+> [!TIP]
+> **换编译方式前先清一次 `build/`**：上一次在本机编译时，`latexmk` 把 `c:/texlive/...` 这类
+> **本机路径**记进了 `build/main.fdb_latexmk` / `build/main.fls`，容器里并没有这些文件，
+> 它可能因此多跑几轮、日志里冒出无关的「找不到文件」。清理命令见下一节。
+
 ### 常用清理命令
 
 ```bash
+# 方式一：本机
 latexmk -c main.tex       # 清理中间文件（.aux / .log / .xdv 等），保留 PDF
 latexmk -C main.tex       # 连 PDF 一起清理
+```
+
+```bash
+# 方式二：Docker（<镜像> 换成 texlive/texlive 或 ghcr.io/tellcts/texlive:latest）
+docker run --rm -v "$PWD":/workdir -w /workdir <镜像> latexmk -C main.tex
 ```
 
 ### `.latexmkrc` 已经替你配好了
 
 模板目录下的 `.latexmkrc` 会让 `latexmk` 自动做这几件事，不需要你传额外参数
-（Overleaf 会自己接管这些参数，见上一节说明）：
+（Overleaf 会自己接管这些参数，见 [首选 Overleaf 在线编译](#首选-overleaf-在线编译)；
+Docker 方式同理，容器的工作目录就是 `/workdir`）：
 
 | 配置                           | 作用                                                 |
 | ------------------------------ | ---------------------------------------------------- |
@@ -745,6 +893,18 @@ src/templates/tzcan/
 
 另外，Overleaf 用自己的输出目录，`.latexmkrc` 里的 `$out_dir = 'build'` 在那边不生效，
 这是正常现象 —— PDF 直接点右上角 `Download PDF` 拿。
+
+</details>
+
+<details>
+<summary><b>Q：用 Docker 编译时拉不动镜像，报 <code>i/o timeout</code>？</b></summary>
+
+Docker Hub 在国内直连大概率超时，处理办法见 [拉不下镜像？](#拉不下镜像)：已经配了镜像加速器就
+继续用官方的 `texlive/texlive`，没配就换成作者同步的 `ghcr.io/tellcts/texlive:latest`。
+
+顺带一提，Docker 编出来的中文会比本机版「略有不同」：容器里没有你系统的中文字体，`ctex` 会自动
+退回 TeX Live 自带的 Fandol（方正）字体族，加粗标题的观感和个别行的折行位置都可能有出入。
+要完全一致的定稿，请用 [方式一](#方式一本地安装-tex-live) 在装好 TeX Live 的本机编一次。
 
 </details>
 
