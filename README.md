@@ -19,6 +19,19 @@
 
 ---
 
+## 🖼️ 效果预览
+
+<div align="center">
+
+<img src="previews/template-tzcan/tzcan-1.jpg" width="49%" alt="tzcan 模板效果预览 · 第 1 页" />
+<img src="previews/template-tzcan/tzcan-2.jpg" width="49%" alt="tzcan 模板效果预览 · 第 2 页" />
+
+**tzcan 模板** · 第 1 / 2 页 —— 双矩形边框 · 校徽水印 · 内容与版式彻底分离
+
+[📖 **使用说明**](src/templates/tzcan/USAGE.md) · [🖼️ **效果图目录**](previews/template-tzcan/)
+
+</div>
+
 ## 📖 这是什么
 
 **resumes-CV** 是一个用 LaTeX 编写的**模块化简历模板库**。
@@ -89,12 +102,16 @@
 
 ## 🎨 可用模板
 
-| 模板                          | 风格                                                                  | 使用说明                                       |
-| ----------------------------- | --------------------------------------------------------------------- | ---------------------------------------------- |
-| **tzcan** <br/>*(目前已实现)* | 双矩形边框 · 校徽水印 · 两行信息栏 · 内容/版式分离 · 全组件键值对接口 | [📖 **USAGE.md**](src/templates/tzcan/USAGE.md) |
+| 模板                          | 风格                                                                  | 使用说明                                       | 效果预览                                      |
+| ----------------------------- | --------------------------------------------------------------------- | ---------------------------------------------- | --------------------------------------------- |
+| **tzcan** <br/>*(目前已实现)* | 双矩形边框 · 校徽水印 · 两行信息栏 · 内容/版式分离 · 全组件键值对接口 | [📖 **USAGE.md**](src/templates/tzcan/USAGE.md) | [🖼️ **第 1 / 2 页**](previews/template-tzcan/) |
 
 > [!NOTE]
 > 更多模板开发中，欢迎[参与贡献](#-参与贡献)。
+
+> [!NOTE]
+> 各模板的效果图统一放在 `previews/template-<模板名>/` 下，README 直接引用 ——
+> 新增模板时的具体要求见 [🤝 CONTRIBUTING.md](CONTRIBUTING.md#-新增模板规范)。
 
 **每个模板的 `USAGE.md` 都是一份完整中文手册**，包含：
 
@@ -136,6 +153,8 @@ resumes-CV/
 ├── LICENSE
 ├── README.md                    ← 你正在看的文件
 ├── CONTRIBUTING.md              # 贡献指南：开发环境 / 规范 / 提 PR 流程
+├── previews/                    # 各模板的简历效果图（template-<模板名>/）
+│   └── template-tzcan/          # tzcan-1.jpg / tzcan-2.jpg：第 1、2 页效果图
 └── src/
     └── templates/
         └── tzcan/               # tzcan 模板
@@ -192,7 +211,8 @@ latexmk --version    # 应输出 Latexmk, John Collins, ...
 - 📁 仓库结构与五条铁律（内容/版式分离、模板目录自成一体、拿到即可编译、每个模板各带一份 `AGENTS.md` + `CLAUDE.md`）
 - 🌿 分支命名与提交信息格式
 - 🧩 组件开发规范（命名、键值接口、`-common.sty`、文件头注释）
-- 🆕 新增模板要求：目录自成一体、用户易编译、zip 能在 Overleaf 编译，且必须提供详细 `USAGE.md`
+- 🆕 新增模板要求：目录自成一体、用户易编译、zip 能在 Overleaf 编译，必须提供详细 `USAGE.md`，
+  并在 `previews/template-<模板名>/` 下放好该模板的简历效果图
 - ✍️ 文档写作规范（GitHub Alerts、中文、目录同步）
 - ✅ 提交前的自测清单
 
