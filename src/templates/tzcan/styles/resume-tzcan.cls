@@ -45,8 +45,9 @@
 % ============================================================
 % 二、自有组件
 % ============================================================
-% tzcan-common 必须最先：它提供四个主题色、\midbullet、两个 expl3 工具
-% 与 \cvbulletlist，其余 11 个组件全部依赖它。
+% tzcan-common 必须最先：它提供四个主题色、\midbullet、两个 expl3 工具、
+% \cvbulletlist 与 \cvlabelstyle / \cvfieldlabel（字段标签样式），
+% 其余 11 个组件全部依赖它。
 % 其余组件彼此无依赖，顺序可调。
 
 \RequirePackage{styles/components/tzcan-common}          % 底座：颜色 / 工具 / 圆点列表

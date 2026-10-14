@@ -384,8 +384,8 @@ Docker 方式同理，容器的工作目录就是 `/workdir`）：
    `key ... unknown` 先检查拼写。
 3. **没写的键 = 不显示**，且不会留下孤零零的标签或多余的分隔符 —— 分隔符只出现在
    两个**确有内容**的条目之间。可以放心地按需删减任何一行。
-4. 需要缩小字号、加粗等局部排版时，直接在值里写 LaTeX 命令即可，例如
-   `gpa = {\small GPA: 3.8}`。
+4. 需要加粗、换行等局部排版时，直接在值里写 LaTeX 命令即可，例如
+   `courses = {软件工程，\textbf{数据库系统原理}}`。
 
 ### 顶层骨架
 
@@ -645,14 +645,14 @@ Docker 方式同理，容器的工作目录就是 `/workdir`）：
 
 `\cveducation{ ... }` —— 键值接口，**全部键可选**。
 
-| 键        | 含义     | 必填 | 说明                                           |
-| --------- | -------- | ---- | ---------------------------------------------- |
-| `date`    | 就读时间 | 否   | 左侧固定 3.5cm 宽的栏位                        |
-| `school`  | 学校     | 否   | 加粗，与专业、学历用 ` · ` 自动连接            |
-| `major`   | 专业     | 否   | 同上                                           |
-| `degree`  | 学历     | 否   | 如 `本科` / `硕士`                             |
-| `gpa`     | 补充信息 | 否   | **原样输出、命令不加前缀**，用来写 GPA、排名等 |
-| `courses` | 主修课程 | 否   | 命令会**自动补「主修课程：」前缀**             |
+| 键        | 含义     | 必填 | 说明                                |
+| --------- | -------- | ---- | ----------------------------------- |
+| `date`    | 就读时间 | 否   | 左侧固定 3.5cm 宽的栏位             |
+| `school`  | 学校     | 否   | 加粗，与专业、学历用 ` · ` 自动连接 |
+| `major`   | 专业     | 否   | 同上                                |
+| `degree`  | 学历     | 否   | 如 `本科` / `硕士`                  |
+| `gpa`     | 专业排名 | 否   | 命令会**自动补「专业排名：」前缀**  |
+| `courses` | 主修课程 | 否   | 命令会**自动补「主修课程：」前缀**  |
 
 ```latex
 \cveducation{
@@ -660,7 +660,7 @@ Docker 方式同理，容器的工作目录就是 `/workdir`）：
   school  = {某某大学},
   major   = {某某专业},
   degree  = {本科},
-  gpa     = {GPA:~x.xx~/~5.0 --- 专业排名前 xx\%},
+  gpa     = {前20\%（GPA:~4.0~/~5.0）},
   courses = {软件工程，数据库系统原理，数据结构，计算机网络，操作系统},
 }
 ```
@@ -671,6 +671,8 @@ Docker 方式同理，容器的工作目录就是 `/workdir`）：
 - 想恢复成整串手写、完全掌控连接符，只写 `school` 即可：
   `school = {某某大学~\midbullet~某某专业~\midbullet~本科}`
 - `gpa` 和 `courses` 是**第二、三行**，两条都不写就只输出标题行，不会留下空行。
+- 两行的标签「专业排名：」「主修课程：」由命令**自动补上**，值里只写内容；
+  标签与项目经历的「项目介绍：」「技术栈：」是同一套样式（`\small` 加粗）。
 - 百分号在 LaTeX 里是注释符，必须转义写成 `\%`。
 
 ---
@@ -795,6 +797,7 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 | ------------------------------------------ | ------------------ | ------------------------------------- |
 | `\cvborderframe`                           | `resume-tzcan.cls` | 页面双矩形边框，已在文档类里调用一次  |
 | `\cvbulletlist`                            | 各列表类组件       | 统一的圆点列表样式（左缩进 1.2em）    |
+| `\cvlabelstyle` / `\cvfieldlabel`          | 各经历类组件       | 字段标签样式（`\small` 加粗）         |
 | `\infoitem`                                | `\cvpersonalinfo`  | 「图标 + 文字」原子组件，不可断行     |
 | `\hrefmail` / `\hrefphone` / `\hrefgithub` | `\cvpersonalinfo`  | 生成可点击的邮箱 / 电话 / GitHub 链接 |
 | `\cvprojectlabel` 等                       | 各经历类组件       | 条目标签（行内式 / 块式）             |
@@ -859,7 +862,7 @@ src/templates/tzcan/
 └── styles/
     ├── resume-tzcan.cls            # 文档类：字号 / 纸张 / 页边距 / 全局设置
     └── components/                 # 12 个组件，全部由 .cls 导出
-        ├── tzcan-common.sty            # 底座：主题色 / \midbullet / \cvbulletlist
+        ├── tzcan-common.sty            # 底座：主题色 / \midbullet / \cvbulletlist / \cvfieldlabel
         ├── tzcan-watermark.sty         # \addwatermark
         ├── tzcan-border.sty            # \cvborderframe
         ├── tzcan-section.sty           # \cvsection

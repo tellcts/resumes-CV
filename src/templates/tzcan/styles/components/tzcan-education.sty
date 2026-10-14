@@ -3,7 +3,8 @@
 % ============================================================
 %
 % 提供：\cveducation
-% 依赖：tzcan-common（\midbullet、\__cv_collect:Nnn、\__cv_if_notblank:Nn）、
+% 依赖：tzcan-common（\midbullet、\cvfieldlabel、\__cv_collect:Nnn、
+%       \__cv_if_notblank:Nn）、
 %       tabularx
 %
 % 每个键都可以省略，没写的不会出现在简历上（也不会留下空标签）。
@@ -14,8 +15,8 @@
 % school    学校            school  = {某某大学}
 % major     专业            major   = {某某专业}
 % degree    学历            degree  = {本科}
-% gpa       补充信息        gpa     = {GPA:~x.xx~/~5.0 --- 专业排名前 xx\%}
-%                           （GPA、排名等，原样输出，命令不加标签）
+% gpa       专业排名        gpa     = {前20\%（GPA:~4.0~/~5.0）}
+%                           （命令会自动加上「专业排名：」前缀，值里只写排名与 GPA）
 % courses   主修课程        courses = {计算机网络，操作系统，……}
 %                           （命令会自动加上「主修课程：」前缀）
 %
@@ -28,9 +29,11 @@
 % 说明：学校 / 专业 / 学历 三者用「·」自动连接，缺哪个就跳过哪个。
 %       若想恢复成手写的一整串，只写 school 即可：
 %       school = {某某大学~\midbullet~某某专业~\midbullet~本科}
+%       第二、三行的标签由命令自动补，字体样式与项目经历的「项目介绍：」等
+%       标签一致（\small 加粗，见 tzcan-common 的 \cvfieldlabel）。
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{tzcan-education}[2026/10/12 教育背景]
+\ProvidesPackage{tzcan-education}[2026/10/14 教育背景]
 
 % 实现说明：下面是 expl3 语法，故包在 \ExplSyntaxOn / \ExplSyntaxOff 之间。
 % 每个含 expl3 的组件都要各自包一对 \ExplSyntaxOn / \ExplSyntaxOff，不能跨文件共享。
@@ -77,9 +80,9 @@
   % （先攒后放：让 & 和 \\ 插入时处在行内最外层，不落在任何宏参数的分组里）
   \tl_clear:N \l__cv_ed_rows_tl
   \__cv_if_notblank:Nn \l__cv_ed_gpa_tl
-  { \tl_put_right:Nn \l__cv_ed_rows_tl { & {\small \l__cv_ed_gpa_tl} \\ } }
+  { \tl_put_right:Nn \l__cv_ed_rows_tl { & {\small \cvfieldlabel{专业排名}\l__cv_ed_gpa_tl} \\ } }
   \__cv_if_notblank:Nn \l__cv_ed_courses_tl
-  { \tl_put_right:Nn \l__cv_ed_rows_tl { & {\small 主修课程：\l__cv_ed_courses_tl} \\ } }
+  { \tl_put_right:Nn \l__cv_ed_rows_tl { & {\small \cvfieldlabel{主修课程}\l__cv_ed_courses_tl} \\ } }
   \noindent
   \begin{tabularx}{\textwidth}{@{}p{3.5cm} X@{}}
     {\small \l__cv_ed_date_tl} &
