@@ -135,6 +135,7 @@ latexmk -pvc main.tex   # 常驻模式，保存自动重编
 resumes-CV/
 ├── LICENSE
 ├── README.md                    ← 你正在看的文件
+├── CONTRIBUTING.md              # 贡献指南：开发环境 / 规范 / 提 PR 流程
 └── src/
     └── templates/
         └── tzcan/               # tzcan 模板
@@ -181,21 +182,26 @@ latexmk --version    # 应输出 Latexmk, John Collins, ...
 
 ## 🤝 参与贡献
 
-欢迎 Issue 和 Pull Request！特别是：
+欢迎 Issue 和 Pull Request —— 反馈 Bug、改进组件、新增模板、修补文档都算贡献。
 
-- 🐛 **反馈 Bug** —— 描述复现步骤和你期望的效果
-- 🎨 **提交新模板** —— 新建 `src/templates/<模板名>/`，并附上自己的 `USAGE.md`
-- 🧩 **新增/改进组件** —— 见下方规范
+**完整流程与规范统一写在这里：[🤝 CONTRIBUTING.md](CONTRIBUTING.md)**，包括：
 
-**组件开发规范**（详见各模板目录下的 `AGENTS.md`）：
+- 🛠️ 开发环境：**首选本地安装 TeX Live 完整版，或 Docker 部署 TeX Live**（Overleaf 留给只想快速生成简历、快速验证样式的场景）
+- 🤖 **推荐用 AI 工具辅助开发**：仓库自带的 `AGENTS.md` 可直接当提示词，但编译与验收仍由人负责
+- 🧭 从 Fork、克隆、编译到提 PR 的完整步骤
+- 📁 仓库结构与五条铁律（内容/版式分离、模板目录自成一体、拿到即可编译、每个模板各带一份 `AGENTS.md` + `CLAUDE.md`）
+- 🌿 分支命名与提交信息格式
+- 🧩 组件开发规范（命名、键值接口、`-common.sty`、文件头注释）
+- 🆕 新增模板要求：目录自成一体、用户易编译、zip 能在 Overleaf 编译，且必须提供详细 `USAGE.md`
+- ✍️ 文档写作规范（GitHub Alerts、中文、目录同步）
+- ✅ 提交前的自测清单
 
-1. 组件文件统一命名为 `tzcan-*.sty`，放在 `styles/components/` 下，
-   并在 `resume-tzcan.cls` 里通过 `\RequirePackage{...}` 导出；
-2. **对外接口一律使用键值对**，便于使用者填空；
-3. 被多个组件共用的能力，直接追加进 `tzcan-common.sty`，不要另建文件；
-4. 新命令用 `\newcommand` 封装，并在文件头写清：提供什么、依赖什么、被谁依赖。
+> [!IMPORTANT]
+> 提 PR 前请先按贡献指南自测：用**本地 TeX Live 完整版或 Docker** 在模板目录下
+> `latexmk main.tex` 能干净编译出 PDF，且不破坏现有排版；
+> 同时确认没有提交 `build/` 产物与任何真实个人信息。
 
-**提 PR 前请自测**：`latexmk main.tex` 能干净编译出 PDF，且不破坏现有排版。
+**[👉 阅读完整贡献指南 →](CONTRIBUTING.md)**
 
 ## 📄 许可
 
