@@ -10,7 +10,7 @@
 ![Engine](https://img.shields.io/badge/engine-XeLaTeX-blue)
 [![Overleaf](https://img.shields.io/badge/Overleaf-online-47A141?logo=overleaf&logoColor=white)](src/templates/tzcan/USAGE.md#首选-overleaf-在线编译)
 [![Docker](https://img.shields.io/badge/Docker-supported-2496ED?logo=docker&logoColor=white)](src/templates/tzcan/USAGE.md#方式二docker-容器编译)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](#-参与贡献)
+[![Downloads](https://img.shields.io/github/downloads/tellcts/resumes-CV/total?label=Downloads&color=2EA043&logo=github)](https://github.com/tellcts/resumes-CV/releases)
 [![GitHub stars](https://img.shields.io/github/stars/tellcts/resumes-CV?style=social)](https://github.com/tellcts/resumes-CV)
 [![License](https://img.shields.io/badge/License-PolyForm%20Noncommercial%201.0.0-orange.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
@@ -106,9 +106,9 @@
 
 ## 🎨 可用模板
 
-| 模板                          | 风格                                                                  | 使用说明                                       | 效果预览                                    |
-| ----------------------------- | --------------------------------------------------------------------- | ---------------------------------------------- | ------------------------------------------- |
-| **tzcan** <br/>*(目前已实现)* | 双矩形边框 · 校徽水印 · 两行信息栏 · 内容/版式分离 · 全组件键值对接口 | [📖 **USAGE.md**](src/templates/tzcan/USAGE.md) | [🖼️ **第 1 ~ 2 页**](PREVIEWS.md#-tzcan)     |
+| 模板                          | 风格                                                                  | 使用说明                                       | 效果预览                                |
+| ----------------------------- | --------------------------------------------------------------------- | ---------------------------------------------- | --------------------------------------- |
+| **tzcan** <br/>*(目前已实现)* | 双矩形边框 · 校徽水印 · 两行信息栏 · 内容/版式分离 · 全组件键值对接口 | [📖 **USAGE.md**](src/templates/tzcan/USAGE.md) | [🖼️ **第 1 ~ 2 页**](PREVIEWS.md#-tzcan) |
 
 > [!NOTE]
 > 更多模板开发中，欢迎[参与贡献](#-参与贡献)。
@@ -186,11 +186,11 @@ resumes-CV/
 首选 **Overleaf 在线编译**；介意把简历传到网上，就走其次的两条 ——
 **Docker 容器编译**或**本地安装 TeX Live**（二者任选其一）。
 
-| 优先级    | 方式                | 适合谁                 | 优点                           | 缺点                                 |
-| --------- | ------------------- | ---------------------- | ------------------------------ | ------------------------------------ |
-| **首选** | **Overleaf 在线编译** | 只想尽快填内容、尽快出 PDF | 零安装、零配置，浏览器里改完就能出 PDF，换电脑也一样 | ⚠️ 简历会上传到第三方服务器（姓名 / 电话 / 证件照都在云端） |
-| **次选** | **Docker 容器编译**   | 不想在本机装几个 GB 的 LaTeX | 免装 TeX Live，源码与产物仍留在自己电脑上 | 要先装好 Docker；首次拉镜像约 2.5 GB |
-| **次选** | **本地安装 TeX Live** | 在意隐私、要长期反复改简历 | 全程本地、离线可用，编译结果可复现 | 完整版约 10 GB，装完还要配环境 |
+| 优先级   | 方式                  | 适合谁                       | 优点                                                 | 缺点                                                       |
+| -------- | --------------------- | ---------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
+| **首选** | **Overleaf 在线编译** | 只想尽快填内容、尽快出 PDF   | 零安装、零配置，浏览器里改完就能出 PDF，换电脑也一样 | ⚠️ 简历会上传到第三方服务器（姓名 / 电话 / 证件照都在云端） |
+| **次选** | **Docker 容器编译**   | 不想在本机装几个 GB 的 LaTeX | 免装 TeX Live，源码与产物仍留在自己电脑上            | 要先装好 Docker；首次拉镜像约 2.5 GB                       |
+| **次选** | **本地安装 TeX Live** | 在意隐私、要长期反复改简历   | 全程本地、离线可用，编译结果可复现                   | 完整版约 10 GB，装完还要配环境                             |
 
 各条路的操作步骤（Overleaf 怎么上传、怎么切 XeLaTeX、Docker 命令行怎么写）见
 [📖 tzcan `USAGE.md` → 🚀 选择编译方式](src/templates/tzcan/USAGE.md#-选择编译方式)：
