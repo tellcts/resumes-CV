@@ -8,12 +8,12 @@
 
 ![TeX Live](https://img.shields.io/badge/TeX%20Live-2026-3D6117?logo=latex&logoColor=white)
 ![Engine](https://img.shields.io/badge/engine-XeLaTeX-blue)
-![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
 [![Overleaf](https://img.shields.io/badge/Overleaf-online-47A141?logo=overleaf&logoColor=white)](src/templates/tzcan/USAGE.md#首选-overleaf-在线编译)
 [![Docker](https://img.shields.io/badge/Docker-supported-2496ED?logo=docker&logoColor=white)](src/templates/tzcan/USAGE.md#方式二docker-容器编译)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](#-参与贡献)
 [![GitHub stars](https://img.shields.io/github/stars/tellcts/resumes-CV?style=social)](https://github.com/tellcts/resumes-CV)
 [![License](https://img.shields.io/badge/License-PolyForm%20Noncommercial%201.0.0-orange.svg)](LICENSE)
+![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
 
 </div>
 
