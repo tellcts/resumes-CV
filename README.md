@@ -1,8 +1,8 @@
 <div align="center">
 
-# resumes-CV
-
-**用 LaTeX 模块化构建属于你的精美简历 💖**
+<h1 align="center">
+  <img src=".github/assets/readme-banner.svg" alt="resumes-CV —— 用 LaTeX 模块化构建属于你的精美简历" />
+</h1>
 
 把简历当代码写：内容归内容，排版归排版，改一行字不会让整个版面塌掉。
 
