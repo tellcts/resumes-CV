@@ -1,0 +1,155 @@
+name: Build Check
+
+# 编译校验：模板编不过，PR 检查不绿、Release 也发不出来。
+#
+# 触发方式：
+#   1. pull_request —— 只在改动到 src/templates/**（或本工作流自身）时触发，且只编译
+#      「本次改动到的那些模板」；纯文档 PR 根本不会启动这条工作流。
+#   2. workflow_call —— 由 release-templates.yml 调用，发版前编译全部模板。
+#   3. workflow_dispatch —— 手动触发，编译全部模板。
+#
+# 注意（重要）：PR 触发带了路径过滤，而 GitHub 对「没被触发的工作流」不会产生检查记录 ——
+# 因此不要把本工作流直接设为 main 的必需检查（Required status check），否则纯文档 PR 会永远
+# 卡在「Expected — Waiting for status to be reported」。真要设必需检查，请去掉下面的 paths
+# 过滤，改成「总是运行 + 在步骤里判断要不要编译」的写法（纯文档 PR 会跑完并报绿）。
+#
+# 编译用官方 texlive/texlive:latest 镜像，与 USAGE.md 里的「Docker 容器编译」是同一条路：
+# 同一个镜像、同一条 latexmk 命令，引擎 XeLaTeX 由模板自己的 .latexmkrc 指定，
+# 因此 CI 里的结果和贡献者按文档走 Docker 的结果一致。
+
+on:
+  pull_request:
+    paths:
+      - "src/templates/**"
+      - ".github/workflows/build-check.yml"
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # 计算 PR 改动需要完整历史（包含 base 分支）
+
+      - name: Decide which templates to build
+        id: targets
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          all_templates=""
+          for d in src/templates/*/; do
+            [ -d "$d" ] || continue
+            name="${d#src/templates/}"
+            all_templates="${all_templates} ${name%/}"
+          done
+          all_templates="${all_templates# }"
+
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            echo "Triggered by ${{ github.event_name }}: building every template."
+            targets="$all_templates"
+          else
+            base="${{ github.base_ref }}"
+
+            if changed="$(git diff --name-only "origin/${base}...HEAD" 2>/dev/null)"; then
+              # 工作流自己改了，就全量编译一遍
+              if printf '%s\n' "$changed" | grep -qF '.github/workflows/build-check.yml'; then
+                echo "This workflow itself changed: building every template."
+                targets="$all_templates"
+              else
+                targets=""
+                for line in $changed; do
+                  case "$line" in
+                    src/templates/*/*)
+                      rest="${line#src/templates/}"
+                      name="${rest%%/*}"
+                      case " $targets " in
+                        *" $name "*) ;;
+                        *) targets="${targets} ${name}" ;;
+                      esac
+                      ;;
+                  esac
+                done
+                targets="${targets# }"
+              fi
+            else
+              echo "Cannot diff against ${base}: building every template."
+              targets="$all_templates"
+            fi
+          fi
+
+          if [ -z "$targets" ]; then
+            echo "No template changes in this run: skipping the build."
+          else
+            echo "Templates to build:"
+            echo "$targets"
+          fi
+
+          {
+            echo 'list<<EOF'
+            echo "$targets"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Build with latexmk (XeLaTeX)
+        if: steps.targets.outputs.list != ''
+        shell: bash
+        env:
+          TARGETS: ${{ steps.targets.outputs.list }}
+        run: |
+          set -euo pipefail
+
+          for t in $TARGETS; do
+            echo "::group::latexmk ${t}"
+
+            docker run --rm \
+              -v "$PWD/src/templates/${t}":/workdir \
+              -w /workdir \
+              texlive/texlive:latest \
+              latexmk -halt-on-error main.tex
+
+            echo "::endgroup::"
+          done
+
+      - name: Report Overfull / Underfull boxes
+        if: steps.targets.outputs.list != ''
+        shell: bash
+        env:
+          TARGETS: ${{ steps.targets.outputs.list }}
+        run: |
+          for t in $TARGETS; do
+            log="src/templates/${t}/build/main.log"
+            [ -f "$log" ] || continue
+
+            echo "::group::${t}: Overfull / Underfull"
+            grep -E "Overfull|Underfull" "$log" | head -n 20 || echo "(none)"
+            echo "::endgroup::"
+          done
+
+      - name: Show log tail on failure
+        if: failure()
+        shell: bash
+        run: |
+          for log in src/templates/*/build/main.log; do
+            [ -f "$log" ] || continue
+
+            echo "::group::${log}"
+            tail -n 80 "$log"
+            echo "::endgroup::"
+          done
+
+      - name: Upload PDFs
+        if: steps.targets.outputs.list != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-pdf
+          path: src/templates/*/build/main.pdf
+          if-no-files-found: warn
+          retention-days: 14

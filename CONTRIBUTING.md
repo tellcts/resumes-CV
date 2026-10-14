@@ -149,9 +149,11 @@ latexmk -C main.tex       # 连 PDF 一起清理
 ```
 
 > [!IMPORTANT]
-> **本仓库的 CI 只做「打包发版」，不做编译校验** —— 也就是说，
-> 排版错误不会有机器人替你发现。提 PR 前请在模板目录下用 `latexmk main.tex`
-> 干净编出一份 PDF，并自己翻一遍确认没有塌版、错位、断行异常。
+> **CI 只保证「编得出来」，不保证「排得好看」。** 提 PR 后，只要改到了 `src/templates/**`，
+> [🚀 CI 与发版](#-ci-与发版) 里的 `Build Check` 就会在官方 TeX Live 容器里编译**你改动的那些模板**，
+> 编不过直接红、同时把 PDF 传成 `build-pdf` 工件；但容器里的中文字体与你本机不同 ——
+> 所以**提交前仍要在模板目录下用 `latexmk main.tex` 干净编一遍，并自己逐页翻过**，
+> 确认没有塌版、错位、断行异常。
 
 > [!TIP]
 > 报缺宏包时不用重装 TeX Live，缺什么补什么：`tlmgr install fontawesome5`。
@@ -213,7 +215,8 @@ resumes-CV/
 ├── previews/                       # 各模板的简历效果图，一个模板一个目录
 │   └── template-tzcan/             # tzcan 的效果图（目录名 = template-<模板名>）
 ├── .github/workflows/
-│   └── release-templates.yml       # 打 tag 时自动打包各模板并发 Release
+│   ├── build-check.yml             # PR 与发版前编译各模板（texlive/texlive 容器）
+│   └── release-templates.yml       # 打 tag 时先编译校验，再打包各模板并发 Release
 └── src/templates/
     └── tzcan/                      # 每个模板自成一体，可单独分发
         ├── main.tex                # 简历内容（使用者唯一需要改的文件）
@@ -501,22 +504,43 @@ chore：推送 tag 自动上传每个模板的 zip 到 Release
 
 ## 🚀 CI 与发版
 
-仓库只有一条工作流 [`.github/workflows/release-templates.yml`](.github/workflows/release-templates.yml)：
+仓库有两条工作流，分工是「**先编译校验，再打包发版**」。
+
+**① [`.github/workflows/build-check.yml`](.github/workflows/build-check.yml) —— 编译校验**
+
+| 触发                        | 行为                                                                   |
+| --------------------------- | ---------------------------------------------------------------------- |
+| PR（改到 `src/templates/**` 或本工作流） | 只编译**本次改动到的模板**；纯文档 PR 不触发它            |
+| 发版（被 release 工作流调用） | 编译**全部模板**，编不过就不发 Release                                 |
+| 手动 `workflow_dispatch`     | 编译全部模板                                                           |
+
+编译在官方 **`texlive/texlive:latest`** 容器里用 `latexmk` 完成（引擎 XeLaTeX 由模板自己的
+`.latexmkrc` 指定）—— 和 [Docker 容器编译](src/templates/tzcan/USAGE.md#方式二docker-容器编译)
+是同一条命令、同一个镜像，所以你按文档走 Docker 得到的结果就是 CI 的结果。编出的 PDF 会作为
+**`build-pdf` 工件**上传（保留 14 天），评审直接下载就能逐页看图，不必在自己机器上装 TeX Live。
+
+**② [`.github/workflows/release-templates.yml`](.github/workflows/release-templates.yml) —— 打包发版**
 
 1. 维护者推送形如 `v*` 的 tag（例如 `v1.2.0`）时触发；
-2. 工作流**遍历 `src/templates/` 下的每个模板目录**，用 `git archive` 打成
+2. **先跑 ①** —— 任一模板编译失败，发版直接中止（`needs: build-check`），不会产出半成品 Release；
+3. 全部模板编译通过后，遍历 `src/templates/` 下的每个模板目录，用 `git archive` 打成
    `Resume.Template.<模板名>-<版本>.zip`（zip 内顶层目录就是模板名）；
-3. 创建（或追加到）同名 GitHub Release，把 zip 作为附件上传。
+4. 创建（或追加到）同名 GitHub Release，把 zip 作为附件上传。
 
-这件事对贡献者的含义有两条：
+这件事对贡献者的含义有三条：
 
 - **打 tag 和发 Release 由维护者做**，PR 里不需要动 tag 或版本号；
 - 正因为打包是按目录做的，**每个模板目录必须自成一体**（见
-  [📁 仓库结构与铁律](#-仓库结构与铁律)）—— 这是硬性要求，不是风格偏好。
+  [📁 仓库结构与铁律](#-仓库结构与铁律)）—— 这是硬性要求，不是风格偏好；
+- **CI 只保证「编得出来」，不保证「排得好看」**：容器里的中文字体与你本机不同，
+  版式请以本地 TeX Live / Docker 编出的 PDF 为准，并照
+  [✅ 提交前自测清单](#-提交前自测清单) 逐页翻一遍。
 
-> [!NOTE]
-> 工作流**不编译 LaTeX**，因此它不会替你发现排版问题；
-> 编译验证只能靠贡献者按 [✅ 提交前自测清单](#-提交前自测清单) 自己走一遍。
+> [!WARNING]
+> **别把 `Build Check` 直接设成 `main` 的必需检查。** 它的 PR 触发带了路径过滤（只看
+> `src/templates/**` 和它自己），而 GitHub 对**没被触发的工作流不产生检查记录** ——
+> 一旦设为必需检查，纯文档 PR 就会永远卡在 `Expected — Waiting for status to be reported`。
+> 确实想要这条必需检查的话，把 `paths:` 过滤去掉、改成「总是运行 + 在步骤里判断要不要编译」。
 
 ---
 
