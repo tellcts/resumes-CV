@@ -11,12 +11,13 @@
 %   · \__cv_if_notblank:Nn  两个 expl3 工具，各模块的键值接口共用
 %     \__cv_collect:Nnn
 %   · \cvbulletlist         统一的圆点列表
+%   · \cvlabelstyle / \cvfieldlabel  字段标签的统一字体样式（\small 加粗）
 %
 % 依赖：由文档类 resume-tzcan 先行加载 xcolor 与 expl3，本文件不重复加载第三方宏包。
 % 被依赖：其余 11 个组件全部依赖本文件，改动前先确认影响面。
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{tzcan-common}[2026/10/12 全模块共用的底座：颜色 / 工具 / 圆点列表]
+\ProvidesPackage{tzcan-common}[2026/10/14 全模块共用的底座：颜色 / 工具 / 标签样式 / 圆点列表]
 
 % --- 颜色 ---
 \definecolor{cvsection}{HTML}{2C3E50}
@@ -26,6 +27,14 @@
 
 % 行内居中圆点（在 ctex 默认字体下垂直居中）
 \newcommand{\midbullet}{\raisebox{+0.25ex}{\textbullet}}
+
+% --- 字段标签的统一字体样式 ---
+% 各经历类组件的标签（项目介绍 / 技术栈 / 专业排名 / 主修课程 / 个人职责……）
+% 全部走这里，保证全篇标签的字号与字重一致：\small + 加粗。
+%   \cvlabelstyle{标签}  —— 只出标签本身（加粗小号字）
+%   \cvfieldlabel{标签}  —— 行内式标签：上面的样式 + 全角冒号，正文紧接其后
+\newcommand{\cvlabelstyle}[1]{{\small\textbf{#1}}}
+\newcommand{\cvfieldlabel}[1]{\cvlabelstyle{#1：}}
 
 % --- 全局设置 ---
 % 默认行距，ctex 已处理中文行距

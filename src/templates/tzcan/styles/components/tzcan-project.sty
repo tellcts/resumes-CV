@@ -3,7 +3,8 @@
 % ============================================================
 %
 % 提供：\cvprojectlabel、\cvprojectlabelblock、\cvproject
-% 依赖：tzcan-common（\midbullet、\cvbulletlist、两个 expl3 工具）、
+% 依赖：tzcan-common（\midbullet、\cvbulletlist、\cvlabelstyle、\cvfieldlabel、
+%       两个 expl3 工具）、
 %       hyperref（\href）、fontawesome5（\faGithub）
 %
 % 每一项都可以省略。没写的项不会出现在简历上，也不会留下孤零零的标签。
@@ -32,20 +33,22 @@
 % 提示：值一律用花括号包住；键名拼错会直接报错，不会静默丢内容。
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{tzcan-project}[2026/10/12 项目经历]
+\ProvidesPackage{tzcan-project}[2026/10/14 项目经历]
 
 % 内部：项目条目标题 —— 行内式：标签与内容同行（项目介绍 / 技术栈）
+% 标签样式取自 tzcan-common 的 \cvfieldlabel（\small 加粗 + 全角冒号），
+% 与教育背景的「专业排名：」「主修课程：」等标签共用同一套样式。
 % 注意：这两个 \newcommand 的名字不含 "_" 和 ":"，必须留在下面的
 % \ExplSyntaxOn 之外，否则名字会被 expl3 的 catcode 规则处理。
 \newcommand{\cvprojectlabel}[1]{%
   \vspace{0.4ex}%
-  \noindent{\small\textbf{#1：}}%
+  \noindent\cvfieldlabel{#1}%
 }
 
 % 内部：项目条目标题 —— 块式：标签独占一行（个人职责 / 项目亮点，后接圆点列表）
 \newcommand{\cvprojectlabelblock}[1]{%
   \vspace{0.4ex}%
-  \noindent{\small\textbf{#1}}\par
+  \noindent\cvlabelstyle{#1}\par
 }
 
 % 实现说明：下面是 expl3 语法，故包在 \ExplSyntaxOn / \ExplSyntaxOff 之间。
