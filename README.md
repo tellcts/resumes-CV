@@ -209,7 +209,7 @@ resumes-CV/
 | 发行版   | **TeX Live 2026**（旧版本可能缺宏包）                         |
 | 引擎     | **XeLaTeX**（中文依赖 `ctex`，`pdflatex` 编译不出来）         |
 | 构建工具 | **latexmk**（随 TeX Live 一起安装）                           |
-| 宏包     | `fontawesome5` / `ctex` / `tikz` / `tabularx` / `hyperref` 等 |
+| 宏包     | `fontawesome7` / `ctex` / `tikz` / `tabularx` / `hyperref` 等 |
 
 本地安装请参照**清华镜像站官方指导**：<https://mirrors.tuna.tsinghua.edu.cn/help/CTAN/>；
 不想在本机装 10 GB 的发行版就走 Docker（镜像拉一次，之后每次编译几秒）。装完确认两件事：
@@ -224,8 +224,8 @@ latexmk --version    # 应输出 Latexmk, John Collins, ...
 > 模板用 `a4paper`，不设的话部分宏包会按 Letter 排版，版式会整体跑偏。
 
 > [!TIP]
-> 若编译时提示缺宏包（如 `fontawesome5`），**不用重装 TeX Live**，缺什么补什么：
-> `tlmgr install fontawesome5`
+> 若编译时提示缺宏包（如 `fontawesome7`），**不用重装 TeX Live**，缺什么补什么：
+> `tlmgr install fontawesome7`
 
 ## 🤝 参与贡献
 

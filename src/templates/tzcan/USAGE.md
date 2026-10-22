@@ -115,7 +115,7 @@ git clone git@github.com:tellcts/resumes-CV.git
 
 - Overleaf 自己接管输出目录，`.latexmkrc` 里的 `$out_dir = 'build'` 在那边**不生效**，这是正常现象，
   不用去找 `build/main.pdf`，直接点 `Download PDF` 即可。
-- `ctex`、`fontawesome5`、`tikz` 等宏包 Overleaf 都已内置，不需要额外安装。
+- `ctex`、`fontawesome7`、`tikz` 等宏包 Overleaf 都已内置，不需要额外安装。
 - 换证件照：在文件树里进 `assets/images/` 上传你自己的 `person.png` 覆盖同名文件，`main.tex` 一个字都不用改；
   校徽同理，放进 `assets/badges/`。
 
@@ -427,22 +427,22 @@ Docker 方式同理，容器的工作目录就是 `/workdir`）：
 \cvsection{\faLaptopCode}{项目经历}
 \cvsection{\faBriefcase}{实习经历}
 \cvsection{\faGraduationCap}{教育背景}
-\cvsection{\faCog}{专业技能}
+\cvsection{\faGear}{专业技能}
 \cvsection{\faAward}{荣誉证书}
-\cvsection{\faUserCircle}{自我评价}
+\cvsection{\faCircleUser}{自我评价}
 ```
 
-图标来自 `fontawesome5` 宏包，写 `\fa` 开头的命令名即可。常用图标速查：
+图标来自 `fontawesome7` 宏包，写 `\fa` 开头的命令名即可。常用图标速查：
 
 | 图标 | 命令            | 图标 | 命令               |
 | ---- | --------------- | ---- | ------------------ |
 | 💻    | `\faLaptopCode` | 🎓    | `\faGraduationCap` |
-| 💼    | `\faBriefcase`  | ⚙️    | `\faCog`           |
-| 🏆    | `\faAward`      | 👤    | `\faUserCircle`    |
+| 💼    | `\faBriefcase`  | ⚙️    | `\faGear`          |
+| 🏆    | `\faAward`      | 👤    | `\faCircleUser`    |
 | 🏢    | `\faBuilding`   | 🚀    | `\faRocket`        |
 | 📊    | `\faChartBar`   | 🔧    | `\faWrench`        |
 
-更多图标见 [Font Awesome 5 官方图标列表](https://fontawesome.com/v5/search?o=r&m=free)。
+更多图标见 [Font Awesome 7 官方图标列表](https://fontawesome.com/search?m=free)。
 
 ---
 
@@ -464,17 +464,17 @@ Docker 方式同理，容器的工作目录就是 `/workdir`）：
 | ---------- | --------------- | ---- | ------ | -------------------------------------------- |
 | `phone`    | 电话            | 否   | 第一行 | 自动变成可点击的 `tel:` 链接                 |
 | `email`    | 邮箱            | 否   | 第一行 | 自动变成可点击的 `mailto:` 链接              |
-| `github`   | GitHub 用户名   | 否   | 第二行 | **只填用户名**，自动补 `https://github.com/` |
+| `link`     | 个人主页链接    | 否   | 第二行 | 格式为 `{URL \| 自定义文字}`；生成可点击超链接，图标按域名自动选择 |
 | `age`      | 年龄            | 否   | 第二行 | 原样输出，如 `21岁`                          |
 | `gender`   | 性别            | 否   | 第二行 | 原样输出                                     |
-| `identity` | 身份 / 学历状态 | 否   | 第二行 | 原样输出，可用 `                             | ` 写多个 |
+| `identity` | 身份 / 学历状态 | 否   | 第二行 | 原样输出，可用 `\|` 写多个                   |
 | `target`   | 求职目标岗位    | 否   | 第二行 | 原样输出                                     |
 
 ```latex
 \cvpersonalinfo{
   phone    = {+86 188--8888--8888},
   email    = {you@example.com},
-  github   = {tellcts},
+  link     = {https://github.com/tellcts | GitHub},
   age      = {21岁},
   gender   = {男},
   identity = {26应届生 | 中共党员 | 共青团员 | 硕士在读},
@@ -482,11 +482,32 @@ Docker 方式同理，容器的工作目录就是 `/workdir`）：
 }
 ```
 
+同一个 `link` 键可以用于 GitHub、Gitee、GitLab 或其他主页：
+
+```latex
+% 自己填写图标后的文字
+link = {https://gitee.com/alice | Alice 的 Gitee}
+
+% 省略自定义文字：自动显示 gitee.com/alice
+link = {https://gitee.com/alice}
+
+% 其他平台：显示经纬线地球图标
+link = {https://example.com/alice | 个人主页}
+
+% 自定义文字支持 LaTeX 格式
+link = {https://github.com/alice | \textbf{个人主页}}
+```
+
+> [!TIP]
+> `link` 生成的平台图标和显示文字是可点击超链接；点击后会在 PDF 阅读器中打开对应网址。
+
 **说明：**
 
 - **第一行**只放 `phone` / `email`，用 ` | ` 分隔；**第二行**放其余五项，用 ` · ` 分隔。
 - 哪一项不写、哪一行就少一项，**不会出现连续两个分隔符**。
-- `github` 虽然叫「用户名」，但位置在第二行末尾，不是第一行。
+- `link` 使用 `{URL | 自定义文字}` 格式；竖线后的文字可省略。省略时自动显示去掉协议的 URL。
+- `link` 会根据域名自动选择图标：包含 `github`、`gitee` 或 `gitlab` 时显示对应原生品牌图标，其他域名显示经纬线地球图标。
+- `link` 内的竖线是 URL 与显示文字的分隔符；`identity` 内的竖线仍只是普通文本。
 - `identity` 想写多个身份时用 `|` 隔开即可，它只是一段原样输出的文字。
 
 ---
@@ -536,12 +557,17 @@ Docker 方式同理，容器的工作目录就是 `/workdir`）：
 | 键          | 含义     | 必填 | 说明                                                   |
 | ----------- | -------- | ---- | ------------------------------------------------------ |
 | `name`      | 项目名称 | 否   | 标题行左端，加粗                                       |
-| `link`      | 项目链接 | 否   | 标题行居中，渲染为 ` GitHub` 图标链接                  |
+| `link`      | 项目链接 | 否   | 标题行居中；生成可点击超链接，图标按域名自动选择，均为黑色 |
 | `date`      | 项目时间 | 否   | 标题行右端                                             |
 | `intro`     | 项目介绍 | 否   | 行内式标签「项目介绍：」+ 正文，小号字                 |
 | `tech`      | 技术栈   | 否   | 行内式标签「技术栈：」+ 正文，建议用 `\midbullet` 分隔 |
 | `duty`      | 个人职责 | 否   | 块式标签「个人职责」+ 圆点列表                         |
 | `highlight` | 项目亮点 | 否   | 块式标签「项目亮点」+ 圆点列表                         |
+
+链接图标由组件内部规则自动选择：域名包含 `github`、`gitee` 或 `gitlab` 时显示对应原生品牌图标，其他链接显示经纬线地球图标。规则只检查域名，不会因路径或查询参数包含指定字符而误判。用户只需要正常填写 `link`，无需配置图标。
+
+> [!TIP]
+> 项目标题行中的平台图标和显示文字是可点击超链接；点击后会在 PDF 阅读器中打开 `link` 指定的网址。
 
 ```latex
 \cvproject{
@@ -565,6 +591,7 @@ Docker 方式同理，容器的工作目录就是 `/workdir`）：
 
 - `duty` / `highlight` 是 `\item` 列表，每项以 `\item` 开头，**不要**自己写 `\begin{itemize}`。
 - 标题行三段（`name` / `link` / `date`）**全空时整行不输出**，不会留下空行。
+- `link` 按组件内部的域名规则选择图标；路径或查询参数中出现关键字不会触发判断。
 - `\midbullet` 是行内居中圆点，比直接写 `·` 的字距更均匀。
 - ⏱ **单行长度约束**：`\small`(10pt) 下每条可用行宽约 **50 个汉字**；要让每条 `\item`
   单行显示不折行，整体（含行首「标签：」）控制在 **46 字以内**。
@@ -799,7 +826,7 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 | `\cvbulletlist`                            | 各列表类组件       | 统一的圆点列表样式（左缩进 1.2em）    |
 | `\cvlabelstyle` / `\cvfieldlabel`          | 各经历类组件       | 字段标签样式（`\small` 加粗）         |
 | `\infoitem`                                | `\cvpersonalinfo`  | 「图标 + 文字」原子组件，不可断行     |
-| `\hrefmail` / `\hrefphone` / `\hrefgithub` | `\cvpersonalinfo`  | 生成可点击的邮箱 / 电话 / GitHub 链接 |
+| `\hrefmail` / `\hrefphone` / `\hrefhomepage` | `\cvpersonalinfo`  | 生成可点击的邮箱 / 电话 / 自动识别平台的主页链接 |
 | `\cvprojectlabel` 等                       | 各经历类组件       | 条目标签（行内式 / 块式）             |
 
 ---
@@ -924,10 +951,10 @@ Docker Hub 在国内直连大概率超时，处理办法见 [拉不下镜像？]
 <details>
 <summary><b>Q：图标显示成空白方块 / 缺字？</b></summary>
 
-缺少 `fontawesome5` 或字体文件。补装：
+缺少 `fontawesome7` 或字体文件。补装：
 
 ```bash
-tlmgr install fontawesome5
+tlmgr install fontawesome7
 ```
 
 若仍不行，说明 TeX Live 装的是精简版，字体文件不齐 —— 补装 `texlive-fonts-extra`，

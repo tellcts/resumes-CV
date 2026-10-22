@@ -24,7 +24,7 @@
 \RequirePackage{tikz}       % 方便控制位置和透明度（也可直接用 eso-pic 的 \put）
 
 % --- 字体图标 ---
-\RequirePackage{fontawesome5}
+\RequirePackage{fontawesome7}
 
 % --- 颜色 ---
 \RequirePackage{xcolor}
