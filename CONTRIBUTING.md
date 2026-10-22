@@ -156,7 +156,7 @@ latexmk -C main.tex       # 连 PDF 一起清理
 > 确认没有塌版、错位、断行异常。
 
 > [!TIP]
-> 报缺宏包时不用重装 TeX Live，缺什么补什么：`tlmgr install fontawesome5`。
+> 报缺宏包时不用重装 TeX Live，缺什么补什么：`tlmgr install fontawesome7`。
 > 换了编译方式（本机 ↔ Docker）之后先 `latexmk -C main.tex` 清一次 `build/`，
 > 避免上一轮记录的本机绝对路径干扰这一轮。
 
@@ -310,7 +310,7 @@ chore：推送 tag 自动上传每个模板的 zip 到 Release
 %
 % 提供：\cvxxx（对外命令）
 % 依赖：tzcan-common（\midbullet、\cvbulletlist、两个 expl3 工具）、
-%       fontawesome5（\faGithub）等
+%       fontawesome7（\faGear、\faGithub、\faGitee 等）
 % 被依赖：resume-tzcan.cls（导出），或其它组件
 %
 % 键名     含义     写法
