@@ -1,0 +1,15 @@
+# 普通文本文件自动规范化
+* text=auto
+
+# Unix/Linux 文件始终使用 LF
+*.sh text eol=lf
+*.bash text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+Dockerfile text eol=lf
+Makefile text eol=lf
+
+# Windows 批处理脚本始终使用 CRLF
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
