@@ -1,7 +1,3 @@
-# my $sep = ($^O eq 'MSWin32') ? ';' : ':';
-
-# $ENV{TEXINPUTS} = "styles/$sep" . "styles/components/$sep" . ($ENV{TEXINPUTS} || '');
-
 # 指定xelatex引擎
 $pdf_mode = 5;
 
