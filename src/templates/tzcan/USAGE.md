@@ -34,8 +34,7 @@
   - [🔨 本地编译](#-本地编译)
     - [方式一：本地安装 TeX Live](#方式一本地安装-tex-live)
     - [方式二：Docker 容器编译](#方式二docker-容器编译)
-      - [拉不下镜像？](#拉不下镜像)
-    - [常用清理命令](#常用清理命令)
+    - [清理编译产物](#清理编译产物)
     - [`.latexmkrc` 已经替你配好了](#latexmkrc-已经替你配好了)
   - [🖼️ 替换素材](#️-替换素材)
     - [证件照](#证件照)
@@ -144,10 +143,11 @@ latexmk -pvc main.tex     # 常驻模式，保存 .tex 自动重编
 - ✅ **优点**：本机**不用装几个 GB 的 TeX Live**，只要装了 Docker 就能编；源码、图片、产物
   全在你自己的目录里，容器只借用「编译」这一步；镜像只拉一次，之后每次编译都是几秒钟的事。
 - ⚠️ **缺点**：需要先装 Docker（Desktop / Engine 都行）并保持运行；首次要拉约 2.5 GB 的镜像，
-  直连 Docker Hub 可能失败（见 [拉不下镜像？](#拉不下镜像)）；容器里没有你系统的中文字体，
+  网络受限时可能拉取失败；容器里没有你系统的中文字体，
   中文外观与「本地安装 TeX Live」版略有差异。
 
-操作只有一行命令，详见 [方式二：Docker 容器编译](#方式二docker-容器编译)。
+模板目录自带 Bash 和 PowerShell 编译脚本，运行其中一个即可，详见
+[方式二：Docker 容器编译](#方式二docker-容器编译)。
 
 ---
 
@@ -161,8 +161,9 @@ latexmk -pvc main.tex     # 常驻模式，保存 .tex 自动重编
 | **方式二：Docker 容器编译**   | 装好并启动 Docker，能拉一次镜像  | 不想在本机装几个 GB 的 TeX Live      |
 
 > [!WARNING]
-> **两条路都必须在模板目录下执行编译。** `main.tex` 里写的是 `\documentclass{styles/resume-tzcan}`
-> ——相对路径，在别的目录下编译会直接报找不到文档类。
+> **本地 TeX Live 方式必须在模板目录下执行编译。** `main.tex` 里写的是
+> `\documentclass{styles/resume-tzcan}` ——相对路径，在别的目录下编译会直接报找不到文档类。
+> Docker 脚本会自动定位并挂载模板目录，因此调用脚本时不需要先进入模板目录。
 
 > [!NOTE]
 > **用 Overleaf 的话，本节整节跳过** —— 见上面的 [首选 Overleaf 在线编译](#首选-overleaf-在线编译)。
@@ -180,119 +181,40 @@ latexmk -pvc main.tex     # 常驻模式，保存 .tex 自动重编，适合边�
 
 ### 方式二：Docker 容器编译
 
-本机没装 TeX Live、也不想装？只要装了 Docker，用官方 `texlive/texlive` 镜像就能编 ——
-**源码始终留在你自己的目录里**，容器只是把「编译」这一步借走，简历数据不出本机。
-
-**第一步：进模板目录**（和方式一一样，绕不开）：
-
+进入模板目录，运行对应脚本即可：
+- Linux / MacOS
 ```bash
-cd resumes-CV/src/templates/tzcan
+# 进入模板目录
+cd src/templates/tzcan
+
+# 执行 Docker 编译脚本
+./scripts/docker-build.sh
 ```
-
-**第二步：一条命令编出 PDF**：
-
-```bash
-# macOS / Linux（bash / zsh）
-docker run --rm \
-  -v "$PWD":/workdir \
-  -w /workdir \
-  texlive/texlive \
-  latexmk main.tex
-```
-
+- Windows
 ```powershell
-# Windows（PowerShell）
-docker run --rm `
-  -v "${PWD}:/workdir" `
-  -w /workdir `
-  texlive/texlive `
-  latexmk main.tex
+# 进入模板目录
+cd src\templates\tzcan
+
+# 执行 Docker 编译脚本
+.\scripts\docker-build.ps1
 ```
-
-命令逐段拆开看：
-
-| 片段                 | 作用                                                                |
-| -------------------- | ------------------------------------------------------------------- |
-| `docker run --rm`    | 开一个一次性容器，编译完自动删除，不在本机留垃圾                    |
-| `-v "$PWD":/workdir` | 把**当前所在目录**（也就是模板目录）挂进容器的 `/workdir`           |
-| `-w /workdir`        | 让容器的当前目录就是 `/workdir` —— 相对路径和 `.latexmkrc` 才找得到 |
-| `texlive/texlive`    | 官方 TeX Live 镜像（等同于 `texlive/texlive:latest`）               |
-| `latexmk main.tex`   | 容器里执行的命令，和方式一完全一致                                  |
 
 > [!NOTE]
-> 容器的工作目录就是 `/workdir`，`.latexmkrc` 会被自动读到 —— 引擎（XeLaTeX）和输出目录（`build/`）
-> 都不用额外传参数，产物照样落在**本机**的 `build/main.pdf`。
+> 首次运行会自动下载 Docker 镜像。编译成功后，PDF 位于
+> `src/templates/tzcan/build/main.pdf`。
+>
+> 如果你有更快的 Docker 镜像源，只需将两个脚本中的 `ghcr.io/tellcts/texlive:latest`
+> 替换成对应镜像名即可。
 
-> [!TIP]
-> **首次运行要拉镜像**（约 2.5 GB），这一次慢是正常的；之后每次编译只是启动一个容器，几秒就出结果。
+### 清理编译产物
 
-想边改边看，在 `docker run` 后面加 `-it` 跑常驻模式（会占住一个终端，`Ctrl+C` 退出）：
-
-```bash
-docker run --rm -it -v "$PWD":/workdir -w /workdir texlive/texlive latexmk -pvc main.tex
-```
-
-#### 拉不下镜像？
-
-Docker Hub 在国内直连经常超时，第一次 `docker run` 就卡在拉取：
-
-```text
-Error response from daemon: Get "https://registry-1.docker.io/v2/": dial tcp ...: i/o timeout
-```
-
-按顺序试这两个办法：
-
-1. **你已经配了镜像加速器**（Docker Desktop 的 `Settings → Docker Engine` 里加了 `registry-mirrors`，
-   或走了代理）—— 那就不用改命令，继续用官方的 `texlive/texlive`；
-2. **没配加速、也不想折腾** —— 换成作者从官方同步的 `ghcr.io/tellcts/texlive:latest`，
-   只改镜像名，其余参数一个字不用动：
-
-```bash
-docker run --rm \
-  -v "$PWD":/workdir \
-  -w /workdir \
-  ghcr.io/tellcts/texlive:latest \
-  latexmk main.tex
-```
-
-```powershell
-docker run --rm `
-  -v "${PWD}:/workdir" `
-  -w /workdir `
-  ghcr.io/tellcts/texlive:latest `
-  latexmk main.tex
-```
-
-这份镜像的内容与官方 `texlive/texlive` 一致（作者定期同步），只是换了个仓库 —— 所以本文档里凡是
-出现 `texlive/texlive` 的地方，都可以直接替换成 `ghcr.io/tellcts/texlive:latest`。
-
-> [!IMPORTANT]
-> **容器里没有你系统的中文字体**，`ctex` 会自动退回 TeX Live 自带的 **Fandol（方正）** 字体族。
-> 内容和版式都一样，但中文观感（尤其**加粗标题**）会和方式一编出来的有细微差异，个别行还可能折行位置不同。
-
-> [!TIP]
-> **换编译方式前先清一次 `build/`**：上一次在本机编译时，`latexmk` 把 `c:/texlive/...` 这类
-> **本机路径**记进了 `build/main.fdb_latexmk` / `build/main.fls`，容器里并没有这些文件，
-> 它可能因此多跑几轮、日志里冒出无关的「找不到文件」。清理命令见下一节。
-
-### 常用清理命令
-
-```bash
-# 方式一：本机
-latexmk -c main.tex       # 清理中间文件（.aux / .log / .xdv 等），保留 PDF
-latexmk -C main.tex       # 连 PDF 一起清理
-```
-
-```bash
-# 方式二：Docker（<镜像> 换成 texlive/texlive 或 ghcr.io/tellcts/texlive:latest）
-docker run --rm -v "$PWD":/workdir -w /workdir <镜像> latexmk -C main.tex
-```
+需要重新编译时，删除模板目录下的 `build/` 后再次运行脚本即可。
 
 ### `.latexmkrc` 已经替你配好了
 
 模板目录下的 `.latexmkrc` 会让 `latexmk` 自动做这几件事，不需要你传额外参数
 （Overleaf 会自己接管这些参数，见 [首选 Overleaf 在线编译](#首选-overleaf-在线编译)；
-Docker 方式同理，容器的工作目录就是 `/workdir`）：
+Docker 脚本会自动把模板目录挂载为容器的 `/workdir`）：
 
 | 配置                           | 作用                                                 |
 | ------------------------------ | ---------------------------------------------------- |
@@ -460,15 +382,15 @@ Docker 方式同理，容器的工作目录就是 `/workdir`）：
 
 `\cvpersonalinfo{ ... }` —— 键值接口，**全部键可选**。渲染成居中的两行。
 
-| 键         | 含义            | 必填 | 所在行 | 说明                                         |
-| ---------- | --------------- | ---- | ------ | -------------------------------------------- |
-| `phone`    | 电话            | 否   | 第一行 | 自动变成可点击的 `tel:` 链接                 |
-| `email`    | 邮箱            | 否   | 第一行 | 自动变成可点击的 `mailto:` 链接              |
+| 键         | 含义            | 必填 | 所在行 | 说明                                                               |
+| ---------- | --------------- | ---- | ------ | ------------------------------------------------------------------ |
+| `phone`    | 电话            | 否   | 第一行 | 自动变成可点击的 `tel:` 链接                                       |
+| `email`    | 邮箱            | 否   | 第一行 | 自动变成可点击的 `mailto:` 链接                                    |
 | `link`     | 个人主页链接    | 否   | 第二行 | 格式为 `{URL \| 自定义文字}`；生成可点击超链接，图标按域名自动选择 |
-| `age`      | 年龄            | 否   | 第二行 | 原样输出，如 `21岁`                          |
-| `gender`   | 性别            | 否   | 第二行 | 原样输出                                     |
-| `identity` | 身份 / 学历状态 | 否   | 第二行 | 原样输出，可用 `\|` 写多个                   |
-| `target`   | 求职目标岗位    | 否   | 第二行 | 原样输出                                     |
+| `age`      | 年龄            | 否   | 第二行 | 原样输出，如 `21岁`                                                |
+| `gender`   | 性别            | 否   | 第二行 | 原样输出                                                           |
+| `identity` | 身份 / 学历状态 | 否   | 第二行 | 原样输出，可用 `\|` 写多个                                         |
+| `target`   | 求职目标岗位    | 否   | 第二行 | 原样输出                                                           |
 
 ```latex
 \cvpersonalinfo{
@@ -554,15 +476,15 @@ link = {https://github.com/alice | \textbf{个人主页}}
 > [!NOTE]
 > 显示顺序固定：**标题行 → 项目介绍 → 技术栈 → 个人职责 → 项目亮点**，传入顺序不影响排版。
 
-| 键          | 含义     | 必填 | 说明                                                   |
-| ----------- | -------- | ---- | ------------------------------------------------------ |
-| `name`      | 项目名称 | 否   | 标题行左端，加粗                                       |
+| 键          | 含义     | 必填 | 说明                                                       |
+| ----------- | -------- | ---- | ---------------------------------------------------------- |
+| `name`      | 项目名称 | 否   | 标题行左端，加粗                                           |
 | `link`      | 项目链接 | 否   | 标题行居中；生成可点击超链接，图标按域名自动选择，均为黑色 |
-| `date`      | 项目时间 | 否   | 标题行右端                                             |
-| `intro`     | 项目介绍 | 否   | 行内式标签「项目介绍：」+ 正文，小号字                 |
-| `tech`      | 技术栈   | 否   | 行内式标签「技术栈：」+ 正文，建议用 `\midbullet` 分隔 |
-| `duty`      | 个人职责 | 否   | 块式标签「个人职责」+ 圆点列表                         |
-| `highlight` | 项目亮点 | 否   | 块式标签「项目亮点」+ 圆点列表                         |
+| `date`      | 项目时间 | 否   | 标题行右端                                                 |
+| `intro`     | 项目介绍 | 否   | 行内式标签「项目介绍：」+ 正文，小号字                     |
+| `tech`      | 技术栈   | 否   | 行内式标签「技术栈：」+ 正文，建议用 `\midbullet` 分隔     |
+| `duty`      | 个人职责 | 否   | 块式标签「个人职责」+ 圆点列表                             |
+| `highlight` | 项目亮点 | 否   | 块式标签「项目亮点」+ 圆点列表                             |
 
 链接图标由组件内部规则自动选择：域名包含 `github`、`gitee` 或 `gitlab` 时显示对应原生品牌图标，其他链接显示经纬线地球图标。规则只检查域名，不会因路径或查询参数包含指定字符而误判。用户只需要正常填写 `link`，无需配置图标。
 
@@ -820,14 +742,14 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 
 以下命令由组件内部调用，一般**不需要**在 `main.tex` 里手写：
 
-| 命令                                       | 由谁调用           | 作用                                  |
-| ------------------------------------------ | ------------------ | ------------------------------------- |
-| `\cvborderframe`                           | `resume-tzcan.cls` | 页面双矩形边框，已在文档类里调用一次  |
-| `\cvbulletlist`                            | 各列表类组件       | 统一的圆点列表样式（左缩进 1.2em）    |
-| `\cvlabelstyle` / `\cvfieldlabel`          | 各经历类组件       | 字段标签样式（`\small` 加粗）         |
-| `\infoitem`                                | `\cvpersonalinfo`  | 「图标 + 文字」原子组件，不可断行     |
+| 命令                                         | 由谁调用           | 作用                                             |
+| -------------------------------------------- | ------------------ | ------------------------------------------------ |
+| `\cvborderframe`                             | `resume-tzcan.cls` | 页面双矩形边框，已在文档类里调用一次             |
+| `\cvbulletlist`                              | 各列表类组件       | 统一的圆点列表样式（左缩进 1.2em）               |
+| `\cvlabelstyle` / `\cvfieldlabel`            | 各经历类组件       | 字段标签样式（`\small` 加粗）                    |
+| `\infoitem`                                  | `\cvpersonalinfo`  | 「图标 + 文字」原子组件，不可断行                |
 | `\hrefmail` / `\hrefphone` / `\hrefhomepage` | `\cvpersonalinfo`  | 生成可点击的邮箱 / 电话 / 自动识别平台的主页链接 |
-| `\cvprojectlabel` 等                       | 各经历类组件       | 条目标签（行内式 / 块式）             |
+| `\cvprojectlabel` 等                         | 各经历类组件       | 条目标签（行内式 / 块式）                        |
 
 ---
 
@@ -879,6 +801,9 @@ src/templates/tzcan/
 ├── .latexmkrc                      # latexmk 配置：XeLaTeX 引擎、输出到 build/
 ├── main.tex                        # 👈 你唯一需要改的文件：简历内容
 ├── USAGE.md                        # 本文件
+├── scripts/
+│   ├── docker-build.sh             # macOS / Linux 的 Docker 编译脚本
+│   └── docker-build.ps1            # Windows PowerShell 的 Docker 编译脚本
 ├── assets/
 │   ├── badges/                     # 校徽（水印）
 │   │   ├── ecjtu.png
@@ -927,10 +852,9 @@ src/templates/tzcan/
 </details>
 
 <details>
-<summary><b>Q：用 Docker 编译时拉不动镜像，报 <code>i/o timeout</code>？</b></summary>
+<summary><b>Q：Docker 脚本无法运行？</b></summary>
 
-Docker Hub 在国内直连大概率超时，处理办法见 [拉不下镜像？](#拉不下镜像)：已经配了镜像加速器就
-继续用官方的 `texlive/texlive`，没配就换成作者同步的 `ghcr.io/tellcts/texlive:latest`。
+先确认 Docker 已启动。首次运行需要联网下载镜像；编译失败时查看 `build/main.log`。
 
 顺带一提，Docker 编出来的中文会比本机版「略有不同」：容器里没有你系统的中文字体，`ctex` 会自动
 退回 TeX Live 自带的 Fandol（方正）字体族，加粗标题的观感和个别行的折行位置都可能有出入。
@@ -943,7 +867,8 @@ Docker Hub 在国内直连大概率超时，处理办法见 [拉不下镜像？]
 
 图片路径解析的是**编译进程的当前目录（cwd）**，不是 `main.tex` 所在目录。两个检查点：
 
-1. 是否在 `src/templates/tzcan/` 目录下执行的 `latexmk`？
+1. 使用本地 TeX Live 时，是否在 `src/templates/tzcan/` 目录下执行 `latexmk`？
+   Docker 脚本会自动定位模板目录，不需要手工切换。
 2. 路径是否写全 —— `assets/badges/ecjtu.png` 而不是 `ecjtu.png`？
 
 </details>
