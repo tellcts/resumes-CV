@@ -4,7 +4,7 @@
   <img src=".github/assets/readme-banner.svg" alt="resumes-CV —— 用 LaTeX 模块化构建属于你的精美简历" />
 </h1>
 
-把简历当代码写：内容归内容，排版归排版，改一行字不会让整个版面塌掉。
+把简历当代码写：内容归内容，排版归排版，版面效果跨平台强一致性。
 
 ![TeX Live](https://img.shields.io/badge/TeX%20Live-2026-3D6117?logo=latex&logoColor=white)
 ![Engine](https://img.shields.io/badge/engine-XeLaTeX-blue)
@@ -229,27 +229,7 @@ latexmk --version    # 应输出 Latexmk, John Collins, ...
 
 ## 🤝 参与贡献
 
-欢迎 Issue 和 Pull Request —— 反馈 Bug、改进组件、新增模板、修补文档都算贡献。
-
-**完整流程与规范统一写在这里：[🤝 CONTRIBUTING.md](CONTRIBUTING.md)**，包括：
-
-- 🛠️ 开发环境：**首选本地安装 TeX Live 完整版，或 Docker 部署 TeX Live**（Overleaf 留给只想快速生成简历、快速验证样式的场景）
-- 🤖 **推荐用 AI 工具辅助开发**：仓库自带的 `AGENTS.md` 可直接当提示词，但编译与验收仍由人负责
-- 🧭 从 Fork、克隆、编译到提 PR 的完整步骤
-- 📁 仓库结构与五条铁律（内容/版式分离、模板目录自成一体、拿到即可编译、每个模板各带一份 `AGENTS.md` + `CLAUDE.md`）
-- 🌿 分支命名与提交信息格式
-- 🧩 组件开发规范（命名、键值接口、`-common.sty`、文件头注释）
-- 🆕 新增模板要求：目录自成一体、用户易编译、zip 能在 Overleaf 编译，必须提供详细 `USAGE.md`，
-  并在 `previews/template-<模板名>/` 下放好效果图、在 [PREVIEWS.md](PREVIEWS.md) 里加一节展示
-- ✍️ 文档写作规范（GitHub Alerts、中文、目录同步）
-- ✅ 提交前的自测清单
-
-> [!IMPORTANT]
-> 提 PR 前请先按贡献指南自测：用**本地 TeX Live 完整版或 Docker** 在模板目录下
-> `latexmk main.tex` 能干净编译出 PDF，且不破坏现有排版；
-> 同时确认没有提交 `build/` 产物与任何真实个人信息。
-
-**[👉 阅读完整贡献指南 →](CONTRIBUTING.md)**
+欢迎提交 Issue 和 Pull Request。具体流程与要求请查看[贡献者文档](CONTRIBUTING.md)。
 
 ## 📄 许可
 
