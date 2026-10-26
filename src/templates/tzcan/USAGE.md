@@ -31,7 +31,7 @@ cd resumes-CV/src/templates/tzcan
 | **本地 TeX Live** | 数据和产物都在本机，适合长期修改 | 需要安装完整环境 |
 | **Docker** | 不需要安装 TeX Live | 首次拉取镜像约 2.5 GB |
 
-三种方式生成的内容相同。Docker 使用容器内置中文字体，个别文字外观和换行可能与本机编译略有差异。
+三种方式生成的内容相同。模板固定使用 TeX Live 自带的 Fandol（中文）和 Latin Modern（西文）字体，不再依赖操作系统字体，因此不同平台的字体来源一致。
 
 ### 首选 Overleaf 在线编译
 
@@ -379,11 +379,14 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 | 目标 | 文件 | 主要配置 |
 | --- | --- | --- |
 | 字号、纸张、页边距 | `styles/resume-tzcan.cls` | `\LoadClass`、`geometry` |
+| 字体 | `styles/resume-tzcan.cls` | `ctex` 的 `fontset=fandol` |
 | 主题颜色 | `styles/components/tzcan-common.sty` | `cvsection`、`cvicon`、`cvrule`、`cvtext` |
 | 边框粗细与间距 | `styles/components/tzcan-border.sty` | `\cvborderouterwidth`、`\cvborderinnerwidth`、`\cvbordergap` |
 | 章节标题间距 | `styles/components/tzcan-section.sty` | `\cvsectiontitlesep`、`\cvsectionrulesep` |
 | 照片与分隔线位置 | `styles/components/tzcan-personalinfo.sty` | `\cvphototop`、`\cvphotoright`、`\cvlinegap` |
 | 列表缩进 | `styles/components/tzcan-common.sty` | `\cvbulletlist` 的 `leftmargin` |
+
+中文固定使用 TeX Live 自带的 Fandol 字体，西文和数学字体沿用 TeX Live 的 Latin Modern。模板不读取系统字体，因此无需额外安装宋体、黑体或中易字库。
 
 主题颜色使用 HTML 十六进制值，例如：
 
@@ -415,6 +418,7 @@ src/templates/tzcan/
 | --- | --- |
 | Overleaf 找不到 `styles/resume-tzcan.cls` | 确认 `main.tex`、`styles/`、`assets/` 位于项目根目录 |
 | 中文无法显示或 `ctex` 报错 | 编译器必须选择 XeLaTeX，并使用 `latexmk main.tex` |
+| 提示找不到 Fandol 字体 | 使用完整安装的 TeX Live 2026，或执行 `tlmgr install fandol` |
 | 图片找不到 | 在模板目录编译，路径写成 `assets/images/person.png` 或 `assets/badges/xxx.png` |
 | 图标显示为方块 | 执行 `tlmgr install fontawesome7` |
 | 修改后 PDF 没变化 | 本地执行 `latexmk -C main.tex`；其他方式删除 `build/` 后重编 |

@@ -84,7 +84,10 @@
 ]{geometry}
 
 % 中文支持。
-\RequirePackage{ctex}
+% 固定使用 TeX Live 自带的 Fandol 字体集，避免 ctex 在 Windows / macOS 上
+% 自动选用 SimSun、KaiTi、华文宋体等系统字体。这里只改变字体来源，
+% 字号、行距、页边距、组件间距和边框几何仍由模板原有参数控制。
+\RequirePackage[fontset=fandol]{ctex}
 
 % 添加双矩形边框包裹（几何旋钮见 components/tzcan-border.sty）
 \cvborderframe
