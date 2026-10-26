@@ -6,8 +6,8 @@
 
 把简历当代码写：内容归内容，排版归排版，版面效果跨平台强一致性。
 
+[![CI](https://github.com/tellcts/resumes-CV/actions/workflows/build-check.yml/badge.svg?branch=main)](https://github.com/tellcts/resumes-CV/actions/workflows/build-check.yml)
 ![TeX Live](https://img.shields.io/badge/TeX%20Live-2026-3D6117?logo=latex&logoColor=white)
-![Engine](https://img.shields.io/badge/engine-XeLaTeX-blue)
 [![Overleaf](https://img.shields.io/badge/Overleaf-online-47A141?logo=overleaf&logoColor=white)](src/templates/tzcan/USAGE.md#首选-overleaf-在线编译)
 [![Docker](https://img.shields.io/badge/Docker-supported-2496ED?logo=docker&logoColor=white)](src/templates/tzcan/USAGE.md#方式二docker-容器编译)
 [![Downloads](https://img.shields.io/github/downloads/tellcts/resumes-CV/total?label=Downloads&color=2EA043&logo=github)](https://github.com/tellcts/resumes-CV/releases)
