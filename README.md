@@ -112,8 +112,7 @@
 
 > [!NOTE]
 > 更多模板开发中，欢迎[参与贡献](#-参与贡献)。
-
-> [!NOTE]
+>
 > **全部模板的效果图都在 [🖼️ PREVIEWS.md](PREVIEWS.md)** —— 本 README 的预览区只展示 tzcan 一个模板，
 > 免得越堆越长。图片源文件放在 `previews/template-<模板名>/` 下，
 > 新增模板时的具体要求见 [🤝 CONTRIBUTING.md](CONTRIBUTING.md#-新增模板规范)。
@@ -209,6 +208,7 @@ resumes-CV/
 | 发行版   | **TeX Live 2026**（旧版本可能缺宏包）                         |
 | 引擎     | **XeLaTeX**（中文依赖 `ctex`，`pdflatex` 编译不出来）         |
 | 构建工具 | **latexmk**（随 TeX Live 一起安装）                           |
+| 字体     | TeX Live 自带 `Fandol`（中文）与 `Latin Modern`（西文）       |
 | 宏包     | `fontawesome7` / `ctex` / `tikz` / `tabularx` / `hyperref` 等 |
 
 本地安装请参照**清华镜像站官方指导**：<https://mirrors.tuna.tsinghua.edu.cn/help/CTAN/>；
@@ -226,6 +226,9 @@ latexmk --version    # 应输出 Latexmk, John Collins, ...
 > [!TIP]
 > 若编译时提示缺宏包（如 `fontawesome7`），**不用重装 TeX Live**，缺什么补什么：
 > `tlmgr install fontawesome7`
+
+> [!NOTE]
+> 模板已固定使用 TeX Live 内置的 Fandol 字体，不依赖 Windows、macOS 或 Linux 的系统字体。
 
 ## 🤝 参与贡献
 
