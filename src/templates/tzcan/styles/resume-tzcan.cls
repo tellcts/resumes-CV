@@ -75,12 +75,15 @@
 %   · 正文行宽 = 分割线长度（18cm），各模块内容与分割线左右两端都对齐。
 % 注意：改动这里的数值时，要同步改 components/tzcan-personalinfo.sty 里
 % \cvphototopright 的 xshift。
+% top 说明：第 2 页及后续页从距页顶 0.89cm 处开始，使正文视觉上边距
+% 与首页正文下边距一致；第一页再由 \AtBeginDocument 的 -0.39cm 微调
+% 到原位置，因此两处取值需配套修改。
 % bottom 说明：内框线带在距页底 0.475–0.625cm，所以正文区下边界低于约 0.8cm
 % 时，最后一行就有压到内框的风险。当前 1.0cm ⇒ 下边界 28.70cm，距内框内沿
 % 约 0.37cm。注意：调小 bottom 只是「允许正文往下排」，正文本身不会自动下移；
 % 只有当内容长到用满新空间时，底部留白才会真的变小。
 \RequirePackage[
-  left=1.5cm, right=1.5cm, top=2.0cm, bottom=1.0cm
+  left=1.5cm, right=1.5cm, top=0.89cm, bottom=1.0cm
 ]{geometry}
 
 % 中文支持。
@@ -100,7 +103,7 @@
 % 这是版式调整而非内容，故随文档类一起管理。
 % 用 \AtBeginDocument 承载，执行时机等同于「正文第一行」；
 % 若编译后发现整页纵向位置不对，第一嫌疑就是这一行。
-\AtBeginDocument{\vspace*{-1.5cm}}
+\AtBeginDocument{\vspace*{-0.39cm}}
 
 % ============================================================
 % 文件结束

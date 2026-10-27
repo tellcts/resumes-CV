@@ -3,8 +3,8 @@
 % ============================================================
 %
 % 提供：\cvprojectlabel、\cvprojectlabelblock、\cvproject
-% 依赖：tzcan-common（\midbullet、\cvbulletlist、\cvlabelstyle、\cvfieldlabel、
-%       两个 expl3 工具）、
+% 依赖：tzcan-common（cvrule 色、\midbullet、\cvbulletlist、\cvlabelstyle、
+%       \cvfieldlabel、两个 expl3 工具）、
 %       hyperref（\href）、fontawesome7（\faGithub、\faGitee、\faGlobe）
 %
 % 每一项都可以省略。没写的项不会出现在简历上，也不会留下孤零零的标签。
@@ -21,6 +21,8 @@
 %
 % 显示顺序固定：标题行 → 项目介绍 → 技术栈 → 个人职责 → 项目亮点。
 % 标题行为“名称居左 / 链接居中 / 时间居右”，三段全空时整行不输出。
+% 相邻项目之间自动绘制一条分隔线；第一个项目前和最后一个项目后不画线。
+% 分隔线与章节标题下划线同为 0.6pt，并通过上下等距留白保持居中。
 % 按“域名子串 → 图标 + 文字”的规则自动选择链接图标：
 %   · 内置规则：域名包含 github / gitee 时显示对应品牌；
 %   · 其他链接显示经纬线地球图标与“项目链接”；
@@ -38,11 +40,10 @@
 % 提示：值一律用花括号包住；键名拼错会直接报错，不会静默丢内容。
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{tzcan-project}[2026/10/22 项目经历]
+\ProvidesPackage{tzcan-project}[2026/10/27 项目经历]
 
 % 内部：项目条目标题 —— 行内式：标签与内容同行（项目介绍 / 技术栈）
-% 标签样式取自 tzcan-common 的 \cvfieldlabel（\small 加粗 + 全角冒号），
-% 与教育背景的「专业排名：」「主修课程：」等标签共用同一套样式。
+% 标签样式取自 tzcan-common 的 \cvfieldlabel（\small 加粗 + 全角冒号）。
 % 注意：这两个 \newcommand 的名字不含 "_" 和 ":"，必须留在下面的
 % \ExplSyntaxOn 之外，否则名字会被 expl3 的 catcode 规则处理。
 \newcommand{\cvprojectlabel}[1]{%
@@ -74,6 +75,7 @@
 \tl_new:N \l__cv_pj_link_label_tl
 \tl_new:N \l__cv_pj_rule_match_tl
 \bool_new:N \l__cv_pj_head_bool
+\bool_new:N \g__cv_pj_has_entry_bool
 \seq_new:N \l__cv_pj_link_domain_seq
 \seq_new:N \g__cv_pj_linkicon_rules_seq
 
@@ -232,10 +234,11 @@
 \NewDocumentCommand{\cvproject}{ m }{
   \group_begin:
   \keys_set:nn { cv / project } {#1}
+  \bool_if:NT \g__cv_pj_has_entry_bool { \cventryseparator }
+  \bool_gset_true:N \g__cv_pj_has_entry_bool
   \__cv_pj_linkicon_display_set:
   \__cv_pj_head_render:
   \__cv_pj_body_render:
-  \vspace{0.5ex}
   \group_end:
 }
 
