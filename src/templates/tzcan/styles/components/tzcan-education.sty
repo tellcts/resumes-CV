@@ -3,7 +3,7 @@
 % ============================================================
 %
 % 提供：\cveducation
-% 依赖：tzcan-common（\midbullet、\cvfieldlabel、\__cv_collect:Nnn、
+% 依赖：tzcan-common（\midbullet、\__cv_collect:Nnn、
 %       \__cv_if_notblank:Nn）、
 %       tabularx
 %
@@ -30,7 +30,7 @@
 %       专业、学历缺哪个就跳过哪个，后续内容统一从左侧开始。
 %       若想恢复成手写的一整串，只写 school 即可：
 %       school = {某某大学~\midbullet~某某专业~\midbullet~本科}
-%       第二、三行的标签由命令自动补，使用小号、加粗的标签样式。
+%       第二、三行的标签由命令自动补，使用小号、常规字重的正文样式。
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{tzcan-education}[2026/10/27 教育背景]
@@ -83,7 +83,7 @@
     \tl_put_right:Nn \l__cv_ed_rows_tl
     {
       \multicolumn{3}{@{}>{\raggedright\arraybackslash}p{\textwidth}@{}}
-      { \small \cvfieldlabel{专业排名}\l__cv_ed_rank_tl } \\
+      { \small\mdseries 专业排名：\l__cv_ed_rank_tl } \\
     }
   }
   \__cv_if_notblank:Nn \l__cv_ed_courses_tl
@@ -91,7 +91,7 @@
     \tl_put_right:Nn \l__cv_ed_rows_tl
     {
       \multicolumn{3}{@{}>{\raggedright\arraybackslash}p{\textwidth}@{}}
-      { \small \cvfieldlabel{主修课程}\l__cv_ed_courses_tl } \\
+      { \small\mdseries 主修课程：\l__cv_ed_courses_tl } \\
     }
   }
   \noindent

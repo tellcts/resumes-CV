@@ -270,7 +270,7 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 | `duty` | 个人职责 | 块式标签 + 圆点列表 |
 | `highlight` | 项目亮点 | 块式标签 + 圆点列表 |
 
-显示顺序固定为：标题行 → 项目介绍 → 技术栈 → 个人职责 → 项目亮点。
+显示顺序固定为：标题行 → 项目介绍 → 技术栈 → 个人职责 → 项目亮点。连续填写多个 `\cvproject` 时，相邻项目之间会自动绘制与章节标题下划线同粗的分隔线，并在上下两段内容之间居中。
 
 ### `\cvinternship` 实习经历
 
@@ -296,6 +296,8 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 | `duty` | 岗位职责 | 块式标签 + 圆点列表 |
 | `achievement` | 产出成果 | 块式标签 + 圆点列表 |
 
+连续填写多个 `\cvinternship` 时，相邻实习经历之间会自动绘制分隔线。
+
 ### `\cvwork` 工作经历
 
 字段和写法与 `\cvinternship` 一致，只改变命令名和章节标题：
@@ -315,7 +317,7 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 }
 ```
 
-没有正式工作经历时，可以把章节标题和 `\cvwork` 整段删除。
+连续填写多个 `\cvwork` 时，相邻工作经历之间会自动绘制分隔线；样式与项目、实习经历保持一致。没有正式工作经历时，可以把章节标题和 `\cvwork` 整段删除。
 
 ### `\cveducation` 教育背景
 
@@ -336,8 +338,8 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 | `school` | 学校 | 标题行左侧，加粗 |
 | `major` | 专业 | 可省略 |
 | `degree` | 学历 | 如「本科」「硕士」 |
-| `rank` | 排名或绩点 | 自动补加粗的「专业排名：」 |
-| `courses` | 主修课程 | 自动补加粗的「主修课程：」 |
+| `rank` | 排名或绩点 | 自动补常规字重的「专业排名：」 |
+| `courses` | 主修课程 | 自动补常规字重的「主修课程：」 |
 
 学校位于标题行左侧，专业与学历自动连接后居中，日期位于同一行右端。缺少哪项就跳过哪项；专业排名与主修课程等内容从左侧开始对齐。
 

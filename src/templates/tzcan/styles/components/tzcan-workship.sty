@@ -22,6 +22,7 @@
 %
 % 显示顺序固定：标题行 → 工作职责 → 工作成果。
 % 标题行为“职位居左 / 公司居中 / 时间居右”，三段全空时整行不输出。
+% 相邻工作经历之间自动绘制与项目经历相同的分隔线。
 %
 % 用法：
 %   \cvwork{
@@ -37,7 +38,7 @@
 % 提示：值一律用花括号包住；键名拼错会直接报错，不会静默丢内容。
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{tzcan-workship}[2026/10/12 工作经历]
+\ProvidesPackage{tzcan-workship}[2026/10/27 工作经历]
 
 % 内部：工作条目标题 —— 行内式（此处暂无使用，与 project 保持一致备用）
 % 注意：这两个 \newcommand 的名字不含 "_" 和 ":"，必须留在下面的
@@ -64,6 +65,7 @@
 \tl_new:N \l__cv_wk_achievement_tl
 % 标题行是否有内容（决定整行是否输出）
 \bool_new:N \l__cv_wk_head_bool
+\bool_new:N \g__cv_wk_has_entry_bool
 
 \keys_define:nn { cv / work }
 {
@@ -83,6 +85,8 @@
 \NewDocumentCommand{\cvwork}{ m }{
   \group_begin:
   \keys_set:nn { cv / work } {#1}
+  \bool_if:NT \g__cv_wk_has_entry_bool { \cventryseparator }
+  \bool_gset_true:N \g__cv_wk_has_entry_bool
   % --- 标题行：职位居左，公司居中，时间居右 ---
   % 两个 \hfill 均分中间的空白，公司名称即落在职位与时间的中间
   \bool_set_false:N \l__cv_wk_head_bool
@@ -115,7 +119,6 @@
     \small
     \cvbulletlist{\l__cv_wk_achievement_tl}
   }
-  \vspace{0.5ex}
   \group_end:
 }
 
