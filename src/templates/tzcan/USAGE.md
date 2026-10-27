@@ -27,13 +27,13 @@ cd resumes-CV/src/templates/tzcan
 
 | 方式 | 优点 | 注意 |
 | --- | --- | --- |
-| **Overleaf** | 零安装，浏览器内编辑和编译 | 个人资料会上传到云端 |
-| **本地 TeX Live** | 数据和产物都在本机，适合长期修改 | 需要安装完整环境 |
-| **Docker** | 不需要安装 TeX Live | 首次拉取镜像约 2.5 GB |
+| **方式一：Overleaf** | 零安装，浏览器内编辑和编译 | 个人资料会上传到云端 |
+| **方式二：本地 TeX Live** | 数据和产物都在本机，适合长期修改 | 需要安装完整环境 |
+| **方式三：Docker** | 不需要安装 TeX Live | 首次拉取镜像约 2.5 GB |
 
 三种方式生成的内容相同。模板固定使用 TeX Live 自带的 Fandol（中文）和 Latin Modern（西文）字体，不再依赖操作系统字体，因此不同平台的字体来源一致。
 
-### 首选 Overleaf 在线编译
+### 方式一：Overleaf 在线编译
 
 1. 将 `src/templates/tzcan/` 压成 ZIP，或使用 Release 中的模板压缩包。
 2. 登录 <https://www.overleaf.com>，选择 `New Project → Upload Project`。
@@ -51,7 +51,7 @@ cd resumes-CV/src/templates/tzcan
 
 Overleaf 会自行管理输出目录，不需要寻找 `build/main.pdf`，直接下载预览面板中的 PDF 即可。
 
-### 方式一：本地安装 TeX Live
+### 方式二：本地安装 TeX Live
 
 需要 **TeX Live 2026**、**XeLaTeX** 和 `latexmk`。进入模板目录后执行：
 
@@ -73,7 +73,7 @@ latexmk -pvc main.tex     # 保存后自动编译
 tlmgr install fontawesome7
 ```
 
-### 方式二：Docker 容器编译
+### 方式三：Docker 容器编译
 
 先启动 Docker，然后在模板目录执行对应脚本：
 
@@ -109,6 +109,9 @@ tlmgr install fontawesome7
 }
 \cvphototopright[2.5cm]{assets/images/person.png}
 
+% 可选：收紧个人信息区与项目经历之间的距离
+\vspace{-1.2em}
+
 \cvsection{\faLaptopCode}{项目经历}
 \cvproject{
   name = {项目名称},
@@ -143,10 +146,9 @@ tlmgr install fontawesome7
 
 ```latex
 \cvphototopright[2.5cm]{assets/images/person.png}
-\cvhorizontalline
 ```
 
-`\cvphototopright` 将照片固定在右上角，宽度默认 `2.5cm`，修改宽度后分隔线会自动适配。`\cvhorizontalline` 必须放在照片命令之后；不使用照片时可以删掉照片命令，分隔线仍能正常显示。
+`\cvphototopright` 将照片固定在右上角，宽度默认 `2.5cm`。默认不再绘制个人信息区与正文之间的水平分隔线；如需恢复该分隔线，在照片命令之后调用 `\cvhorizontalline`。不使用照片时也可以单独调用分隔线命令。
 
 需要把照片插入正文流时，可改用 `\cvphoto[2.5cm]{图片路径}`。
 
@@ -174,7 +176,8 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 | `\cvname` | 姓名 | 必填 |
 | `\cvpersonalinfo` | 个人信息栏 | 全部可选 |
 | `\cvphototopright` / `\cvphoto` | 证件照 | 图片路径必填 |
-| `\cvhorizontalline` | 信息区分隔线 | 无参数 |
+| `\cvhorizontalline` | 可选的信息区分隔线 | 无参数 |
+| `\cventryseparator` | 项目、实习、工作条目之间的分隔线 | 通常由组件自动调用 |
 | `\cvproject` | 项目经历 | 全部可选 |
 | `\cvinternship` | 实习经历 | 全部可选 |
 | `\cvwork` | 工作经历 | 全部可选 |
@@ -270,7 +273,7 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 | `duty` | 个人职责 | 块式标签 + 圆点列表 |
 | `highlight` | 项目亮点 | 块式标签 + 圆点列表 |
 
-显示顺序固定为：标题行 → 项目介绍 → 技术栈 → 个人职责 → 项目亮点。连续填写多个 `\cvproject` 时，相邻项目之间会自动绘制与章节标题下划线同粗的分隔线，并在上下两段内容之间居中。
+显示顺序固定为：标题行 → 项目介绍 → 技术栈 → 个人职责 → 项目亮点。连续填写多个 `\cvproject` 时，相邻项目之间会自动绘制 `0.6pt`、与章节标题下划线同粗的分隔线，上下各留出 `0.75ex`，使线位于两段内容之间。
 
 ### `\cvinternship` 实习经历
 
@@ -296,7 +299,7 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 | `duty` | 岗位职责 | 块式标签 + 圆点列表 |
 | `achievement` | 产出成果 | 块式标签 + 圆点列表 |
 
-连续填写多个 `\cvinternship` 时，相邻实习经历之间会自动绘制分隔线。
+连续填写多个 `\cvinternship` 时，相邻实习经历之间会自动绘制分隔线，样式和位置与项目经历一致。
 
 ### `\cvwork` 工作经历
 
@@ -317,7 +320,7 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 }
 ```
 
-连续填写多个 `\cvwork` 时，相邻工作经历之间会自动绘制分隔线；样式与项目、实习经历保持一致。没有正式工作经历时，可以把章节标题和 `\cvwork` 整段删除。
+连续填写多个 `\cvwork` 时，相邻工作经历之间会自动绘制分隔线；样式与项目、实习经历保持一致。三类经历的第一段前都不会额外画线。没有正式工作经历时，可以把章节标题和 `\cvwork` 整段删除。
 
 ### `\cveducation` 教育背景
 
@@ -342,6 +345,8 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 | `courses` | 主修课程 | 自动补常规字重的「主修课程：」 |
 
 学校位于标题行左侧，专业与学历自动连接后居中，日期位于同一行右端。缺少哪项就跳过哪项；专业排名与主修课程等内容从左侧开始对齐。
+
+可连续调用多次 `\cveducation` 添加多段教育经历。每段使用独立的键值内容，示例中的 `rank` 对应“专业排名”，不要继续使用旧键名 `gpa`。
 
 ### `\cvskillcategory` 专业技能
 
@@ -389,6 +394,7 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 | 主题颜色 | `styles/components/tzcan-common.sty` | `cvsection`、`cvicon`、`cvrule`、`cvtext` |
 | 边框粗细与间距 | `styles/components/tzcan-border.sty` | `\cvborderouterwidth`、`\cvborderinnerwidth`、`\cvbordergap` |
 | 章节标题间距 | `styles/components/tzcan-section.sty` | `\cvsectiontitlesep`、`\cvsectionrulesep` |
+| 项目 / 实习 / 工作条目分隔线 | `styles/components/tzcan-common.sty` | `\cventryseparator` |
 | 照片与分隔线位置 | `styles/components/tzcan-personalinfo.sty` | `\cvphototop`、`\cvphotoright`、`\cvlinegap` |
 | 列表缩进 | `styles/components/tzcan-common.sty` | `\cvbulletlist` 的 `leftmargin` |
 
@@ -404,6 +410,8 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 ```
 
 修改页边距或照片位置时，需要同时检查 `geometry` 和 `tzcan-personalinfo.sty` 中的相关数值，避免分隔线与照片错位。
+
+跨页时，第二页及后续页的正文视觉上边距与首页正文下边距对齐；当前 `geometry` 使用 `top=0.89cm`、`bottom=1.0cm`，第一页另外使用 `\AtBeginDocument{\vspace*{-0.39cm}}` 保持原有起始位置。两处数值需要配套修改。
 
 ## 目录结构
 
@@ -428,6 +436,7 @@ src/templates/tzcan/
 | 图片找不到 | 在模板目录编译，路径写成 `assets/images/person.png` 或 `assets/badges/xxx.png` |
 | 图标显示为方块 | 执行 `tlmgr install fontawesome7` |
 | 修改后 PDF 没变化 | 本地执行 `latexmk -C main.tex`；其他方式删除 `build/` 后重编 |
+| 新增第二段经历后 PDF 没显示 | 确认 `build/main.pdf` 的时间晚于 `main.tex`，然后在模板目录重新执行 `latexmk main.tex` |
 | 不知道具体报错位置 | 打开 `build/main.log`，从后往前找到第一个以 `!` 开头的错误 |
 | 列表意外折行 | 精简文字，让每条列表连同行首标签不超过 46 个汉字 |
 | 页面内容压到边框 | 精简内容或调整 `resume-tzcan.cls` 中的 `geometry` 下边距 |

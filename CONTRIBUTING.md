@@ -111,9 +111,9 @@ git push -u origin feat/your-topic
 
 | 优先级     | 方案                         | 适合谁                                | 说明                                                                                |
 | ---------- | ---------------------------- | ------------------------------------- | ----------------------------------------------------------------------------------- |
-| **① 首选** | **本地安装 TeX Live 完整版** | 长期开发、改组件、出定稿              | 数据全程留在本机，编译结果可复现；代价是完整版约 10 GB，装完要配环境                |
-| **② 次选** | **Docker 部署 TeX Live**     | 不想在本机装完整发行版                | 免装 TeX Live，源码与产物仍在本机；使用 TeX Live 内置字体，无需配置系统字库          |
-| **③ 辅助** | **Overleaf 在线编译**        | **只想快速生成简历、快速验证样式**的人 | 不用装任何东西，浏览器里就能出 PDF；但会**把简历内容上传到第三方**，且有编译时长限制 |
+| **首选** | **本地安装 TeX Live 完整版** | 长期开发、改组件、出定稿              | 数据全程留在本机，编译结果可复现；代价是完整版约 10 GB，装完要配环境                |
+| **次选** | **Docker 部署 TeX Live**     | 不想在本机装完整发行版                | 免装 TeX Live，源码与产物仍在本机；使用 TeX Live 内置字体，无需配置系统字库          |
+| **辅助** | **Overleaf 在线编译**        | **只想快速生成简历、快速验证样式**的人 | 不用装任何东西，浏览器里就能出 PDF；但会**把简历内容上传到第三方**，且有编译时长限制 |
 
 > [!CAUTION]
 > **不要把 Overleaf 当主要开发环境。** 它的定位就是「快速出简历」和「快速验证样式」：
@@ -130,7 +130,7 @@ git push -u origin feat/your-topic
 
 安装请参照清华镜像站官方指导：<https://mirrors.tuna.tsinghua.edu.cn/help/CTAN/>；
 不想在本机装完整发行版，就走
-[Docker 部署 TeX Live](src/templates/tzcan/USAGE.md#方式二docker-容器编译) ——
+[Docker 部署 TeX Live](src/templates/tzcan/USAGE.md#方式三docker-容器编译) ——
 镜像拉一次，之后每次编译只要几秒。
 
 > [!WARNING]
@@ -512,7 +512,7 @@ chore：推送 tag 自动上传每个模板的 zip 到 Release
 | 手动 `workflow_dispatch`     | 编译全部模板                                                           |
 
 编译在官方 **`texlive/texlive:latest`** 容器里用 `latexmk` 完成（引擎 XeLaTeX 由模板自己的
-`.latexmkrc` 指定）—— 和 [Docker 容器编译](src/templates/tzcan/USAGE.md#方式二docker-容器编译)
+`.latexmkrc` 指定）—— 和 [Docker 容器编译](src/templates/tzcan/USAGE.md#方式三docker-容器编译)
 是同一条命令、同一个镜像，所以你按文档走 Docker 得到的结果就是 CI 的结果。编出的 PDF 会作为
 **`build-pdf` 工件**上传（保留 14 天），评审直接下载就能逐页看图，不必在自己机器上装 TeX Live。
 

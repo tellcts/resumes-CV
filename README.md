@@ -8,8 +8,8 @@
 
 [![CI](https://github.com/tellcts/resumes-CV/actions/workflows/build-check.yml/badge.svg?branch=main)](https://github.com/tellcts/resumes-CV/actions/workflows/build-check.yml)
 ![TeX Live](https://img.shields.io/badge/TeX%20Live-2026-3D6117?logo=latex&logoColor=white)
-[![Overleaf](https://img.shields.io/badge/Overleaf-online-47A141?logo=overleaf&logoColor=white)](src/templates/tzcan/USAGE.md#首选-overleaf-在线编译)
-[![Docker](https://img.shields.io/badge/Docker-supported-2496ED?logo=docker&logoColor=white)](src/templates/tzcan/USAGE.md#方式二docker-容器编译)
+[![Overleaf](https://img.shields.io/badge/Overleaf-online-47A141?logo=overleaf&logoColor=white)](src/templates/tzcan/USAGE.md#方式一overleaf-在线编译)
+[![Docker](https://img.shields.io/badge/Docker-supported-2496ED?logo=docker&logoColor=white)](src/templates/tzcan/USAGE.md#方式三docker-容器编译)
 [![Downloads](https://img.shields.io/github/downloads/tellcts/resumes-CV/total?label=Downloads&color=2EA043&logo=github)](https://github.com/tellcts/resumes-CV/releases)
 [![GitHub stars](https://img.shields.io/github/stars/tellcts/resumes-CV?style=social)](https://github.com/tellcts/resumes-CV)
 [![License](https://img.shields.io/badge/License-PolyForm%20Noncommercial%201.0.0-orange.svg)](LICENSE)
@@ -182,20 +182,19 @@ resumes-CV/
 ## 🔧 环境要求
 
 **普通用户不用提前装任何东西** —— 三条路通向同一份 PDF，**任选一条即可**：
-首选 **Overleaf 在线编译**；介意把简历传到网上，就走其次的两条 ——
-**Docker 容器编译**或**本地安装 TeX Live**（二者任选其一）。
+**方式一**是 **Overleaf 在线编译**；介意把简历传到网上，可选择**方式二本地安装 TeX Live**或**方式三 Docker 容器编译**。
 
-| 优先级   | 方式                  | 适合谁                       | 优点                                                 | 缺点                                                       |
+| 方式     | 方案                  | 适合谁                       | 优点                                                 | 缺点                                                       |
 | -------- | --------------------- | ---------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
-| **首选** | **Overleaf 在线编译** | 只想尽快填内容、尽快出 PDF   | 零安装、零配置，浏览器里改完就能出 PDF，换电脑也一样 | ⚠️ 简历会上传到第三方服务器（姓名 / 电话 / 证件照都在云端） |
-| **次选** | **Docker 容器编译**   | 不想在本机装几个 GB 的 LaTeX | 免装 TeX Live，源码与产物仍留在自己电脑上            | 要先装好 Docker；首次拉镜像约 2.5 GB                       |
-| **次选** | **本地安装 TeX Live** | 在意隐私、要长期反复改简历   | 全程本地、离线可用，编译结果可复现                   | 完整版约 10 GB，装完还要配环境                             |
+| **方式一** | **Overleaf 在线编译** | 只想尽快填内容、尽快出 PDF   | 零安装、零配置，浏览器里改完就能出 PDF，换电脑也一样 | ⚠️ 简历会上传到第三方服务器（姓名 / 电话 / 证件照都在云端） |
+| **方式二** | **本地安装 TeX Live** | 在意隐私、要长期反复改简历   | 全程本地、离线可用，编译结果可复现                   | 完整版约 10 GB，装完还要配环境                             |
+| **方式三** | **Docker 容器编译**   | 不想在本机装几个 GB 的 LaTeX | 免装 TeX Live，源码与产物仍留在自己电脑上            | 要先装好 Docker；首次拉镜像约 2.5 GB                       |
 
 各条路的操作步骤（Overleaf 怎么上传、怎么切 XeLaTeX、Docker 命令行怎么写）见
 [📖 tzcan `USAGE.md` → 🚀 选择编译方式](src/templates/tzcan/USAGE.md#-选择编译方式)：
-[首选 Overleaf](src/templates/tzcan/USAGE.md#首选-overleaf-在线编译) ·
-[Docker](src/templates/tzcan/USAGE.md#方式二docker-容器编译) ·
-[本地 TeX Live](src/templates/tzcan/USAGE.md#方式一本地安装-tex-live)。
+[方式一：Overleaf](src/templates/tzcan/USAGE.md#方式一overleaf-在线编译) ·
+[方式二：本地 TeX Live](src/templates/tzcan/USAGE.md#方式二本地安装-tex-live) ·
+[方式三：Docker](src/templates/tzcan/USAGE.md#方式三docker-容器编译)。
 
 > [!CAUTION]
 > **走 Overleaf 就等于把简历交给第三方。** 姓名、手机号、邮箱、证件照都会存在它的云端 ——
