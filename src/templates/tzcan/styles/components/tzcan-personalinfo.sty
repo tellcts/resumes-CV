@@ -8,10 +8,10 @@
 %       graphicx（\includegraphics、\framebox）、tikz（\cvphototopright）、
 %       hyperref（\href）、fontawesome7（\faPhone、\faGithub 等）
 %
-% 本文件覆盖整个「个人信息区」。main.tex 里的调用顺序是：
-%   \cvname → \cvpersonalinfo → \cvphototopright → \cvhorizontalline
-% 四块各自独立，按需取用；但 \cvhorizontalline 依赖 \cvphototopright 留下的尺寸，
-% 所以这两个的顺序不能颠倒（见下）。
+% 本文件覆盖整个「个人信息区」。推荐调用顺序是：
+%   \cvname → \cvpersonalinfo → \cvphototopright
+% 如需信息区分隔线，再在照片之后调用 \cvhorizontalline。
+% 这四块各自独立、按需取用；分隔线依赖照片留下的尺寸，因此不能放在照片之前。
 %
 % 为什么收在一个文件里：照片的位置与分隔线的位置是耦合的（线右端对齐照片右边界、
 % 线顶部让开照片底边），拆开反而把一件耦合的事拆散了。耦合点集中在下面那组
