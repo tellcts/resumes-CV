@@ -89,6 +89,10 @@
 % 字号、行距、页边距、组件间距和边框几何仍由模板原有参数控制。
 \RequirePackage[fontset=fandol]{ctex}
 
+% 统一正文：模板中的 \small 统一定为 11pt，与常规字号一致。
+% 行距同步设为模板正文的标准行距 13.6pt。
+\renewcommand{\small}{\fontsize{11pt}{13.6pt}\selectfont}
+
 % 添加双矩形边框包裹（几何旋钮见 components/tzcan-border.sty）
 \cvborderframe
 

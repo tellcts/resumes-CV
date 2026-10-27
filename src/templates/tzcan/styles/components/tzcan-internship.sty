@@ -24,7 +24,7 @@
 %   }
 %
 % 排版约束：duty / achievement 走 \cvbulletlist（左缩进 1.2em），
-%           \small(10pt) 下每条可用行宽约 50 个汉字宽；
+%           \small(11pt) 下每条可用行宽约 46 个汉字宽；
 %           要让每条 \item 单行显示，整体（含行首「标签：」）控制在 46 字以内。
 %
 % 提示：值一律用花括号包住；键名拼错会直接报错，不会静默丢内容。
@@ -88,10 +88,10 @@
   \bool_if:NT \l__cv_in_head_bool
   {
     {\parfillskip=0pt\relax
-      \noindent{\small\textbf{\l__cv_in_position_tl}}
+      \noindent{\normalsize\textbf{\l__cv_in_position_tl}}
       \__cv_if_notblank:Nn \l__cv_in_company_tl
-      { \hfill{\small\textbf{\l__cv_in_company_tl}} }
-      \hfill{\small \l__cv_in_date_tl}\par
+      { \hfill{\normalsize\textbf{\l__cv_in_company_tl}} }
+      \hfill{\normalsize\bfseries \l__cv_in_date_tl}\par
     }
   }
   % --- 岗位职责 ---
