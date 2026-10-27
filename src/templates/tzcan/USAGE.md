@@ -108,7 +108,6 @@ tlmgr install fontawesome7
   link  = {https://github.com/your-name | GitHub},
 }
 \cvphototopright[2.5cm]{assets/images/person.png}
-\cvhorizontalline
 
 \cvsection{\faLaptopCode}{项目经历}
 \cvproject{
@@ -171,7 +170,7 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 
 | 命令 | 用途 | 必填情况 |
 | --- | --- | --- |
-| `\cvsection` | 章节标题 | 图标和标题都必填 |
+| `\cvsection` | 章节标题 | 图标和标题都必填；加 `*` 可省略下划线 |
 | `\cvname` | 姓名 | 必填 |
 | `\cvpersonalinfo` | 个人信息栏 | 全部可选 |
 | `\cvphototopright` / `\cvphoto` | 证件照 | 图片路径必填 |
@@ -189,6 +188,12 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 
 ```latex
 \cvsection{\faLaptopCode}{项目经历}
+```
+
+默认在标题下方绘制分隔线。若不需要分隔线，在命令后加 `*`：
+
+```latex
+\cvsection*{\faLaptopCode}{项目经历}
 ```
 
 常用图标：
@@ -320,21 +325,21 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
   school  = {某某大学},
   major   = {某某专业},
   degree  = {本科},
-  gpa     = {前20\%（GPA:~4.0~/~5.0）},
+  rank    = {前20\%（GPA:~4.0~/~5.0）},
   courses = {软件工程，数据库系统原理，数据结构，计算机网络},
 }
 ```
 
 | 键 | 含义 | 说明 |
 | --- | --- | --- |
-| `date` | 就读时间 | 左侧固定宽度栏位 |
-| `school` | 学校 | 加粗，与专业、学历自动连接 |
+| `date` | 就读时间 | 标题行右侧，右对齐 |
+| `school` | 学校 | 标题行左侧，加粗 |
 | `major` | 专业 | 可省略 |
 | `degree` | 学历 | 如「本科」「硕士」 |
-| `gpa` | 排名或绩点 | 自动补「专业排名：」 |
-| `courses` | 主修课程 | 自动补「主修课程：」 |
+| `rank` | 排名或绩点 | 自动补加粗的「专业排名：」 |
+| `courses` | 主修课程 | 自动补加粗的「主修课程：」 |
 
-学校、专业、学历缺少哪项就跳过哪项。需要完全自定义标题行时，只写 `school` 并使用 `\midbullet` 连接。
+学校位于标题行左侧，专业与学历自动连接后居中，日期位于同一行右端。缺少哪项就跳过哪项；专业排名与主修课程等内容从左侧开始对齐。
 
 ### `\cvskillcategory` 专业技能
 
@@ -353,11 +358,10 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 \cvhonor{
   date   = {2025.12},
   award  = {全国计算机技术与软件专业技术资格证书~\midbullet~信息安全工程师},
-  detail = {可选补充说明},
 }
 ```
 
-`date` 显示在左侧，`award` 显示在右侧，`detail` 是可选第二行。
+每条 `\cvhonor` 会在 `award` 前自动添加“1.”“2.”等序号。`award` 在标题行左侧，`date` 在标题行右侧并右对齐。
 
 ### `\cvselfassessment` 自我评价
 

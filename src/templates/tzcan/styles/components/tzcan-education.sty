@@ -15,7 +15,7 @@
 % school    学校            school  = {某某大学}
 % major     专业            major   = {某某专业}
 % degree    学历            degree  = {本科}
-% gpa       专业排名        gpa     = {前20\%（GPA:~4.0~/~5.0）}
+% rank      专业排名        rank    = {前20\%（GPA:~4.0~/~5.0）}
 %                           （命令会自动加上「专业排名：」前缀，值里只写排名与 GPA）
 % courses   主修课程        courses = {计算机网络，操作系统，……}
 %                           （命令会自动加上「主修课程：」前缀）
@@ -23,17 +23,17 @@
 % 用法：
 %   \cveducation{
 %     date = {...}, school = {...}, major = {...}, degree = {...},
-%     gpa = {...}, courses = {...},
+%     rank = {...}, courses = {...},
 %   }
 %
-% 说明：学校 / 专业 / 学历 三者用「·」自动连接，缺哪个就跳过哪个。
+% 说明：学校居左，专业 / 学历用「·」连接后居中，时间居右；
+%       专业、学历缺哪个就跳过哪个，后续内容统一从左侧开始。
 %       若想恢复成手写的一整串，只写 school 即可：
 %       school = {某某大学~\midbullet~某某专业~\midbullet~本科}
-%       第二、三行的标签由命令自动补，字体样式与项目经历的「项目介绍：」等
-%       标签一致（\small 加粗，见 tzcan-common 的 \cvfieldlabel）。
+%       第二、三行的标签由命令自动补，使用小号、加粗的标签样式。
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{tzcan-education}[2026/10/14 教育背景]
+\ProvidesPackage{tzcan-education}[2026/10/27 教育背景]
 
 % 实现说明：下面是 expl3 语法，故包在 \ExplSyntaxOn / \ExplSyntaxOff 之间。
 % 每个含 expl3 的组件都要各自包一对 \ExplSyntaxOn / \ExplSyntaxOff，不能跨文件共享。
@@ -44,10 +44,10 @@
 \tl_new:N \l__cv_ed_school_tl
 \tl_new:N \l__cv_ed_major_tl
 \tl_new:N \l__cv_ed_degree_tl
-\tl_new:N \l__cv_ed_gpa_tl
+\tl_new:N \l__cv_ed_rank_tl
 \tl_new:N \l__cv_ed_courses_tl
-% 学校 · 专业 · 学历 的连接队列
-\seq_new:N \l__cv_ed_head_seq
+% 专业 · 学历 的连接队列
+\seq_new:N \l__cv_ed_detail_seq
 % 第二、三行（有内容的才攒进来）
 \tl_new:N \l__cv_ed_rows_tl
 
@@ -57,36 +57,49 @@
   school  .tl_set:N  = \l__cv_ed_school_tl,
   major   .tl_set:N  = \l__cv_ed_major_tl,
   degree  .tl_set:N  = \l__cv_ed_degree_tl,
-  gpa     .tl_set:N  = \l__cv_ed_gpa_tl,
+  rank    .tl_set:N  = \l__cv_ed_rank_tl,
   courses .tl_set:N  = \l__cv_ed_courses_tl,
   % 未给出的键默认为空 —— 空值即“不显示”
   date    .initial:n = {},
   school  .initial:n = {},
   major   .initial:n = {},
   degree  .initial:n = {},
-  gpa     .initial:n = {},
+  rank    .initial:n = {},
   courses .initial:n = {},
 }
 
 \NewDocumentCommand{\cveducation}{ m }{
   \group_begin:
   \keys_set:nn { cv / education } {#1}
-  % --- 学校 / 专业 / 学历：只把非空的接进队列 ---
-  \seq_clear:N \l__cv_ed_head_seq
-  \__cv_collect:Nnn \l__cv_ed_school_tl { \l__cv_ed_school_tl } \l__cv_ed_head_seq
-  \__cv_collect:Nnn \l__cv_ed_major_tl { \l__cv_ed_major_tl } \l__cv_ed_head_seq
-  \__cv_collect:Nnn \l__cv_ed_degree_tl { \l__cv_ed_degree_tl } \l__cv_ed_head_seq
-  % --- 有内容的行先攒起来，最后整体插进表格 ---
+  % --- 专业 / 学历：只把非空的接进队列，并在标题行居中 ---
+  \seq_clear:N \l__cv_ed_detail_seq
+  \__cv_collect:Nnn \l__cv_ed_major_tl { \l__cv_ed_major_tl } \l__cv_ed_detail_seq
+  \__cv_collect:Nnn \l__cv_ed_degree_tl { \l__cv_ed_degree_tl } \l__cv_ed_detail_seq
+  % --- 有内容的行先攒起来，最后整体插进表格；正文统一占左栏 ---
   % （先攒后放：让 & 和 \\ 插入时处在行内最外层，不落在任何宏参数的分组里）
   \tl_clear:N \l__cv_ed_rows_tl
-  \__cv_if_notblank:Nn \l__cv_ed_gpa_tl
-  { \tl_put_right:Nn \l__cv_ed_rows_tl { & {\small \cvfieldlabel{专业排名}\l__cv_ed_gpa_tl} \\ } }
+  \__cv_if_notblank:Nn \l__cv_ed_rank_tl
+  {
+    \tl_put_right:Nn \l__cv_ed_rows_tl
+    {
+      \multicolumn{3}{@{}>{\raggedright\arraybackslash}p{\textwidth}@{}}
+      { \small \cvfieldlabel{专业排名}\l__cv_ed_rank_tl } \\
+    }
+  }
   \__cv_if_notblank:Nn \l__cv_ed_courses_tl
-  { \tl_put_right:Nn \l__cv_ed_rows_tl { & {\small \cvfieldlabel{主修课程}\l__cv_ed_courses_tl} \\ } }
+  {
+    \tl_put_right:Nn \l__cv_ed_rows_tl
+    {
+      \multicolumn{3}{@{}>{\raggedright\arraybackslash}p{\textwidth}@{}}
+      { \small \cvfieldlabel{主修课程}\l__cv_ed_courses_tl } \\
+    }
+  }
   \noindent
-  \begin{tabularx}{\textwidth}{@{}p{3.5cm} X@{}}
-    {\normalsize\bfseries \l__cv_ed_date_tl} &
-    {\textbf{\seq_use:Nn \l__cv_ed_head_seq { \nobreakspace\midbullet\nobreakspace }}} \\
+  \begin{tabularx}{\textwidth}
+    {@{}>{\raggedright\arraybackslash}X c >{\raggedleft\arraybackslash}X@{}}
+    {\textbf{\tl_use:N \l__cv_ed_school_tl}} &
+    {\textbf{\seq_use:Nn \l__cv_ed_detail_seq { \nobreakspace\midbullet\nobreakspace }}} &
+    {\normalsize\bfseries \l__cv_ed_date_tl} \\
     \tl_use:N \l__cv_ed_rows_tl
   \end{tabularx}
   \vspace{0.15ex}
