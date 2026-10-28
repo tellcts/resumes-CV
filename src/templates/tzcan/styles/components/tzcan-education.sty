@@ -4,8 +4,7 @@
 %
 % 提供：\cveducation
 % 依赖：tzcan-common（\midbullet、\__cv_collect:Nnn、
-%       \__cv_if_notblank:Nn）、
-%       tabularx
+%       \__cv_if_notblank:Nn）、enumitem、tabularx
 %
 % 每个键都可以省略，没写的不会出现在简历上（也不会留下空标签）。
 %
@@ -15,25 +14,38 @@
 % school    学校            school  = {某某大学}
 % major     专业            major   = {某某专业}
 % degree    学历            degree  = {本科}
-% rank      专业排名        rank    = {前20\%（GPA:~4.0~/~5.0）}
-%                           （命令会自动加上「专业排名：」前缀，值里只写排名与 GPA）
-% courses   主修课程        courses = {计算机网络，操作系统，……}
-%                           （命令会自动加上「主修课程：」前缀）
+% content   补充内容        content = {\item …… \item ……}
 %
 % 用法：
 %   \cveducation{
 %     date = {...}, school = {...}, major = {...}, degree = {...},
-%     rank = {...}, courses = {...},
+%     content = {\item ... \item ...},
 %   }
 %
 % 说明：学校居左，专业 / 学历用「·」连接后居中，时间居右；
 %       专业、学历缺哪个就跳过哪个，后续内容统一从左侧开始。
 %       若想恢复成手写的一整串，只写 school 即可：
 %       school = {某某大学~\midbullet~某某专业~\midbullet~本科}
-%       第二、三行的标签由命令自动补，使用小号、常规字重的正文样式。
+%       content 使用小号、常规字重的圆点列表样式。
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{tzcan-education}[2026/10/27 教育背景]
+\ProvidesPackage{tzcan-education}[2026/10/28 教育背景]
+
+% 内部：教育背景补充内容 —— 紧凑圆点列表
+% 放在 tabularx 之外渲染，避免列表环境给表格行增加额外高度；
+% topsep / partopsep 归零，使首条内容紧接学校行。
+\newcommand{\cveducationcontent}[1]{%
+  \begin{itemize}[
+        leftmargin=1.2em,
+        itemsep=0.15ex,
+        topsep=0pt,
+        partopsep=0pt,
+        parsep=0pt,
+        label=\midbullet
+      ]
+      #1
+  \end{itemize}%
+}
 
 % 实现说明：下面是 expl3 语法，故包在 \ExplSyntaxOn / \ExplSyntaxOff 之间。
 % 每个含 expl3 的组件都要各自包一对 \ExplSyntaxOn / \ExplSyntaxOff，不能跨文件共享。
@@ -44,12 +56,9 @@
 \tl_new:N \l__cv_ed_school_tl
 \tl_new:N \l__cv_ed_major_tl
 \tl_new:N \l__cv_ed_degree_tl
-\tl_new:N \l__cv_ed_rank_tl
-\tl_new:N \l__cv_ed_courses_tl
+\tl_new:N \l__cv_ed_content_tl
 % 专业 · 学历 的连接队列
 \seq_new:N \l__cv_ed_detail_seq
-% 第二、三行（有内容的才攒进来）
-\tl_new:N \l__cv_ed_rows_tl
 
 \keys_define:nn { cv / education }
 {
@@ -57,15 +66,13 @@
   school  .tl_set:N  = \l__cv_ed_school_tl,
   major   .tl_set:N  = \l__cv_ed_major_tl,
   degree  .tl_set:N  = \l__cv_ed_degree_tl,
-  rank    .tl_set:N  = \l__cv_ed_rank_tl,
-  courses .tl_set:N  = \l__cv_ed_courses_tl,
+  content .tl_set:N  = \l__cv_ed_content_tl,
   % 未给出的键默认为空 —— 空值即“不显示”
   date    .initial:n = {},
   school  .initial:n = {},
   major   .initial:n = {},
   degree  .initial:n = {},
-  rank    .initial:n = {},
-  courses .initial:n = {},
+  content .initial:n = {},
 }
 
 \NewDocumentCommand{\cveducation}{ m }{
@@ -75,33 +82,18 @@
   \seq_clear:N \l__cv_ed_detail_seq
   \__cv_collect:Nnn \l__cv_ed_major_tl { \l__cv_ed_major_tl } \l__cv_ed_detail_seq
   \__cv_collect:Nnn \l__cv_ed_degree_tl { \l__cv_ed_degree_tl } \l__cv_ed_detail_seq
-  % --- 有内容的行先攒起来，最后整体插进表格；正文统一占左栏 ---
-  % （先攒后放：让 & 和 \\ 插入时处在行内最外层，不落在任何宏参数的分组里）
-  \tl_clear:N \l__cv_ed_rows_tl
-  \__cv_if_notblank:Nn \l__cv_ed_rank_tl
-  {
-    \tl_put_right:Nn \l__cv_ed_rows_tl
-    {
-      \multicolumn{3}{@{}>{\raggedright\arraybackslash}p{\textwidth}@{}}
-      { \small\mdseries 专业排名：\l__cv_ed_rank_tl } \\
-    }
-  }
-  \__cv_if_notblank:Nn \l__cv_ed_courses_tl
-  {
-    \tl_put_right:Nn \l__cv_ed_rows_tl
-    {
-      \multicolumn{3}{@{}>{\raggedright\arraybackslash}p{\textwidth}@{}}
-      { \small\mdseries 主修课程：\l__cv_ed_courses_tl } \\
-    }
-  }
   \noindent
   \begin{tabularx}{\textwidth}
     {@{}>{\raggedright\arraybackslash}X c >{\raggedleft\arraybackslash}X@{}}
     {\textbf{\tl_use:N \l__cv_ed_school_tl}} &
     {\textbf{\seq_use:Nn \l__cv_ed_detail_seq { \nobreakspace\midbullet\nobreakspace }}} &
     {\normalsize\bfseries \l__cv_ed_date_tl} \\
-    \tl_use:N \l__cv_ed_rows_tl
   \end{tabularx}
+  \__cv_if_notblank:Nn \l__cv_ed_content_tl
+  {
+    \small\mdseries
+    \cveducationcontent{\l__cv_ed_content_tl}
+  }
   \vspace{0.15ex}
   \par
   \group_end:
