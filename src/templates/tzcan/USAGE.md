@@ -4,87 +4,76 @@
 
 </div>
 
-这个模板只需要编辑 `main.tex` 填写内容，排版由 `styles/` 提供。修改姓名、经历或技能不会打乱整体版式。
-
-## 快速上手
-
-1. 用 `assets/images/person.png` 覆盖模板证件照；需要水印时替换 `assets/badges/` 中的校徽。
-2. 编辑 `main.tex`，用真实内容替换示例。
-3. 选择 Overleaf、本地 TeX Live 或 Docker 编译。
-
-本地和 Docker 的编译产物都是 `build/main.pdf`；Overleaf 直接点击 `Download PDF`。
-
-## 获取模板
-
-```bash
-git clone https://github.com/tellcts/resumes-CV.git
-cd resumes-CV/src/templates/tzcan
-```
-
-也可以从 [Releases](https://github.com/tellcts/resumes-CV/releases) 下载 `Resume.Template.tzcan-*.zip`。
-
 ## 🚀 选择编译方式
 
-| 方式 | 优点 | 注意 |
-| --- | --- | --- |
-| **方式一：Overleaf** | 零安装，浏览器内编辑和编译 | 个人资料会上传到云端 |
-| **方式二：本地 TeX Live** | 数据和产物都在本机，适合长期修改 | 需要安装完整环境 |
-| **方式三：Docker** | 不需要安装 TeX Live | 首次拉取镜像约 2.5 GB |
+| 方式                         | 优点                             | 注意                  |
+| ---------------------------- | -------------------------------- | --------------------- |
+| **方式一：Overleaf（推荐）** | 零安装，浏览器内编辑和编译       | 个人资料会上传到云端  |
+| **方式二：本地 TeX Live**    | 数据和产物都在本机，适合长期修改 | 需要安装完整环境      |
+| **方式三：Docker**           | 不需要安装 TeX Live              | 首次拉取镜像约 2.5 GB |
 
-三种方式生成的内容相同。模板固定使用 TeX Live 自带的 Fandol（中文）和 Latin Modern（西文）字体，不再依赖操作系统字体，因此不同平台的字体来源一致。
 
 ### 方式一：Overleaf 在线编译
 
-1. 将 `src/templates/tzcan/` 压成 ZIP，或使用 Release 中的模板压缩包。
-2. 登录 <https://www.overleaf.com>，选择 `New Project → Upload Project`。
-3. 确认项目根目录直接包含 `main.tex`、`assets/` 和 `styles/`。
-4. 打开 `Menu → Compiler`，选择 **XeLaTeX**。
-5. 修改 `main.tex`，重新编译并下载 PDF。
+1. 选择并下载最新 Release 中的模板压缩包，如 [Resume.Template.tzcan-2.2.0.zip](https://github.com/tellcts/resumes-CV/releases/download/v2.2.0/Resume.Template.tzcan-2.2.0.zip)。
+2. 登录 <https://cn.overleaf.com/>，点击`创建新项目` -> 点击`Existing project(.zip)` -> 上传模板压缩包。
+![](../../../previews/template-tzcan/overleaf/overleaf_step_0.png)
+3. 进入项目页面后，点击左下角表示设置的`齿轮图标` -> 点击`编译器选项` -> 切换至`XeLaTeX` -> 关闭面板。
+![](../../../previews/template-tzcan/overleaf/overleaf_step_1.png)
+4. 点击最右侧栏目左上角的`重新编译`选项即可。
+![](../../../previews/template-tzcan/overleaf/overleaf_step_2.png)
+5. 点击最上面一行居中的`压缩包名称`，选择`下载PDF`或`下载源代码`即可。推荐同时选择二者，避免修改丢失,后续重传参照前序步骤。
+![](../../../previews/template-tzcan/overleaf/overleaf_step_3.png)
 
 > [!WARNING]
-> 项目根目录不能多套一层 `tzcan/` 文件夹，否则 `styles/resume-tzcan.cls` 的相对路径会失效。
->
-> Overleaf 默认使用 pdfLaTeX，必须手动切换为 XeLaTeX，否则中文无法正常编译。
-
-> [!CAUTION]
 > 使用 Overleaf 时，姓名、电话、邮箱和证件照都会保存在第三方服务器。介意隐私请选择本地 TeX Live 或 Docker。
-
-Overleaf 会自行管理输出目录，不需要寻找 `build/main.pdf`，直接下载预览面板中的 PDF 即可。
 
 ### 方式二：本地安装 TeX Live
 
-需要 **TeX Live 2026**、**XeLaTeX** 和 `latexmk`。进入模板目录后执行：
+根据 [清华镜像站CTAN](https://mirrors.tuna.tsinghua.edu.cn/help/CTAN/) 本地安装好`TexLive`之后，顺序执行以下命令：
 
 ```bash
-cd src/templates/tzcan
-latexmk main.tex          # 单次编译
-latexmk -pvc main.tex     # 保存后自动编译
-```
+# 克隆仓库至本地
+git clone --depth=1 https://github.com/tellcts/resumes-CV.git
 
-> [!WARNING]
-> 必须在 `src/templates/tzcan/` 目录下编译；图片路径也相对这个目录解析。
+# 进入对应模板目录
+cd ./resumes-CV/src/templates/tzcan
 
-> [!IMPORTANT]
-> 安装 TeX Live 时，请在 `Advanced` 中把默认纸张设为 A4。
+# 在 main.tex 中修改好简历内容后编译
+latexmk main.tex
 
-缺少宏包时不必重装整个 TeX Live，例如：
+# 编译常驻模式，main.tex 保存后自动编译
+latexmk -pvc main.tex
 
-```bash
-tlmgr install fontawesome7
+# 简历 PDF 路径
+./build/main.pdf
 ```
 
 ### 方式三：Docker 容器编译
 
-先启动 Docker，然后在模板目录执行对应脚本：
+请确保本机已经安装`Docker`，且项目已克隆至本地。
+- Windows Powershell
 
 ```powershell
-# Windows PowerShell
-.\scripts\docker-build.ps1
-```
+# 进入对应模板目录
+cd ./resumes-CV/src/templates/tzcan
 
+# 执行 Docker 编译脚本
+.\scripts\docker-build.ps1
+
+# 简历 PDF 路径
+.\build\main.pdf
+```
+- macOS & Linux
 ```bash
-# macOS / Linux
+# 进入对应模板目录
+cd ./resumes-CV/src/templates/tzcan
+
+# 执行 Docker 编译脚本
 ./scripts/docker-build.sh
+
+# 简历 PDF 路径
+./build/main.pdf
 ```
 
 默认镜像为 `ghcr.io/tellcts/texlive:latest`。如果下载速度较慢，可将 `scripts/docker-build.ps1` 和 `scripts/docker-build.sh` 中的镜像地址替换为速度更快的兼容镜像。
@@ -93,122 +82,77 @@ tlmgr install fontawesome7
 
 ## 修改简历内容
 
-`main.tex` 的推荐结构如下：
+### 命令顺序
+
+- 下面按 `main.tex` 自上而下出现的顺序说明。每个章节都由 `\cvsection` 开始，后面接该章节的一个或多个内容条目。
+- 不需要的章节，可以把对应的 `\cvsection` 和条目一起删除。
+- 用户可自行调整命令调用顺序来改变模块在简历中的位置。
+
+| 顺序 | 命令                | 用途                                 | 调用次数     |
+| ---- | ------------------- | ------------------------------------ | ------------ |
+| 1    | `\documentclass`    | 加载 tzcan 模板                      | 文件开头一次 |
+| 2    | `\addwatermark`     | 添加校徽水印                         | 0 或 1 次    |
+| 3    | `\begin{document}`  | 开始正文                             | 一次         |
+| 4    | `\cvname`           | 姓名                                 | 通常一次     |
+| 5    | `\cvpersonalinfo`   | 电话、邮箱、身份、求职目标等个人信息 | 通常一次     |
+| 6    | `\cvphototopright`  | 右上角证件照                         | 0 或 1 次    |
+| 7    | `\cvsection`        | 章节标题；每个章节开头调用           | 每个章节一次 |
+| 8    | `\cvproject`        | 项目经历                             | 0 次或多次   |
+| 9    | `\cvinternship`     | 实习经历                             | 0 次或多次   |
+| 10   | `\cvwork`           | 工作经历                             | 0 次或多次   |
+| 11   | `\cveducation`      | 教育背景                             | 0 次或多次   |
+| 12   | `\cvskillcategory`  | 专业技能分类                         | 0 次或多次   |
+| 13   | `\cvhonor`          | 荣誉、证书                           | 0 次或多次   |
+| 14   | `\cvselfassessment` | 自我评价                             | 0 或 1 次    |
+| 15   | `\end{document}`    | 结束文档并停止排版                   | 文件末尾一次 |
+
+> [!TIP]
+> **在生成的简历 PDF 中，所有链接都是可以直接点击并通过浏览器打开的。**
+
+### `\documentclass` 加载模板
 
 ```latex
 \documentclass{styles/resume-tzcan}
+```
 
+这是文档的第一条命令，必须放在 `\begin{document}` 之前，并且只能在模板目录 `src/templates/tzcan/` 下编译。
+请保持 `styles/resume-tzcan` 这一模板目录内相对路径不变，否则 Overleaf、Docker 与本机编译都可能找不到文档类。
+
+该文档类已经统一定义字号、A4 纸张、页边距、字体、边框和主题颜色，调用时不需要附加类选项。
+
+### `\addwatermark` 校徽水印
+
+```latex
 \addwatermark[opacity=0.09]{assets/badges/ecjtu.png}{center}
+```
 
+| 参数             | 是否必填 | 说明                                                         |
+| ---------------- | -------- | ------------------------------------------------------------ |
+| `[...]` 可选参数 | 可选     | 传给 TikZ 节点的样式，可写 `opacity=0.09,rotate=15`          |
+| 第 1 个 `{}`     | 必须     | 水印图片路径，相对于模板目录，例如 `assets/badges/ecjtu.png` |
+| 第 2 个 `{}`     | 必须     | TikZ 页面锚点，例如 `center`、`north`、`south`、`north west` |
+
+这条命令要放在 `\begin{document}` 之前。水印按页面宽度自动缩放，并绘制在每一页的背景层。
+透明度建议设为 `0.03` 至 `0.15`；不需要水印时删除整行。
+
+> [!TIP]
+> **校徽图片推荐下载网站：<https://www.urongda.com/>。**
+> 
+> **将下载好的图片放置于`src/templates/tzcan/assets/badges/`目录下，更新`\addwatermark`命令中的文件名即可。**
+
+| 素材     | 常用位置                   | 建议                   |
+| -------- | -------------------------- | ---------------------- |
+| 校徽水印 | `assets/badges/*.png`      | 透明背景 PNG，正方形   |
+| 证件照   | `assets/images/person.png` | 竖版一寸照，比例约 5:7 |
+
+### `\begin{document}` 开始正文
+
+```latex
 \begin{document}
-\cvname{张~三}
-\cvpersonalinfo{
-  phone = {+86 188--8888--8888},
-  email = {you@example.com},
-  link  = {https://github.com/your-name | GitHub},
-}
-\cvphototopright[2.5cm]{assets/images/person.png}
-
-% 可选：收紧个人信息区与项目经历之间的距离
-\vspace{-1.2em}
-
-\cvsection{\faLaptopCode}{项目经历}
-\cvproject{
-  name = {项目名称},
-  date = {2026.06 --- 2026.08},
-  duty = {
-  \item 负责内容：用一句话说明工作与结果。
-  },
-}
-
-\end{document}
 ```
 
-### 通用写法
-
-- 键值统一写成 `键 = {值}`，例如 `name = {项目名称}`。
-- 未填写的可选键不会显示，也不会留下标签或多余分隔符。
-- 列表直接写 `\item`，不要再套一层 `\begin{itemize}`。
-- 图片路径相对模板目录，例如 `assets/images/person.png`。
-- 特殊字符需要转义：`#` 写成 `\#`，`%` 写成 `\%`，`&` 写成 `\&`，`_` 写成 `\_`。
-- 要让列表项单行显示，连同行首标签尽量控制在 46 个汉字以内。
-
-## 素材替换
-
-| 素材 | 位置 | 建议 |
-| --- | --- | --- |
-| 证件照 | `assets/images/person.png` | 竖版一寸照，比例约 5:7 |
-| 校徽水印 | `assets/badges/*.png` | 透明背景 PNG，正方形 |
-
-保持文件名不变并直接覆盖原文件，`main.tex` 无需修改。
-
-### 证件照
-
-```latex
-\cvphototopright[2.5cm]{assets/images/person.png}
-```
-
-`\cvphototopright` 将照片固定在右上角，宽度默认 `2.5cm`。默认不再绘制个人信息区与正文之间的水平分隔线；如需恢复该分隔线，在照片命令之后调用 `\cvhorizontalline`。不使用照片时也可以单独调用分隔线命令。
-
-需要把照片插入正文流时，可改用 `\cvphoto[2.5cm]{图片路径}`。
-
-### 校徽水印
-
-```latex
-\addwatermark[opacity=0.09]{assets/badges/ecjtu.png}{center}
-```
-
-第一个参数可控制透明度和旋转，第二个参数可改为 `north`、`south`、`north west` 等 TikZ 锚点。透明度建议在 `0.03` 到 `0.15` 之间。不需要水印时删除整行。
-
-### 行内分隔符
-
-```latex
-tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
-```
-
-`\midbullet` 比直接输入 `·` 更整齐，适合技术栈、证书名称等行内分隔。
-
-## 组件参考
-
-| 命令 | 用途 | 必填情况 |
-| --- | --- | --- |
-| `\cvsection` | 章节标题 | 图标和标题都必填；加 `*` 可省略下划线 |
-| `\cvname` | 姓名 | 必填 |
-| `\cvpersonalinfo` | 个人信息栏 | 全部可选 |
-| `\cvphototopright` / `\cvphoto` | 证件照 | 图片路径必填 |
-| `\cvhorizontalline` | 可选的信息区分隔线 | 无参数 |
-| `\cventryseparator` | 项目、实习、工作条目之间的分隔线 | 通常由组件自动调用 |
-| `\cvproject` | 项目经历 | 全部可选 |
-| `\cvinternship` | 实习经历 | 全部可选 |
-| `\cvwork` | 工作经历 | 全部可选 |
-| `\cveducation` | 教育背景 | 全部可选 |
-| `\cvskillcategory` | 技能分类 | `content` 实际必填 |
-| `\cvhonor` | 荣誉证书 | 全部可选 |
-| `\cvselfassessment` | 自我评价 | 至少写一个 `\item` |
-| `\addwatermark` | 校徽水印 | 图片路径和锚点必填 |
-
-### `\cvsection` 章节标题
-
-```latex
-\cvsection{\faLaptopCode}{项目经历}
-```
-
-默认在标题下方绘制分隔线。若不需要分隔线，在命令后加 `*`：
-
-```latex
-\cvsection*{\faLaptopCode}{项目经历}
-```
-
-常用图标：
-
-| 用途 | 命令 | 用途 | 命令 |
-| --- | --- | --- | --- |
-| 项目 | `\faLaptopCode` | 实习 | `\faBriefcase` |
-| 教育 | `\faGraduationCap` | 技能 | `\faGear` |
-| 荣誉 | `\faAward` | 自我评价 | `\faCircleUser` |
-| 工作 | `\faBuilding` | 其他 | `\faRocket` |
-
-更多图标见 [Font Awesome Free](https://fontawesome.com/search?m=free)。
+这条命令把 `\documentclass` 和 `\addwatermark` 等导言区设置与简历正文分开。
+姓名、个人信息和所有章节命令都必须写在 `\begin{document}` 之后。
 
 ### `\cvname` 姓名
 
@@ -216,14 +160,15 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 \cvname{张~三}
 ```
 
-`~` 是不换行空格，可让两个字的姓名在视觉上更舒展。
+命令只有一个必填参数，显示为大号、加粗、居中姓名。
+`~` 是不换行空格，两个字的姓名可以用它增加字间距；三个字及以上的姓名通常不需要`~`。
 
 ### `\cvpersonalinfo` 个人信息栏
 
 ```latex
 \cvpersonalinfo{
   phone    = {+86 188--8888--8888},
-  email    = {you@example.com},
+  email    = {someone@example.com},
   link     = {https://github.com/your-name | GitHub},
   age      = {21岁},
   gender   = {男},
@@ -232,21 +177,69 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 }
 ```
 
-| 键 | 含义 | 说明 |
-| --- | --- | --- |
-| `phone` | 电话 | 自动生成可点击的 `tel:` 链接 |
-| `email` | 邮箱 | 自动生成可点击的 `mailto:` 链接 |
-| `link` | 主页 | 写法为 `{URL \| 显示文字}`，显示文字可省略 |
-| `age` | 年龄 | 原样显示 |
-| `gender` | 性别 | 原样显示 |
-| `identity` | 身份 | 可用 `\|` 分隔多个身份 |
-| `target` | 求职目标 | 原样显示 |
+| 键         | 含义     | 是否可省略 | 写法与效果                                                  |
+| ---------- | -------- | ---------- | ----------------------------------------------------------- |
+| `phone`    | 电话     | 是         | 显示在第一行，并自动生成可点击的 `tel:` 链接                |
+| `email`    | 邮箱     | 是         | 显示在第一行，并自动生成可点击的 `mailto:` 链接             |
+| `link`     | 个人主页 | 是         | 写作 `{URL \| 显示文字}`；只写 URL 时直接显示规范化后的网址 |
+| `age`      | 年龄     | 是         | 显示在第二行                                                |
+| `gender`   | 性别     | 是         | 显示在第二行                                                |
+| `identity` | 身份     | 是         | 显示在第二行；可用 `\|` 分隔多个身份                        |
+| `target`   | 求职目标 | 是         | 显示在第二行                                                |
 
-第一行显示 `phone`、`email`，第二行显示其余字段。`link` 会自动识别 GitHub、Gitee 和 GitLab 图标，其他网址使用通用主页图标。
+第一行固定显示电话和邮箱，第二行按年龄、性别、身份、求职目标、个人主页的顺序排列；
+未填写的字段及其前后的分隔符会自动省略。主页链接会自动识别 GitHub、Gitee 和 GitLab 图标，
+其他域名使用通用地球图标。网址缺少协议时，组件会自动补全 `https://`，显示文字中不保留协议前缀。
+
+### `\cvphototopright` 右上角证件照
+
+```latex
+\cvphototopright[2.5cm]{assets/images/person.png}
+```
+
+| 参数             | 是否必填 | 说明                                            |
+| ---------------- | -------- | ----------------------------------------------- |
+| `[...]` 照片宽度 | 可选     | 默认 `2.5cm`；照片高度按原图比例自动计算        |
+| `{...}` 图片路径 | 必须     | 相对于模板目录，例如 `assets/images/person.png` |
+
+照片通过页面坐标固定在右上角，不占用正文行；换一张同路径、同比例的照片时，`main.tex` 无需修改。
+如果新照片把正文向下挤，可以在照片命令之后临时加入 `\vspace{-1.2em}` 收回间距，数值可按实际效果微调。
+不需要照片时删除整条命令，同时删除相邻的 `\vspace`。
+
+需要把照片放入正文流时，可以改用：
+
+```latex
+\cvphoto[2.5cm]{assets/images/person.png}
+```
+
+### `\cvsection` 内容模块标题
+
+```latex
+\cvsection{\faLaptopCode}{项目经历}
+```
+
+| 参数         | 是否必填 | 说明                                                |
+| ------------ | -------- | --------------------------------------------------- |
+| 第 1 个 `{}` | 必须     | Font Awesome 图标命令                               |
+| 第 2 个 `{}` | 必须     | 章节标题文字                                        |
+| 命令后的 `*` | 可选     | 写成 `\cvsection*{...}{...}` 时不绘制标题下方分隔线 |
+
+默认会绘制章节下划线。章节内容较少、页面空间紧张时可以加 `*`；也可以直接把整个章节连同标题删除。
+常用图标如下：
+
+| 用途 | 命令               | 用途     | 命令            |
+| ---- | ------------------ | -------- | --------------- |
+| 项目 | `\faLaptopCode`    | 实习     | `\faBriefcase`  |
+| 教育 | `\faGraduationCap` | 技能     | `\faGear`       |
+| 荣誉 | `\faAward`         | 自我评价 | `\faCircleUser` |
+| 工作 | `\faBuilding`      | 其他     | `\faRocket`     |
+
+更多图标见 [Font Awesome Free](https://fontawesome.com/search?m=free)。
 
 ### `\cvproject` 项目经历
 
 ```latex
+\cvsection{\faLaptopCode}{项目经历}
 \cvproject{
   name = {制造产线品质数据可视化分析},
   date = {2026.06 --- 2026.08},
@@ -263,21 +256,25 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 }
 ```
 
-| 键 | 含义 | 显示方式 |
-| --- | --- | --- |
-| `name` | 项目名称 | 标题行左侧，加粗 |
-| `link` | 项目链接 | 标题行中间，可点击 |
-| `date` | 项目时间 | 标题行右侧 |
-| `intro` | 项目介绍 | 「项目介绍：」+ 正文 |
-| `tech` | 技术栈 | 「技术栈：」+ 正文 |
-| `duty` | 个人职责 | 块式标签 + 圆点列表 |
-| `highlight` | 项目亮点 | 块式标签 + 圆点列表 |
+| 键          | 含义     | 是否可省略 | 写法与显示方式                                 |
+| ----------- | -------- | ---------- | ---------------------------------------------- |
+| `name`      | 项目名称 | 是         | 标题行左侧，加粗                               |
+| `link`      | 项目链接 | 是         | 标题行中间；写入完整 URL，图标由域名自动判断   |
+| `date`      | 项目时间 | 是         | 标题行右侧                                     |
+| `intro`     | 项目介绍 | 是         | 自动添加「项目介绍：」，正文与标签同一段       |
+| `tech`      | 技术栈   | 是         | 自动添加「技术栈：」，用 `\midbullet` 分隔技术 |
+| `duty`      | 个人职责 | 是         | 自动添加块式标签，后接 `\item` 圆点列表        |
+| `highlight` | 项目亮点 | 是         | 自动添加块式标签，后接 `\item` 圆点列表        |
 
-显示顺序固定为：标题行 → 项目介绍 → 技术栈 → 个人职责 → 项目亮点。连续填写多个 `\cvproject` 时，相邻项目之间会自动绘制 `0.6pt`、与章节标题下划线同粗的分隔线，上下各留出 `0.75ex`，使线位于两段内容之间。
+字段技术上都可以省略，但实际填写时建议至少保留 `name` 和一段 `duty` 或 `highlight`。
+显示顺序固定为：标题行 → 项目介绍 → 技术栈 → 个人职责 → 项目亮点。
+
+连续调用多次 `\cvproject` 时，项目之间会自动绘制分隔线，第一项前不会额外画线。
 
 ### `\cvinternship` 实习经历
 
 ```latex
+\cvsection{\faBriefcase}{实习经历}
 \cvinternship{
   position = {运维开发实习生},
   company  = {某某信息技术有限公司},
@@ -291,19 +288,18 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 }
 ```
 
-| 键 | 含义 | 显示方式 |
-| --- | --- | --- |
-| `position` | 职位 | 标题行左侧，加粗 |
-| `company` | 公司 | 标题行中间，加粗 |
-| `date` | 时间 | 标题行右侧 |
-| `duty` | 岗位职责 | 块式标签 + 圆点列表 |
-| `achievement` | 产出成果 | 块式标签 + 圆点列表 |
+| 键            | 含义     | 是否可省略 | 写法与显示方式                          |
+| ------------- | -------- | ---------- | --------------------------------------- |
+| `position`    | 职位     | 是         | 标题行左侧，加粗                        |
+| `company`     | 公司     | 是         | 标题行中间，加粗                        |
+| `date`        | 时间     | 是         | 标题行右侧                              |
+| `duty`        | 岗位职责 | 是         | 「岗位职责」块式标签，后接 `\item` 列表 |
+| `achievement` | 产出成果 | 是         | 「产出成果」块式标签，后接 `\item` 列表 |
 
-连续填写多个 `\cvinternship` 时，相邻实习经历之间会自动绘制分隔线，样式和位置与项目经历一致。
+连续填写多个 `\cvinternship` 时，相邻实习经历之间会自动绘制分隔线。
+没有实习经历时，把本章的 `\cvsection` 和所有 `\cvinternship` 一起删除。
 
 ### `\cvwork` 工作经历
-
-字段和写法与 `\cvinternship` 一致，只改变命令名和章节标题：
 
 ```latex
 \cvsection{\faBuilding}{工作经历}
@@ -320,86 +316,127 @@ tech = {Python~\midbullet~Pandas~\midbullet~SQLite}
 }
 ```
 
-连续填写多个 `\cvwork` 时，相邻工作经历之间会自动绘制分隔线；样式与项目、实习经历保持一致。三类经历的第一段前都不会额外画线。没有正式工作经历时，可以把章节标题和 `\cvwork` 整段删除。
+字段和写法与 `\cvinternship` 完全一致，只把命令改成了 `\cvwork`，把块式标签改成了「工作职责」和「工作成果」。
+连续填写多个 `\cvwork` 时会自动添加分隔线；没有正式工作经历时，把整章删除。
 
 ### `\cveducation` 教育背景
 
 ```latex
+\cvsection{\faGraduationCap}{教育背景}
 \cveducation{
   date    = {2023.09 --- 2027.06},
   school  = {某某大学},
   major   = {某某专业},
   degree  = {本科},
   content = {
-    \item 专业排名：前20\%（GPA:~4.0~/~5.0）
-    \item 主修课程：软件工程，数据库系统原理，数据结构，计算机网络
+  \item 专业排名：前20\%（GPA:~4.0~/~5.0）
+  \item 主修课程：软件工程，数据库系统原理，数据结构，计算机网络
   },
 }
 ```
 
-| 键 | 含义 | 说明 |
-| --- | --- | --- |
-| `date` | 就读时间 | 标题行右侧，右对齐 |
-| `school` | 学校 | 标题行左侧，加粗 |
-| `major` | 专业 | 可省略 |
-| `degree` | 学历 | 如「本科」「硕士」 |
-| `content` | 补充内容 | 使用 `\item` 填写任意条目 |
+| 键        | 含义     | 是否可省略 | 写法与显示方式                                |
+| --------- | -------- | ---------- | --------------------------------------------- |
+| `date`    | 就读时间 | 是         | 标题行右侧，右对齐                            |
+| `school`  | 学校     | 是         | 标题行左侧，加粗                              |
+| `major`   | 专业     | 是         | 与 `degree` 自动连接后居中显示                |
+| `degree`  | 学历     | 是         | 如「本科」「硕士」                            |
+| `content` | 补充内容 | 是         | 使用多个 `\item` 填写排名、课程等任意补充条目 |
 
-学校位于标题行左侧，专业与学历自动连接后居中，日期位于同一行右端。缺少哪项就跳过哪项；`content` 中的条目会作为小号、常规字重的圆点列表从左侧开始排列。
+`content` 会渲染成紧接学校行的圆点列表，不要再包一层 `\begin{itemize}`。
+可连续调用多次 `\cveducation` 添加多段教育经历；没有专业或学历时删掉对应键即可。
 
-可连续调用多次 `\cveducation` 添加多段教育经历。每段使用独立的键值内容，排名、课程或其他补充信息统一写在 `content` 中。
+> [!TIP]
+> **最佳实践**
+>
+> 如果只写一条教育背景，推荐使用`content`键值接口避免模块只有一行；两条及以上的教育背景建议都省略`content`键值接口。
 
 ### `\cvskillcategory` 专业技能
 
 ```latex
+\cvsection{\faGear}{专业技能}
 \cvskillcategory{
   name    = {编程与脚本},
   content = {掌握 Python 及常用库，有 C\# 基础。},
 }
 ```
 
-`name` 可以省略，`content` 为空时整条不会显示。`name` 后会自动补冒号，不要在值里重复填写。
+| 键        | 含义     | 是否可省略 | 写法与显示方式                             |
+| --------- | -------- | ---------- | ------------------------------------------ |
+| `name`    | 分类名称 | 是         | 自动补全角冒号并加粗；省略时只显示内容     |
+| `content` | 分类内容 | 否         | 推荐一行以内；为空时整条技能分类都不会输出 |
+
+每一类技能调用一次 `\cvskillcategory`。`content` 是普通正文，不需要写 `\item`；
+不要在 `name` 的值里重复输入「：」。
 
 ### `\cvhonor` 荣誉证书
 
 ```latex
+\cvsection{\faAward}{荣誉证书}
 \cvhonor{
-  date   = {2025.12},
-  award  = {全国计算机技术与软件专业技术资格证书~\midbullet~信息安全工程师},
+  date  = {2025.12},
+  award = {全国计算机技术与软件专业技术资格证书~\midbullet~信息安全工程师},
 }
 ```
 
-每条 `\cvhonor` 会在 `award` 前自动添加“1.”“2.”等序号。`award` 在标题行左侧，`date` 在标题行右侧并右对齐。
+| 键      | 含义           | 是否可省略 | 写法与显示方式                                 |
+| ------- | -------------- | ---------- | ---------------------------------------------- |
+| `date`  | 获得时间       | 是         | 标题行右侧，右对齐                             |
+| `award` | 奖项或证书名称 | 是         | 标题行左侧；多条证书信息可用 `\midbullet` 分隔 |
+
+每次调用 `\cvhonor` 生成一条记录，并自动添加「1.」「2.」等序号。
+连续填写多张证书时逐条调用；不需要证书章节时，把标题和所有条目一起删除。
 
 ### `\cvselfassessment` 自我评价
 
 ```latex
-\cvselfassessment
-{
-\item 解决问题：先复现定位，再查日志与文档寻找根因。
-\item 沟通协作：把操作步骤整理成文档并及时共享。
-\item 抗压能力：按优先级拆分任务，交付前完成自测。
+\cvsection{\faCircleUser}{自我评价}
+\cvselfassessment{
+  \item 解决问题：先复现定位，再查日志与文档寻找根因。
+  \item 沟通协作：把操作步骤整理成文档并及时共享。
+  \item 抗压能力：按优先级拆分任务，交付前完成自测。
 }
 ```
 
-这个命令不接受键值对，直接传入 `\item` 列表。
+这个命令不接受键值对，直接把完整的 `\item` 列表放进唯一的花括号参数中。
+列表项会自动渲染为圆点列表，至少保留一个 `\item`，不要再在外面嵌套 `\begin{itemize}`。
+
+### `\end{document}` 结束文档
+
+所有章节写完后使用：
+
+```latex
+\end{document}
+```
+
+它必须位于文件最后，之后的文字不会进入 PDF。删除整章时注意不要把这一行一起删掉。
+
+### 辅助命令
+
+| 命令                | 用法与说明                                                        |
+| ------------------- | ----------------------------------------------------------------- |
+| `\midbullet`        | 行内圆点分隔符，例如 `Python~\midbullet~Pandas~\midbullet~SQLite` |
+| `\cventryseparator` | 项目、实习、工作条目的自动分隔线；通常不需要手动调用              |
+| `\cvphoto`          | 把照片插入正文流：`\cvphoto[2.5cm]{图片路径}`                     |
+| `\vspace{-1.2em}`   | 临时收紧上下间距，例如照片之后与第一个章节之间                    |
+
+日期中的范围建议统一写成 `2026.06 --- 2026.08`。`---` 会显示为较长的破折号，
+同一份简历内应保持日期格式一致。
 
 ## 版式与配色
 
 只修改内容时不需要打开 `styles/`。需要调整版式时，可参考下面的位置：
 
-| 目标 | 文件 | 主要配置 |
-| --- | --- | --- |
-| 字号、纸张、页边距 | `styles/resume-tzcan.cls` | `\LoadClass`、`geometry` |
-| 字体 | `styles/resume-tzcan.cls` | `ctex` 的 `fontset=fandol` |
-| 主题颜色 | `styles/components/tzcan-common.sty` | `cvsection`、`cvicon`、`cvrule`、`cvtext` |
-| 边框粗细与间距 | `styles/components/tzcan-border.sty` | `\cvborderouterwidth`、`\cvborderinnerwidth`、`\cvbordergap` |
-| 章节标题间距 | `styles/components/tzcan-section.sty` | `\cvsectiontitlesep`、`\cvsectionrulesep` |
-| 项目 / 实习 / 工作条目分隔线 | `styles/components/tzcan-common.sty` | `\cventryseparator` |
-| 照片与分隔线位置 | `styles/components/tzcan-personalinfo.sty` | `\cvphototop`、`\cvphotoright`、`\cvlinegap` |
-| 列表缩进 | `styles/components/tzcan-common.sty` | `\cvbulletlist` 的 `leftmargin` |
-
-中文固定使用 TeX Live 自带的 Fandol 字体，西文和数学字体沿用 TeX Live 的 Latin Modern。模板不读取系统字体，因此无需额外安装宋体、黑体或中易字库。
+| 目标                         | 文件                                       | 主要配置                                                     |
+| ---------------------------- | ------------------------------------------ | ------------------------------------------------------------ |
+| 字号、纸张、页边距           | `styles/resume-tzcan.cls`                  | `\LoadClass`、`geometry`                                     |
+| 字体                         | `styles/resume-tzcan.cls`                  | `ctex` 的 `fontset=fandol`                                   |
+| 主题颜色                     | `styles/components/tzcan-common.sty`       | `cvsection`、`cvicon`、`cvrule`、`cvtext`                    |
+| 边框粗细与间距               | `styles/components/tzcan-border.sty`       | `\cvborderouterwidth`、`\cvborderinnerwidth`、`\cvbordergap` |
+| 章节标题间距                 | `styles/components/tzcan-section.sty`      | `\cvsectiontitlesep`、`\cvsectionrulesep`                    |
+| 项目 / 实习 / 工作条目分隔线 | `styles/components/tzcan-common.sty`       | `\cventryseparator`                                          |
+| 照片位置                     | `styles/components/tzcan-personalinfo.sty` | `\cvphototop`、`\cvphotoright`                               |
+| 列表缩进                     | `styles/components/tzcan-common.sty`       | `\cvbulletlist` 的 `leftmargin`                              |
 
 主题颜色使用 HTML 十六进制值，例如：
 
@@ -429,17 +466,17 @@ src/templates/tzcan/
 
 ## 常见问题
 
-| 问题 | 检查方法 |
-| --- | --- |
-| Overleaf 找不到 `styles/resume-tzcan.cls` | 确认 `main.tex`、`styles/`、`assets/` 位于项目根目录 |
-| 中文无法显示或 `ctex` 报错 | 编译器必须选择 XeLaTeX，并使用 `latexmk main.tex` |
-| 提示找不到 Fandol 字体 | 使用完整安装的 TeX Live 2026，或执行 `tlmgr install fandol` |
-| 图片找不到 | 在模板目录编译，路径写成 `assets/images/person.png` 或 `assets/badges/xxx.png` |
-| 图标显示为方块 | 执行 `tlmgr install fontawesome7` |
-| 修改后 PDF 没变化 | 本地执行 `latexmk -C main.tex`；其他方式删除 `build/` 后重编 |
-| 新增第二段经历后 PDF 没显示 | 确认 `build/main.pdf` 的时间晚于 `main.tex`，然后在模板目录重新执行 `latexmk main.tex` |
-| 不知道具体报错位置 | 打开 `build/main.log`，从后往前找到第一个以 `!` 开头的错误 |
-| 列表意外折行 | 精简文字，让每条列表连同行首标签不超过 46 个汉字 |
-| 页面内容压到边框 | 精简内容或调整 `resume-tzcan.cls` 中的 `geometry` 下边距 |
+| 问题                                      | 检查方法                                                                               |
+| ----------------------------------------- | -------------------------------------------------------------------------------------- |
+| Overleaf 找不到 `styles/resume-tzcan.cls` | 确认 `main.tex`、`styles/`、`assets/` 位于项目根目录                                   |
+| 中文无法显示或 `ctex` 报错                | 编译器必须选择 XeLaTeX，并使用 `latexmk main.tex`                                      |
+| 提示找不到 Fandol 字体                    | 使用完整安装的 TeX Live 2026，或执行 `tlmgr install fandol`                            |
+| 图片找不到                                | 在模板目录编译，路径写成 `assets/images/person.png` 或 `assets/badges/xxx.png`         |
+| 图标显示为方块                            | 执行 `tlmgr install fontawesome7`                                                      |
+| 修改后 PDF 没变化                         | 本地执行 `latexmk -C main.tex`；其他方式删除 `build/` 后重编                           |
+| 新增第二段经历后 PDF 没显示               | 确认 `build/main.pdf` 的时间晚于 `main.tex`，然后在模板目录重新执行 `latexmk main.tex` |
+| 不知道具体报错位置                        | 打开 `build/main.log`，从后往前找到第一个以 `!` 开头的错误                             |
+| 列表意外折行                              | 精简文字，让每条列表连同行首标签不超过 46 个汉字                                       |
+| 页面内容压到边框                          | 精简内容或调整 `resume-tzcan.cls` 中的 `geometry` 下边距                               |
 
 更多问题可提交 [Issue](https://github.com/tellcts/resumes-CV/issues)。
