@@ -54,7 +54,7 @@
 \RequirePackage{styles/components/tzcan-watermark}       % \addwatermark
 \RequirePackage{styles/components/tzcan-border}          % \cvborderframe
 \RequirePackage{styles/components/tzcan-section}         % \cvsection
-\RequirePackage{styles/components/tzcan-personalinfo}    % 个人信息区：\cvname \cvpersonalinfo \cvphototopright \cvhorizontalline
+\RequirePackage{styles/components/tzcan-personalinfo}    % 个人信息区：\cvname \cvpersonalinfo \cvphototopright
 \RequirePackage{styles/components/tzcan-education}       % \cveducation
 \RequirePackage{styles/components/tzcan-honor}           % \cvhonor
 \RequirePackage{styles/components/tzcan-skill}           % \cvskillcategory
