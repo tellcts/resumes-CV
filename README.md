@@ -8,8 +8,8 @@
 
 [![CI](https://github.com/tellcts/resumes-CV/actions/workflows/build-check.yml/badge.svg?branch=main)](https://github.com/tellcts/resumes-CV/actions/workflows/build-check.yml)
 ![TeX Live](https://img.shields.io/badge/TeX%20Live-2026-3D6117?logo=latex&logoColor=white)
-[![Overleaf](https://img.shields.io/badge/Overleaf-online-47A141?logo=overleaf&logoColor=white)](src/templates/tzcan/USAGE.md#方式一overleaf-在线编译)
-[![Docker](https://img.shields.io/badge/Docker-supported-2496ED?logo=docker&logoColor=white)](src/templates/tzcan/USAGE.md#方式三docker-容器编译)
+[![Overleaf](https://img.shields.io/badge/Overleaf-online-47A141?logo=overleaf&logoColor=white)](template-tzcan/USAGE.md#方式一overleaf-在线编译)
+[![Docker](https://img.shields.io/badge/Docker-supported-2496ED?logo=docker&logoColor=white)](template-tzcan/USAGE.md#方式三docker-容器编译)
 [![Downloads](https://img.shields.io/github/downloads/tellcts/resumes-CV/total?label=Downloads&color=2EA043&logo=github)](https://github.com/tellcts/resumes-CV/releases)
 [![GitHub stars](https://img.shields.io/github/stars/tellcts/resumes-CV?style=social)](https://github.com/tellcts/resumes-CV)
 [![License](https://img.shields.io/badge/License-PolyForm%20Noncommercial%201.0.0-orange.svg)](LICENSE)
@@ -23,12 +23,12 @@
 
 <div align="center">
 
-<img src="previews/template-tzcan/tzcan-1.jpg" width="49%" alt="tzcan 模板效果预览 · 第 1 页" />
-<img src="previews/template-tzcan/tzcan-2.jpg" width="49%" alt="tzcan 模板效果预览 · 第 2 页" />
+<img src="template-tzcan/assets/examples/tzcan-1.jpg" width="49%" alt="tzcan 模板效果预览 · 第 1 页" />
+<img src="template-tzcan/assets/examples/tzcan-2.jpg" width="49%" alt="tzcan 模板效果预览 · 第 2 页" />
 
 **tzcan 模板** · 第 1 / 2 页 —— 双矩形边框 · 校徽水印 · 内容与版式彻底分离
 
-[🖼️ **查看全部模板效果图 →**](PREVIEWS.md) · [📖 **tzcan 使用说明**](src/templates/tzcan/USAGE.md)
+[🖼️ **查看全部模板效果图 →**](PREVIEWS.md) · [📖 **tzcan 使用说明**](template-tzcan/USAGE.md)
 
 </div>
 
@@ -83,13 +83,13 @@
 
 ## 🎨 可用模板
 
-| 模板                          | 风格                                                                  | 使用说明                                       | 效果预览                                |
-| ----------------------------- | --------------------------------------------------------------------- | ---------------------------------------------- | --------------------------------------- |
-| **tzcan** <br/>*(目前已实现)* | 双矩形边框 · 校徽水印 · 两行信息栏 · 内容/版式分离 · 全组件键值对接口 | [📖 **USAGE.md**](src/templates/tzcan/USAGE.md) | [🖼️ **第 1 ~ 2 页**](PREVIEWS.md#-tzcan) |
+| 模板                          | 风格                                                                  | 使用说明                                  | 效果预览                                |
+| ----------------------------- | --------------------------------------------------------------------- | ----------------------------------------- | --------------------------------------- |
+| **tzcan** <br/>*(目前已实现)* | 双矩形边框 · 校徽水印 · 两行信息栏 · 内容/版式分离 · 全组件键值对接口 | [📖 **USAGE.md**](template-tzcan/USAGE.md) | [🖼️ **第 1 ~ 2 页**](PREVIEWS.md#-tzcan) |
 
 > [!NOTE]
 > **全部模板的效果图都在 [🖼️ PREVIEWS.md](PREVIEWS.md)** —— 本 README 的预览区只展示 tzcan 一个模板，
-> 图片源文件放在 `previews/template-<模板名>/` 下，
+> 每个模板的图片源文件放在 `template-<模板名>/assets/` 下，具体子目录不限，
 > 新增模板时的具体要求见 [🤝 CONTRIBUTING.md](CONTRIBUTING.md#-新增模板规范)。
 
 ## 🔧 环境要求
@@ -104,10 +104,10 @@
 | **方式三** | **Docker 容器编译**   | 不想在本机装几个 GB 的 LaTeX | 免装 TeX Live，源码与产物仍留在自己电脑上            | 要先装好 Docker；首次拉镜像约 2.5 GB                       |
 
 各条路的操作步骤（Overleaf 怎么上传、怎么切 XeLaTeX、Docker 命令行怎么写）见
-[📖 tzcan `USAGE.md` → 🚀 选择编译方式](src/templates/tzcan/USAGE.md#-选择编译方式)：
-[方式一：Overleaf](src/templates/tzcan/USAGE.md#方式一overleaf-在线编译) ·
-[方式二：本地 TeX Live](src/templates/tzcan/USAGE.md#方式二本地安装-tex-live) ·
-[方式三：Docker](src/templates/tzcan/USAGE.md#方式三docker-容器编译)。
+[📖 tzcan `USAGE.md` → 🚀 选择编译方式](template-tzcan/USAGE.md#-选择编译方式)：
+[方式一：Overleaf](template-tzcan/USAGE.md#方式一overleaf-在线编译) ·
+[方式二：本地 TeX Live](template-tzcan/USAGE.md#方式二本地安装-tex-live) ·
+[方式三：Docker](template-tzcan/USAGE.md#方式三docker-容器编译)。
 
 > [!CAUTION]
 > **走 Overleaf 就等于把简历交给第三方。** 姓名、手机号、邮箱、证件照都会存在它的云端 ——
@@ -134,24 +134,25 @@ resumes-CV/
 ├── README.md                    ← 你正在看的文件
 ├── CONTRIBUTING.md              # 贡献指南：开发环境 / 规范 / 提 PR 流程
 ├── PREVIEWS.md                  # 🖼️ 全部模板的效果图（README 只展示 tzcan）
-├── previews/                    # 各模板的简历效果图（template-<模板名>/）
-│   └── template-tzcan/          # tzcan-1.jpg / tzcan-2.jpg：第 1、2 页效果图
-└── src/
-    └── templates/
-        └── tzcan/               # tzcan 模板
-            ├── main.tex         # 👈 只改这一个文件：简历内容
-            ├── USAGE.md         # 📖 该模板的完整使用说明
-            ├── .latexmkrc       # latexmk 配置（XeLaTeX 引擎、输出到 build/）
-            ├── assets/          # 证件照与校徽素材
-            ├── build/           # 编译产物（main.pdf 在这里）
-            └── styles/          # 版式：文档类 + 12 个组件
-                ├── resume-tzcan.cls
-                └── components/
-                    ├── tzcan-common.sty        # 底座：主题色 / 圆点列表
-                    ├── tzcan-section.sty       # \cvsection 模块标题
-                    ├── tzcan-personalinfo.sty  # 个人信息区
-                    ├── tzcan-project.sty       # \cvproject 项目经历
-                    └── ...                     # 共 12 个组件
+└── template-tzcan/              # tzcan 模板
+    ├── main.tex                 # 👈 只改这一个文件：简历内容
+    ├── USAGE.md                 # 📖 该模板的完整使用说明
+    ├── AGENTS.md                # 模板级开发约定
+    ├── CLAUDE.md                # 指向 AGENTS.md
+    ├── .latexmkrc               # latexmk 配置（XeLaTeX 引擎、输出到 build/）
+    ├── assets/                  # 证件照、校徽、效果图与操作截图
+    │   ├── badges/
+    │   ├── images/
+    │   └── examples/
+    ├── build/                   # 编译产物（main.pdf 在这里）
+    ├── scripts/                 # Docker 编译脚本
+    └── styles/                  # 版式：文档类 + 12 个组件（同级）
+        ├── resume-tzcan.cls
+        ├── tzcan-common.sty        # 底座：主题色 / 圆点列表
+        ├── tzcan-section.sty       # \cvsection 模块标题
+        ├── tzcan-personalinfo.sty  # 个人信息区
+        ├── tzcan-project.sty       # \cvproject 项目经历
+        └── ...                     # 共 12 个组件
 ```
 
 ## 🤝 参与贡献

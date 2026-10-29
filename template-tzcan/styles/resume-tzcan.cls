@@ -4,7 +4,7 @@
 % 本类不接受任何类选项，字号 11pt、纸张 A4、页边距等一律写死在下面。
 % 理由：这些值与「照片 xshift」「边框几何」「分割线与照片右边界对齐」互相咬合，
 % 拆成可调选项等于把耦合关系暴露给使用者，容易一改就错位。
-% 要改版式请直接改本文件里的值，并同步检查 components/tzcan-personalinfo.sty
+% 要改版式请直接改本文件里的值，并同步检查 tzcan-personalinfo.sty
 % 里 \cvphototopright 的 xshift。
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{resume-tzcan}[2026/10/12 Created by Tzcan]
@@ -50,18 +50,18 @@
 % 其余 11 个组件全部依赖它。
 % 其余组件彼此无依赖，顺序可调。
 
-\RequirePackage{styles/components/tzcan-common}          % 底座：颜色 / 工具 / 圆点列表
-\RequirePackage{styles/components/tzcan-watermark}       % \addwatermark
-\RequirePackage{styles/components/tzcan-border}          % \cvborderframe
-\RequirePackage{styles/components/tzcan-section}         % \cvsection
-\RequirePackage{styles/components/tzcan-personalinfo}    % 个人信息区：\cvname \cvpersonalinfo \cvphototopright
-\RequirePackage{styles/components/tzcan-education}       % \cveducation
-\RequirePackage{styles/components/tzcan-honor}           % \cvhonor
-\RequirePackage{styles/components/tzcan-skill}           % \cvskillcategory
-\RequirePackage{styles/components/tzcan-project}         % \cvproject
-\RequirePackage{styles/components/tzcan-internship}      % \cvinternship
-\RequirePackage{styles/components/tzcan-workship}        % \cvwork
-\RequirePackage{styles/components/tzcan-selfassessment}  % \cvselfassessment
+\RequirePackage{tzcan-common}          % 底座：颜色 / 工具 / 圆点列表
+\RequirePackage{tzcan-watermark}       % \addwatermark
+\RequirePackage{tzcan-border}          % \cvborderframe
+\RequirePackage{tzcan-section}         % \cvsection
+\RequirePackage{tzcan-personalinfo}    % 个人信息区：\cvname \cvpersonalinfo \cvphototopright
+\RequirePackage{tzcan-education}       % \cveducation
+\RequirePackage{tzcan-honor}           % \cvhonor
+\RequirePackage{tzcan-skill}           % \cvskillcategory
+\RequirePackage{tzcan-project}         % \cvproject
+\RequirePackage{tzcan-internship}      % \cvinternship
+\RequirePackage{tzcan-workship}        % \cvwork
+\RequirePackage{tzcan-selfassessment}  % \cvselfassessment
 
 % ============================================================
 % 三、文档级设置
@@ -73,7 +73,7 @@
 %   · 所有分割线（\rule{\textwidth}）的右端正好落在证件照右边界上；
 %   · 左右边距相等 ⇒ 正文与分割线都保持居中；
 %   · 正文行宽 = 分割线长度（18cm），各模块内容与分割线左右两端都对齐。
-% 注意：改动这里的数值时，要同步改 components/tzcan-personalinfo.sty 里
+% 注意：改动这里的数值时，要同步改 tzcan-personalinfo.sty 里
 % \cvphototopright 的 xshift。
 % top 说明：第 2 页及后续页从距页顶 0.89cm 处开始，使正文视觉上边距
 % 与首页正文下边距一致；第一页再由 \AtBeginDocument 的 -0.39cm 微调
@@ -96,7 +96,7 @@
 % 行距同步设为模板正文的标准行距 13.6pt。
 \renewcommand{\small}{\fontsize{11pt}{13.6pt}\selectfont}
 
-% 添加双矩形边框包裹（几何旋钮见 components/tzcan-border.sty）
+% 添加双矩形边框包裹（几何旋钮见 tzcan-border.sty）
 \cvborderframe
 
 % 压掉 article 默认上边距的一部分，让首行上移到与照片顶部对齐的位置。
