@@ -59,12 +59,34 @@ jobs:
 
             zip_name="Resume.Template.${name#template-}-${VERSION}.zip"
 
+            # 六个发布路径直接放在 zip 根目录，不额外创建模板名目录。
             git archive \
               --format=zip \
-              --prefix="${name#template-}/" \
               -o "dist/${zip_name}" \
               "${GITHUB_REF_NAME}:${name}" \
               "${package_paths[@]}"
+
+            # 防止以后重新引入目录前缀：zip 根目录必须恰好是指定的发布路径。
+            archive_entries="$(unzip -Z1 "dist/${zip_name}")"
+            archive_roots="$(
+              printf '%s\n' "$archive_entries" \
+                | awk -F/ 'NF { print $1 }' \
+                | sort -u
+            )"
+
+            for required in "${package_paths[@]}"; do
+              if ! grep -Fxq -- "$required" <<< "$archive_roots"; then
+                echo "Release path is not at zip root: ${required} in ${zip_name}" >&2
+                exit 1
+              fi
+            done
+
+            for root in $archive_roots; do
+              if [[ " ${package_paths[*]} " != *" ${root} "* ]]; then
+                echo "Unexpected zip root entry: ${root} in ${zip_name}" >&2
+                exit 1
+              fi
+            done
 
           done
 
