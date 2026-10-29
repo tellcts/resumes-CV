@@ -15,15 +15,15 @@
 
 ### 方式一：Overleaf 在线编译
 
-1. 选择并下载最新 Release 中的模板压缩包，如 [Resume.Template.tzcan-2.2.0.zip](https://github.com/tellcts/resumes-CV/releases/download/v2.2.0/Resume.Template.tzcan-2.2.0.zip)。
+1. 选择并下载最新 [Release](https://github.com/tellcts/resumes-CV/releases/) 中的模板压缩包。
 2. 登录 <https://cn.overleaf.com/>，点击`创建新项目` -> 点击`Existing project(.zip)` -> 上传模板压缩包。
-![](../../../previews/template-tzcan/overleaf/overleaf_step_0.png)
-3. 进入项目页面后，点击左下角表示设置的`齿轮图标` -> 点击`编译器选项` -> 切换至`XeLaTeX` -> 关闭面板。
-![](../../../previews/template-tzcan/overleaf/overleaf_step_1.png)
-4. 点击最右侧栏目左上角的`重新编译`选项即可。
-![](../../../previews/template-tzcan/overleaf/overleaf_step_2.png)
-5. 点击最上面一行居中的`压缩包名称`，选择`下载PDF`或`下载源代码`即可。推荐同时选择二者，避免修改丢失,后续重传参照前序步骤。
-![](../../../previews/template-tzcan/overleaf/overleaf_step_3.png)
+![](assets/examples/overleaf/overleaf_step_0.png)
+1. 进入项目页面后，点击左下角表示设置的`齿轮图标` -> 点击`编译器选项` -> 切换至`XeLaTeX` -> 关闭面板。
+![](assets/examples/overleaf/overleaf_step_1.png)
+1. 点击最右侧栏目左上角的`重新编译`选项即可。
+![](assets/examples/overleaf/overleaf_step_2.png)
+1. 点击最上面一行居中的`压缩包名称`，选择`下载PDF`或`下载源代码`即可。推荐同时选择二者，避免修改丢失,后续重传参照前序步骤。
+![](assets/examples/overleaf/overleaf_step_3.png)
 
 > [!WARNING]
 > 使用 Overleaf 时，姓名、电话、邮箱和证件照都会保存在第三方服务器。介意隐私请选择本地 TeX Live 或 Docker。
@@ -37,7 +37,7 @@
 git clone --depth=1 https://github.com/tellcts/resumes-CV.git
 
 # 进入对应模板目录
-cd ./resumes-CV/src/templates/tzcan
+cd ./resumes-CV/template-tzcan
 
 # 在 main.tex 中修改好简历内容后编译
 latexmk main.tex
@@ -56,7 +56,7 @@ latexmk -pvc main.tex
 
 ```powershell
 # 进入对应模板目录
-cd ./resumes-CV/src/templates/tzcan
+cd ./resumes-CV/template-tzcan
 
 # 执行 Docker 编译脚本
 .\scripts\docker-build.ps1
@@ -67,7 +67,7 @@ cd ./resumes-CV/src/templates/tzcan
 - macOS & Linux
 ```bash
 # 进入对应模板目录
-cd ./resumes-CV/src/templates/tzcan
+cd ./resumes-CV/template-tzcan
 
 # 执行 Docker 编译脚本
 ./scripts/docker-build.sh
@@ -76,7 +76,7 @@ cd ./resumes-CV/src/templates/tzcan
 ./build/main.pdf
 ```
 
-默认镜像为 `ghcr.io/tellcts/texlive:latest`。如果下载速度较慢，可将 `scripts/docker-build.ps1` 和 `scripts/docker-build.sh` 中的镜像地址替换为速度更快的兼容镜像。
+默认镜像为 `ghcr.io/tellcts/texlive:latest`。如果下载速度较慢，可将 `scripts/docker-build.ps1` 和 `scripts/docker-build.sh` 中的镜像地址替换为DockerHub官方镜像地址`texlive/texlive:latest`。
 
 首次运行会下载镜像，之后会复用镜像。编译缓存异常时，删除模板目录下的 `build/` 后重新执行脚本。
 
@@ -112,11 +112,11 @@ cd ./resumes-CV/src/templates/tzcan
 ### `\documentclass` 加载模板
 
 ```latex
-\documentclass{styles/resume-tzcan}
+\documentclass{resume-tzcan}
 ```
 
-这是文档的第一条命令，必须放在 `\begin{document}` 之前，并且只能在模板目录 `src/templates/tzcan/` 下编译。
-请保持 `styles/resume-tzcan` 这一模板目录内相对路径不变，否则 Overleaf、Docker 与本机编译都可能找不到文档类。
+这是文档的第一条命令，必须放在 `\begin{document}` 之前，并且只能在模板目录 `template-tzcan/` 下编译。
+请在模板目录下使用 `latexmk`；它读取 `.latexmkrc` 后会把 `styles/` 加入 `TEXINPUTS`，从而找到 `styles/resume-tzcan.cls`。
 
 该文档类已经统一定义字号、A4 纸张、页边距、字体、边框和主题颜色，调用时不需要附加类选项。
 
@@ -138,7 +138,7 @@ cd ./resumes-CV/src/templates/tzcan
 > [!TIP]
 > **校徽图片推荐下载网站：<https://www.urongda.com/>。**
 > 
-> **将下载好的图片放置于`src/templates/tzcan/assets/badges/`目录下，更新`\addwatermark`命令中的文件名即可。**
+> **将下载好的图片放置于`template-tzcan/assets/badges/`目录下，更新`\addwatermark`命令中的文件名即可。**
 
 | 素材     | 常用位置                   | 建议                   |
 | -------- | -------------------------- | ---------------------- |
@@ -427,16 +427,16 @@ cd ./resumes-CV/src/templates/tzcan
 
 只修改内容时不需要打开 `styles/`。需要调整版式时，可参考下面的位置：
 
-| 目标                         | 文件                                       | 主要配置                                                     |
-| ---------------------------- | ------------------------------------------ | ------------------------------------------------------------ |
-| 字号、纸张、页边距           | `styles/resume-tzcan.cls`                  | `\LoadClass`、`geometry`                                     |
-| 字体                         | `styles/resume-tzcan.cls`                  | `ctex` 的 `fontset=fandol`                                   |
-| 主题颜色                     | `styles/components/tzcan-common.sty`       | `cvsection`、`cvicon`、`cvrule`、`cvtext`                    |
-| 边框粗细与间距               | `styles/components/tzcan-border.sty`       | `\cvborderouterwidth`、`\cvborderinnerwidth`、`\cvbordergap` |
-| 章节标题间距                 | `styles/components/tzcan-section.sty`      | `\cvsectiontitlesep`、`\cvsectionrulesep`                    |
-| 项目 / 实习 / 工作条目分隔线 | `styles/components/tzcan-common.sty`       | `\cventryseparator`                                          |
-| 照片位置                     | `styles/components/tzcan-personalinfo.sty` | `\cvphototop`、`\cvphotoright`                               |
-| 列表缩进                     | `styles/components/tzcan-common.sty`       | `\cvbulletlist` 的 `leftmargin`                              |
+| 目标                         | 文件                            | 主要配置                                                     |
+| ---------------------------- | ------------------------------- | ------------------------------------------------------------ |
+| 字号、纸张、页边距           | `styles/resume-tzcan.cls`       | `\LoadClass`、`geometry`                                     |
+| 字体                         | `styles/resume-tzcan.cls`       | `ctex` 的 `fontset=fandol`                                   |
+| 主题颜色                     | `styles/tzcan-common.sty`       | `cvsection`、`cvicon`、`cvrule`、`cvtext`                    |
+| 边框粗细与间距               | `styles/tzcan-border.sty`       | `\cvborderouterwidth`、`\cvborderinnerwidth`、`\cvbordergap` |
+| 章节标题间距                 | `styles/tzcan-section.sty`      | `\cvsectiontitlesep`、`\cvsectionrulesep`                    |
+| 项目 / 实习 / 工作条目分隔线 | `styles/tzcan-common.sty`       | `\cventryseparator`                                          |
+| 照片位置                     | `styles/tzcan-personalinfo.sty` | `\cvphototop`、`\cvphotoright`                               |
+| 列表缩进                     | `styles/tzcan-common.sty`       | `\cvbulletlist` 的 `leftmargin`                              |
 
 主题颜色使用 HTML 十六进制值，例如：
 
@@ -454,29 +454,36 @@ cd ./resumes-CV/src/templates/tzcan
 ## 目录结构
 
 ```text
-src/templates/tzcan/
+template-tzcan/
+├── .latexmkrc              # latexmk 配置
 ├── main.tex                # 简历内容
-├── assets/                 # 证件照与校徽
+├── USAGE.md                # 使用说明
+├── assets/                 # 证件照、校徽、效果图与操作截图
+│   ├── badges/
+│   ├── images/
+│   └── examples/
 ├── scripts/                # Docker 编译脚本
 ├── build/                  # 编译产物
-└── styles/                 # 文档类与组件
+└── styles/                 # 文档类与组件（同级）
+    ├── resume-tzcan.cls
+    └── tzcan-*.sty
 ```
 
 日常使用时只需要修改 `main.tex` 和 `assets/`。
 
 ## 常见问题
 
-| 问题                                      | 检查方法                                                                               |
-| ----------------------------------------- | -------------------------------------------------------------------------------------- |
-| Overleaf 找不到 `styles/resume-tzcan.cls` | 确认 `main.tex`、`styles/`、`assets/` 位于项目根目录                                   |
-| 中文无法显示或 `ctex` 报错                | 编译器必须选择 XeLaTeX，并使用 `latexmk main.tex`                                      |
-| 提示找不到 Fandol 字体                    | 使用完整安装的 TeX Live 2026，或执行 `tlmgr install fandol`                            |
-| 图片找不到                                | 在模板目录编译，路径写成 `assets/images/person.png` 或 `assets/badges/xxx.png`         |
-| 图标显示为方块                            | 执行 `tlmgr install fontawesome7`                                                      |
-| 修改后 PDF 没变化                         | 本地执行 `latexmk -C main.tex`；其他方式删除 `build/` 后重编                           |
-| 新增第二段经历后 PDF 没显示               | 确认 `build/main.pdf` 的时间晚于 `main.tex`，然后在模板目录重新执行 `latexmk main.tex` |
-| 不知道具体报错位置                        | 打开 `build/main.log`，从后往前找到第一个以 `!` 开头的错误                             |
-| 列表意外折行                              | 精简文字，让每条列表连同行首标签不超过 46 个汉字                                       |
-| 页面内容压到边框                          | 精简内容或调整 `resume-tzcan.cls` 中的 `geometry` 下边距                               |
+| 问题                               | 检查方法                                                                               |
+| ---------------------------------- | -------------------------------------------------------------------------------------- |
+| Overleaf 找不到 `resume-tzcan.cls` | 确认 `main.tex`、`.latexmkrc`、`styles/`、`assets/` 位于项目根目录，并切换至 XeLaTeX   |
+| 中文无法显示或 `ctex` 报错         | 编译器必须选择 XeLaTeX，并使用 `latexmk main.tex`                                      |
+| 提示找不到 Fandol 字体             | 使用完整安装的 TeX Live 2026，或执行 `tlmgr install fandol`                            |
+| 图片找不到                         | 在模板目录编译，路径写成 `assets/images/person.png` 或 `assets/badges/xxx.png`         |
+| 图标显示为方块                     | 执行 `tlmgr install fontawesome7`                                                      |
+| 修改后 PDF 没变化                  | 本地执行 `latexmk -C main.tex`；其他方式删除 `build/` 后重编                           |
+| 新增第二段经历后 PDF 没显示        | 确认 `build/main.pdf` 的时间晚于 `main.tex`，然后在模板目录重新执行 `latexmk main.tex` |
+| 不知道具体报错位置                 | 打开 `build/main.log`，从后往前找到第一个以 `!` 开头的错误                             |
+| 列表意外折行                       | 精简文字，让每条列表连同行首标签不超过 46 个汉字                                       |
+| 页面内容压到边框                   | 精简内容或调整 `resume-tzcan.cls` 中的 `geometry` 下边距                               |
 
 更多问题可提交 [Issue](https://github.com/tellcts/resumes-CV/issues)。

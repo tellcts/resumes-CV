@@ -35,18 +35,36 @@ jobs:
 
           VERSION="${GITHUB_REF_NAME#v}"
 
-          for dir in src/templates/*/; do
-            name=$(basename "$dir")
+          package_paths=(
+            ".latexmkrc"
+            "main.tex"
+            "assets"
+            "scripts"
+            "styles"
+            "USAGE.md"
+          )
+
+          for dir in template-*/; do
+            [ -f "${dir}main.tex" ] || continue
+            name="${dir%/}"
+
+            for required in "${package_paths[@]}"; do
+              if [ ! -e "${dir}${required}" ]; then
+                echo "Missing required release path: ${dir}${required}" >&2
+                exit 1
+              fi
+            done
 
             echo "Packaging template: $name"
 
-            zip_name="Resume.Template.${name}-${VERSION}.zip"
+            zip_name="Resume.Template.${name#template-}-${VERSION}.zip"
 
             git archive \
               --format=zip \
-              --prefix="${name}/" \
+              --prefix="${name#template-}/" \
               -o "dist/${zip_name}" \
-              "${GITHUB_REF_NAME}:src/templates/${name}"
+              "${GITHUB_REF_NAME}:${name}" \
+              "${package_paths[@]}"
 
           done
 

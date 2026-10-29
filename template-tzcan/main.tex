@@ -5,14 +5,14 @@
 % 想改字号 / 纸张 / 页边距 / 字体 / 边框 / 图片查找目录等版式设置，
 % 请改 styles/resume-tzcan.cls。
 %
-% 编译（必须在 src/templates/tzcan/ 目录下执行，产物为 build/main.pdf）：
+% 编译（必须在 template-tzcan/ 目录下执行，产物为 build/main.pdf）：
 %   latexmk main.tex          单次编译
 %   latexmk -pvc main.tex     常驻编译，保存自动重编
 % ============================================================
 
-\documentclass{styles/resume-tzcan}
+\documentclass{resume-tzcan}
 
-% 添加校徽水印。图片路径写全（相对 cwd，即 src/templates/tzcan/）：
+% 添加校徽水印。图片路径写全（相对 cwd，即 template-tzcan/）：
 % 校徽在 assets/badges/，证件照在 assets/images/。
 \addwatermark[opacity=0.09]{assets/badges/ecjtu.png}{center}
 
@@ -34,7 +34,7 @@
   target   = {数字化工程师},
 }
 
-% 右上角一寸照片（路径相对 cwd，即 src/templates/tzcan/）
+% 右上角一寸照片（路径相对 cwd，即 template-tzcan/）
 \cvphototopright[2.5cm]{assets/images/person.png}
 
 % 收紧个人信息区与项目经历之间的距离
