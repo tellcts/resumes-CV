@@ -1,0 +1,50 @@
+name: 📚 文档反馈
+description: 报告 README、USAGE、贡献指南、FAQ 或示例素材中的问题
+title: "[文档] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢帮助改进文档。请尽量指出具体文件和章节；如果问题来自实际编译，
+        请同时说明模板目录和使用的编译方式。
+
+  - type: input
+    id: location
+    attributes:
+      label: 文档位置
+      description: 填写文件路径和章节名称或链接。
+      placeholder: template-tzcan/USAGE.md > 方式三：Docker 容器编译
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 问题描述
+      description: 说明是错别字、命令错误、步骤缺失、描述过时，还是示例图与当前版本不一致。
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望的说明
+      description: 可写出你认为正确、清楚的表述或操作步骤。
+    validations:
+      required: false
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: 建议改法
+      description: 可直接给出修改后的段落、命令或 FAQ 条目。
+    validations:
+      required: false
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 补充材料
+      description: 可拖入截图、PDF，或粘贴实际报错和当前文档片段。
+    validations:
+      required: false
