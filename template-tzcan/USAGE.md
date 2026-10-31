@@ -28,21 +28,36 @@
 > [!WARNING]
 > 使用 Overleaf 时，姓名、电话、邮箱和证件照都会保存在第三方服务器。介意隐私请选择本地 TeX Live 或 Docker。
 
-### 方式二：本地安装 TeX Live
+### 准备本地模板（方式二、方式三通用）
 
-根据 [清华镜像站CTAN](https://mirrors.tuna.tsinghua.edu.cn/help/CTAN/) 本地安装好`TexLive`之后，顺序执行以下命令：
+方式二和方式三都需要先在本地取得模板。任选以下一种方式，完成后进入模板根目录；后续编译命令均在该目录执行。
+
+#### 使用 Release 模板压缩包
+
+1. 从最新 [Release](https://github.com/tellcts/resumes-CV/releases/) 下载 `Resume.Template.tzcan-<版本>.zip`。
+2. 将压缩包完整解压到普通目录，例如 `Resume.Template.tzcan-2.2.2/`。
+3. 进入解压后的目录。该目录应直接包含 `.latexmkrc`、`main.tex`、`assets/`、`scripts/` 和 `styles/`。
+
+解压后的目录可以移动到任意位置，也可以重命名。
+
+#### 使用 Git 仓库
+
+克隆仓库并进入模板目录：
 
 ```bash
-# 克隆仓库至本地
 git clone --depth=1 https://github.com/tellcts/resumes-CV.git
-
-# 进入对应模板目录
 cd ./resumes-CV/template-tzcan
+```
 
-# 在 main.tex 中修改好简历内容后编译
+### 方式二：本地安装 TeX Live
+
+根据 [清华镜像站CTAN](https://mirrors.tuna.tsinghua.edu.cn/help/CTAN/) 本地安装好`TexLive`后，在模板根目录执行：
+
+```bash
+# 修改 main.tex 后编译简历
 latexmk main.tex
 
-# 编译常驻模式，main.tex 保存后自动编译
+# 常驻编译模式：main.tex 保存后自动编译
 latexmk -pvc main.tex
 
 # 简历 PDF 路径
@@ -51,24 +66,21 @@ latexmk -pvc main.tex
 
 ### 方式三：Docker 容器编译
 
-请确保本机已经安装`Docker`，且项目已克隆至本地。
-- Windows Powershell
+请确保本机已经安装`Docker`，然后在模板根目录执行对应平台的编译脚本。
+
+- Windows PowerShell
 
 ```powershell
-# 进入对应模板目录
-cd ./resumes-CV/template-tzcan
-
 # 执行 Docker 编译脚本
 .\scripts\docker-build.ps1
 
 # 简历 PDF 路径
 .\build\main.pdf
 ```
-- macOS & Linux
-```bash
-# 进入对应模板目录
-cd ./resumes-CV/template-tzcan
 
+- macOS & Linux
+
+```bash
 # 执行 Docker 编译脚本
 ./scripts/docker-build.sh
 
