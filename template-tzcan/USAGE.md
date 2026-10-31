@@ -34,8 +34,8 @@
 
 #### 使用 Release 模板压缩包
 
-1. 从最新 [Release](https://github.com/tellcts/resumes-CV/releases/) 下载 `Resume.Template.tzcan-<版本>.zip`。
-2. 将压缩包完整解压到普通目录，例如 `Resume.Template.tzcan-2.2.2/`。
+1. 从 [Release](https://github.com/tellcts/resumes-CV/releases/tag/v1.0.0) 下载模板压缩包，例如 `Resume.Template.tzcan-1.0.0.zip`。
+2. 将压缩包完整解压到普通目录，例如 `Resume.Template.tzcan-1.0.0/`。
 3. 进入解压后的目录。该目录应直接包含 `.latexmkrc`、`main.tex`、`assets/`、`scripts/` 和 `styles/`。
 
 解压后的目录可以移动到任意位置，也可以重命名。
