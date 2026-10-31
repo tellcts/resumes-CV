@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 阅读 tzcan 使用说明
+    url: https://github.com/tellcts/resumes-CV/blob/main/template-tzcan/USAGE.md
+    about: 先查阅编译方式、组件用法和常见问题
+  - name: 🤝 阅读贡献指南
+    url: https://github.com/tellcts/resumes-CV/blob/main/CONTRIBUTING.md
+    about: 提交组件、模板或文档改动前，请先了解仓库规范
+  - name: 📦 下载最新模板
+    url: https://github.com/tellcts/resumes-CV/releases
+    about: 获取可直接上传 Overleaf 的模板压缩包

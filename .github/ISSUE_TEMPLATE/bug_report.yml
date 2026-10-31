@@ -1,0 +1,118 @@
+name: 🐞 问题反馈
+description: 报告编译失败、版式异常、组件行为错误或脚本问题
+title: "[问题反馈] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > [!TIP]
+        > 提交前请先阅读模板目录下的 `USAGE.md` 和常见问题，并在模板目录中完成复现。
+
+        请提供最小、可复现的信息。粘贴代码或日志前，务必删除真实姓名、电话、邮箱、
+        身份证号、证件照及其他敏感内容。
+
+  - type: input
+    id: template
+    attributes:
+      label: 模板目录
+      description: 填写仓库根目录下的模板目录名，不要填写完整本地路径。
+      placeholder: template-tzcan
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: 问题类型
+      description: 选择最接近的一项。
+      options:
+        - 编译失败
+        - 版式或排版异常
+        - 组件输出错误
+        - 素材或脚本问题
+        - GitHub Actions 或 Release 问题
+        - 其他
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: environment
+    attributes:
+      label: 复现环境
+      description: 可以多选。
+      options:
+        - label: 本地 TeX Live 2026 + latexmk
+        - label: Docker
+        - label: Overleaf（XeLaTeX）
+        - label: GitHub Actions
+        - label: 不确定
+    validations:
+      required: true
+
+  - type: input
+    id: environment_details
+    attributes:
+      label: 系统与版本信息
+      description: 请填写操作系统、TeX Live、latexmk、Docker 或浏览器版本等已知信息。
+      placeholder: Windows 11 / TeX Live 2026 / latexmk 4.86
+    validations:
+      required: false
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+      description: 简要说明发生了什么，以及它对正常使用造成了什么影响。
+      placeholder: 修改某个字段后，预览页面中的条目发生重叠。
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 从干净状态开始，按顺序列出能够稳定复现问题的步骤。
+      placeholder: |
+        1. 进入 template-tzcan 目录
+        2. 执行 latexmk main.tex
+        3. 打开 build/main.pdf
+        4. 查看第 1 页的某处内容
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期结果
+      description: 你原本期望看到什么？
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际结果
+      description: 实际看到了什么？如有报错，请提供从后往前找到的第一个错误。
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 最小复现、日志或截图
+      description: 至少提供一项。可直接拖入图片或 PDF；日志请优先提供第一个以 `!` 开头附近的片段。
+      placeholder: |
+        粘贴最小 main.tex 片段、相关日志或拖入截图。
+
+        ! LaTeX Error: ...
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: 隐私确认
+      options:
+        - label: 我已删除真实姓名、电话、邮箱、证件照及其他敏感内容。
+    validations:
+      required: true

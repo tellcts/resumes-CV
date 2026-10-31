@@ -1,0 +1,95 @@
+name: 🆕 新模板建议
+description: 提议新增一套可独立编译和分发的 LaTeX 简历模板
+title: "[新模板] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        这是新模板的提案入口，不是直接提交模板的 PR。建议先通过 Issue 对齐风格、
+        适用场景和维护范围，再开始实现。
+
+        新增模板必须满足仓库约定：使用 XeLaTeX、能够在模板目录中独立编译，
+        并包含 `.latexmkrc`、`main.tex`、`assets/`、`scripts/`、`styles/` 和
+        `USAGE.md` 六条 Release 路径。详见 `CONTRIBUTING.md`。
+
+  - type: input
+    id: template_name
+    attributes:
+      label: 建议的模板名称
+      description: 使用全小写英文或数字，最终目录名会自动加上 `template-` 前缀。
+      placeholder: business-minimal
+    validations:
+      required: true
+
+  - type: textarea
+    id: visual_style
+    attributes:
+      label: 视觉风格
+      description: 描述配色、布局、字号、边框、照片位置和整体气质，避免只写“好看”“高级”。
+      placeholder: 单栏、无照片、深蓝色标题、留白较多，适合校招技术岗位。
+    validations:
+      required: true
+
+  - type: textarea
+    id: use_case
+    attributes:
+      label: 适用人群与使用场景
+      description: 这套模板主要服务哪些求职者？与现有模板相比解决了什么具体问题？
+      placeholder: 适合经历较少、需要通过课程和项目突出能力的应届本科生。
+    validations:
+      required: true
+
+  - type: textarea
+    id: differences
+    attributes:
+      label: 与现有模板的区别
+      description: 请说明为什么使用或调整现有模板不足以满足该场景。
+    validations:
+      required: true
+
+  - type: textarea
+    id: modules
+    attributes:
+      label: 内容模块
+      description: 列出需要的章节、组件和可省略字段，例如个人信息、教育、项目、技能、荣誉等。
+    validations:
+      required: false
+
+  - type: textarea
+    id: references
+    attributes:
+      label: 参考效果图或设计说明
+      description: 可拖入草图、效果图或粘贴参考链接。请勿上传无权使用的素材。
+    validations:
+      required: false
+
+  - type: dropdown
+    id: contribution
+    attributes:
+      label: 你的参与方式
+      description: 仅提出建议也可以，请按实际情况选择。
+      options:
+        - 我愿意提交完整实现 PR
+        - 我可以提供设计、效果图或样稿
+        - 我可以提供部分实现或协助测试
+        - 我暂时只提出建议
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 补充信息
+      description: 可补充目标岗位、页数、必须支持的编译方式或其他验收要求。
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: requirements
+    attributes:
+      label: 规范确认
+      options:
+        - label: 我理解新模板必须使用 XeLaTeX、能够独立编译，并包含全部 Release 必需路径。
+        - label: 我理解第三方图片、字体和图标必须注明来源并确认可再分发。
+    validations:
+      required: true
