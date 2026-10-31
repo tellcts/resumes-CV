@@ -343,7 +343,7 @@ template-<模板名>/                   # 单个模板的根目录
 
 **② [`.github/workflows/release-templates.yml`](.github/workflows/release-templates.yml) —— 打包发版**
 
-1. 维护者推送形如 `v*` 的 tag（例如 `v1.0.0`）时触发；
+1. 维护者推送形如 `v*` 的 tag（例如 `v0.1.0`）时触发；
 2. **先跑 ①** —— 任一模板编译失败，发版直接中止（`needs: build-check`），不会产出半成品 Release；
 3. 全部模板编译通过后，遍历根目录的 `template-*/`，按 [根目录 AGENTS.md](AGENTS.md)
    规定的固定路径用 `git archive` 打包，
