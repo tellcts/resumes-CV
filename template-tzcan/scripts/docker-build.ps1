@@ -55,7 +55,7 @@ $dockerTexFile = $resolvedTexFile.Substring($templatePrefix.Length).Replace("\",
 docker run --rm `
   -v "${templateDir}:/workdir" `
   -w /workdir `
-  ghcr.io/tellcts/texlive:latest `
+  texlive/texlive:latest `
   latexmk $dockerTexFile
 
 if ($LASTEXITCODE -ne 0) {

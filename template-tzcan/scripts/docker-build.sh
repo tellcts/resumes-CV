@@ -43,5 +43,5 @@ docker_tex_file="${tex_path#"$template_dir"/}"
 docker run --rm \
   -v "$template_dir:/workdir" \
   -w /workdir \
-  ghcr.io/tellcts/texlive:latest \
+  texlive/texlive:latest \
   latexmk "$docker_tex_file"
