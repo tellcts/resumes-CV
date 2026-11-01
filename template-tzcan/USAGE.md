@@ -211,8 +211,23 @@ latexmk another_resume.tex
 | `target`   | 求职目标 | 是         | 显示在第二行                                                |
 
 第一行固定显示电话和邮箱，第二行按年龄、性别、身份、求职目标、个人主页的顺序排列；
-未填写的字段及其前后的分隔符会自动省略。主页链接会自动识别 GitHub、Gitee 和 GitLab 图标，
+未填写的字段及其前后的分隔符会自动省略。主页链接会自动识别 GitHub、Gitee 和 GitLab 等图标，
 其他域名使用通用地球图标。网址缺少协议时，组件会自动补全 `https://`，显示文字中不保留协议前缀。
+
+目前支持的主页链接图标与域名映射如下：
+
+| 域名匹配规则                      | 图标含义        | 图标命令    |
+| --------------------------------- | --------------- | ----------- |
+| 域名中包含 `github`，不区分大小写 | GitHub 品牌图标 | `\faGithub` |
+| 域名中包含 `gitee`，不区分大小写  | Gitee 品牌图标  | `\faGitee`  |
+| 域名中包含 `gitlab`，不区分大小写 | GitLab 品牌图标 | `\faGitlab` |
+| 其他域名                          | 通用地球图标    | `\faGlobe`  |
+
+规则只检查链接的域名部分，不检查路径。例如 `https://gist.github.com/...` 会匹配 GitHub 图标。
+
+> [!TIP]
+> 当前仅内置以上图标映射。如需支持更多平台图标，请提交
+> [Issue](https://github.com/tellcts/resumes-CV/issues/new)。
 
 ### `\cvphototopright` 右上角证件照
 
