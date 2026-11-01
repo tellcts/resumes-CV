@@ -60,6 +60,9 @@ latexmk main.tex
 # 常驻编译模式：main.tex 保存后自动编译
 latexmk -pvc main.tex
 
+# 编译指定 TeX 文件（若需管理多个岗位简历模板时）
+latexmk another_resume.tex
+
 # 简历 PDF 路径
 ./build/main.pdf
 ```
@@ -71,8 +74,11 @@ latexmk -pvc main.tex
 - Windows PowerShell
 
 ```powershell
-# 执行 Docker 编译脚本
+# 默认编译 main.tex
 .\scripts\docker-build.ps1
+
+# 编译指定 TeX 文件（若需管理多个岗位简历模板时）
+.\scripts\docker-build.ps1 another_resume.tex
 
 # 简历 PDF 路径
 .\build\main.pdf
@@ -81,14 +87,19 @@ latexmk -pvc main.tex
 - macOS & Linux
 
 ```bash
-# 执行 Docker 编译脚本
+# 默认编译 main.tex
 ./scripts/docker-build.sh
+
+# 编译指定 TeX 文件（若需管理多个岗位简历模板时）
+./scripts/docker-build.sh another_resume.tex
 
 # 简历 PDF 路径
 ./build/main.pdf
 ```
 
-默认镜像为 `ghcr.io/tellcts/texlive:latest`。如果下载速度较慢，可将 `scripts/docker-build.ps1` 和 `scripts/docker-build.sh` 中的镜像地址替换为DockerHub官方镜像地址`texlive/texlive:latest`。
+两个脚本都接受零个或一个 `.tex` 文件参数：省略参数时编译 `main.tex`；指定文件时可使用相对模板根目录的路径或绝对路径，新文件位置首选推荐与`main.tex`同目录。指定文件的 PDF 输出在 `build/` 下，文件名与入口文件相同。
+
+默认镜像为DockerHub官方镜像`texlive/texlive:latest`。如果下载速度较慢，可将 `scripts/docker-build.ps1` 和 `scripts/docker-build.sh` 中的镜像地址替换为作者同步的官方镜像地址`ghcr.io/tellcts/texlive:latest`。
 
 首次运行会下载镜像，之后会复用镜像。编译缓存异常时，删除模板目录下的 `build/` 后重新执行脚本。
 
