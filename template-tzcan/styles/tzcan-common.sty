@@ -12,19 +12,29 @@
 %     \__cv_collect:Nnn
 %   · \cvbulletlist         统一的圆点列表
 %   · \cvlabelstyle / \cvfieldlabel  字段标签的统一字体样式（\small 加粗）
+%   · \cvseparatorrule      全模板统一的水平分隔线
 %   · \cventryseparator     项目 / 实习 / 工作经历的相邻条目分隔线
 %
 % 依赖：由文档类 resume-tzcan 先行加载 xcolor 与 expl3，本文件不重复加载第三方宏包。
 % 被依赖：其余 11 个组件全部依赖本文件，改动前先确认影响面。
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{tzcan-common}[2026/10/27 全模块共用的底座：颜色 / 工具 / 标签样式 / 圆点列表 / 条目分隔线]
+\ProvidesPackage{tzcan-common}[2026/11/11 全模块共用的底座：颜色 / 工具 / 标签样式 / 圆点列表 / 分隔线]
 
 % --- 颜色 ---
 \definecolor{cvsection}{HTML}{2C3E50}
 \definecolor{cvicon}{HTML}{2980B9}
 \definecolor{cvrule}{HTML}{BDC3C7}
 \definecolor{cvtext}{HTML}{333333}
+
+% --- 统一水平分隔线 ---
+% 章节标题下划线和项目 / 实习 / 工作条目分隔线共用这一套样式：
+% 全宽、cvrule 灰色、0.6pt。以后只需修改这里即可同步所有分隔线。
+\newlength{\cvseparatorthickness}
+\setlength{\cvseparatorthickness}{0.6pt}
+\newcommand{\cvseparatorrule}{%
+  {\color{cvrule}\rule{\textwidth}{\cvseparatorthickness}}%
+}
 
 % 行内居中圆点（在 ctex 默认字体下垂直居中）
 \newcommand{\midbullet}{\raisebox{+0.25ex}{\textbullet}}
@@ -39,12 +49,12 @@
 \newcommand{\cvfieldlabel}[1]{\cvlabelstyle{#1：}}
 
 % --- 相邻经历条目之间的分隔线 ---
-% 项目、实习、工作经历共用同一套宽度、粗细和上下间距。
+% 项目、实习、工作经历共用统一线条样式和同一套上下间距。
 \newcommand{\cventryseparator}{%
   \par
   \nointerlineskip
   \vspace{0.75ex}%
-  \noindent{\color{cvrule}\rule{\textwidth}{0.6pt}}%
+  \noindent\cvseparatorrule
   \par
   \nointerlineskip
   \vspace{0.75ex}%

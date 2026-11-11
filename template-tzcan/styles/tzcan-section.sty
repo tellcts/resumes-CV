@@ -3,10 +3,10 @@
 % ============================================================
 %
 % 提供：\cvsection、\cvsectiontitlesep、\cvsectionrulesep
-% 依赖：tzcan-common（cvsection / cvicon / cvrule 三色）、fontawesome7
+% 依赖：tzcan-common（主题色、\cvseparatorrule、\cvseparatorthickness）、fontawesome7
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{tzcan-section}[2026/10/27 模块标题]
+\ProvidesPackage{tzcan-section}[2026/11/11 模块标题]
 
 % --- 模块标题的间距旋钮 ---
 % 关键点：标题那一行结束后，LaTeX 会在它和下一行之间自动塞进一整行行距
@@ -38,14 +38,14 @@
     {
       % 星号版本：省略下划线，同时保留原有的标题与正文间距
       \nointerlineskip
-      \vspace{\dimexpr\cvsectiontitlesep+\cvsectionrulesep+0.6pt\relax}
+      \vspace{\dimexpr\cvsectiontitlesep+\cvsectionrulesep+\cvseparatorthickness\relax}
     }
     {
       % --- 标题 → 分隔线 ---
       \nointerlineskip
       \vspace{\cvsectiontitlesep}%
       \noindent%
-      {\color{cvrule}\rule{\textwidth}{0.6pt}}%
+      \cvseparatorrule
       % --- 分隔线 → 正文 ---
       \par
       \nointerlineskip

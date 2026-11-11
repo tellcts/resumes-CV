@@ -454,6 +454,7 @@ latexmk another_resume.tex
 | 命令                | 用法与说明                                                        |
 | ------------------- | ----------------------------------------------------------------- |
 | `\midbullet`        | 行内圆点分隔符，例如 `Python~\midbullet~Pandas~\midbullet~SQLite` |
+| `\cvseparatorrule`  | 全模板统一的全宽水平分隔线；章节与经历条目均共用此样式          |
 | `\cventryseparator` | 项目、实习、工作条目的自动分隔线；通常不需要手动调用              |
 | `\cvphoto`          | 把照片插入正文流：`\cvphoto[2.5cm]{图片路径}`                     |
 | `\vspace{-1.2em}`   | 临时收紧上下间距，例如照片之后与第一个章节之间                    |
@@ -472,7 +473,7 @@ latexmk another_resume.tex
 | 主题颜色                     | `styles/tzcan-common.sty`       | `cvsection`、`cvicon`、`cvrule`、`cvtext`                    |
 | 边框粗细与间距               | `styles/tzcan-border.sty`       | `\cvborderouterwidth`、`\cvborderinnerwidth`、`\cvbordergap` |
 | 章节标题间距                 | `styles/tzcan-section.sty`      | `\cvsectiontitlesep`、`\cvsectionrulesep`                    |
-| 项目 / 实习 / 工作条目分隔线 | `styles/tzcan-common.sty`       | `\cventryseparator`                                          |
+| 所有水平分隔线               | `styles/tzcan-common.sty`       | `\cvseparatorrule`、`\cvseparatorthickness`                  |
 | 照片位置                     | `styles/tzcan-personalinfo.sty` | `\cvphototop`、`\cvphotoright`                               |
 | 列表缩进                     | `styles/tzcan-common.sty`       | `\cvbulletlist` 的 `leftmargin`                              |
 
