@@ -1,8 +1,4 @@
-# 项目背景
-1. 项目采用`TexLive`制作简历模板
-
 # 目录结构
-
 ```text
 template-tzcan/                    # tzcan 简历模板根目录
 ├── .latexmkrc                    # latexmk 配置：自定义编译行为
@@ -30,14 +26,6 @@ template-tzcan/                    # tzcan 简历模板根目录
 4. 对于被多个组件同时依赖的组件，不要创建新的组件文件，直接在`./styles/tzcan-common.sty`追加。
 5. 新的命令使用`\newcommand`封装。
 
+
 # 简历编译
 1. 你全程不用执行`latexmk main.tex`命令，全程由用户手动执行编译。
-
-# 文档写作规范
-1. 仓库内所有 Markdown 文档（根目录`README.md`、各模板的`USAGE.md`）里的提示框，一律使用 GitHub Alerts 语法，不再使用`> ⚠️`、`> 💡`这类 emoji 前缀的引用块：
-
-   ```markdown
-   > [!WARNING]
-   > 第一行正文
-   > 第二行正文
-   ```
