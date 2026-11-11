@@ -82,6 +82,8 @@
   \seq_clear:N \l__cv_ed_detail_seq
   \__cv_collect:Nnn \l__cv_ed_major_tl { \l__cv_ed_major_tl } \l__cv_ed_detail_seq
   \__cv_collect:Nnn \l__cv_ed_degree_tl { \l__cv_ed_degree_tl } \l__cv_ed_detail_seq
+  % 抵消 tabularx 首行额外高度，使模块分隔线到学校行的距离与公共值一致。
+  \vspace*{-\cvtabulartopcorrection}%
   \noindent
   \begin{tabularx}{\textwidth}
     {@{}>{\raggedright\arraybackslash}X c >{\raggedleft\arraybackslash}X@{}}
