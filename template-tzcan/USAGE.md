@@ -472,8 +472,9 @@ latexmk another_resume.tex
 | 字体                         | `styles/resume-tzcan.cls`       | `ctex` 的 `fontset=fandol`                                   |
 | 主题颜色                     | `styles/tzcan-common.sty`       | `cvsection`、`cvicon`、`cvrule`、`cvtext`                    |
 | 边框粗细与间距               | `styles/tzcan-border.sty`       | `\cvborderouterwidth`、`\cvborderinnerwidth`、`\cvbordergap` |
-| 章节标题间距                 | `styles/tzcan-section.sty`      | `\cvsectiontitlesep`、`\cvsectionrulesep`                    |
+| 章节标题间距                 | `styles/tzcan-section.sty`      | `\cvsectiontitlesep`、`\cvsectionrulesep`（3.9pt）           |
 | 所有水平分隔线               | `styles/tzcan-common.sty`       | `\cvseparatorrule`、`\cvseparatorthickness`                  |
+| 条目分隔线上下间距           | `styles/tzcan-common.sty`       | `\cventryseparatorgap`（3.9pt）                              |
 | 照片位置                     | `styles/tzcan-personalinfo.sty` | `\cvphototop`、`\cvphotoright`                               |
 | 列表缩进                     | `styles/tzcan-common.sty`       | `\cvbulletlist` 的 `leftmargin`                              |
 

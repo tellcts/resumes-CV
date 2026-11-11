@@ -12,6 +12,8 @@
 
 % 自我评价条目：· 开头的列表样式
 \newcommand{\cvselfassessment}[1]{%
+  % 抵消 itemize 首行相对普通文本多出的上方高度。
+  \vspace*{-\cvlisttopcorrection}%
   \noindent%
   \small
   \cvbulletlist{#1}%

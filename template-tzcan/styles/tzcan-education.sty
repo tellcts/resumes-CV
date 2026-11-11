@@ -82,9 +82,8 @@
   \seq_clear:N \l__cv_ed_detail_seq
   \__cv_collect:Nnn \l__cv_ed_major_tl { \l__cv_ed_major_tl } \l__cv_ed_detail_seq
   \__cv_collect:Nnn \l__cv_ed_degree_tl { \l__cv_ed_degree_tl } \l__cv_ed_detail_seq
-  % tabularx 的数组首行比普通文本多出约 3.42pt 的上方高度；
-  % 抵消后，学校行与模块分隔线的距离和工作经历首行保持一致。
-  \vspace*{-3.42pt}%
+  % 抵消 tabularx 首行额外高度，使模块分隔线到学校行的距离与公共值一致。
+  \vspace*{-\cvtabulartopcorrection}%
   \noindent
   \begin{tabularx}{\textwidth}
     {@{}>{\raggedright\arraybackslash}X c >{\raggedleft\arraybackslash}X@{}}

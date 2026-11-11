@@ -32,6 +32,15 @@
 % 全宽、cvrule 灰色、0.6pt。以后只需修改这里即可同步所有分隔线。
 \newlength{\cvseparatorthickness}
 \setlength{\cvseparatorthickness}{0.6pt}
+% 条目分隔线与上下相邻正文之间的统一距离。
+\newlength{\cventryseparatorgap}
+\setlength{\cventryseparatorgap}{3.9pt}
+% tabularx 首行自带的额外上方高度，只在模块首项中抵消。
+\newlength{\cvtabulartopcorrection}
+\setlength{\cvtabulartopcorrection}{3.42pt}
+% 列表首行相对普通文本多出的上方高度，只在模块首项中抵消。
+\newlength{\cvlisttopcorrection}
+\setlength{\cvlisttopcorrection}{1.65pt}
 \newcommand{\cvseparatorrule}{%
   {\color{cvrule}\rule{\textwidth}{\cvseparatorthickness}}%
 }
@@ -53,11 +62,11 @@
 \newcommand{\cventryseparator}{%
   \par
   \nointerlineskip
-  \vspace{0.75ex}%
+  \vspace{\cventryseparatorgap}%
   \noindent\cvseparatorrule
   \par
   \nointerlineskip
-  \vspace{0.75ex}%
+  \vspace{\cventryseparatorgap}%
 }
 
 % --- 全局设置 ---

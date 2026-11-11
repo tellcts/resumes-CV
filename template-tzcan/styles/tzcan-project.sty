@@ -57,6 +57,11 @@
   \noindent\cvlabelstyle{#1}\par
 }
 
+% 项目模块位于首页正文起始处，首行需要少量额外上移，
+% 才能与其余模块共用同一条分隔线到正文的距离。
+\newlength{\cvprojectfirstlinecorrection}
+\setlength{\cvprojectfirstlinecorrection}{1.05pt}
+
 % 实现说明：下面是 expl3 语法，故包在 \ExplSyntaxOn / \ExplSyntaxOff 之间。
 \ExplSyntaxOn
 
@@ -234,7 +239,9 @@
 \NewDocumentCommand{\cvproject}{ m }{
   \group_begin:
   \keys_set:nn { cv / project } {#1}
-  \bool_if:NT \g__cv_pj_has_entry_bool { \cventryseparator }
+  \bool_if:NTF \g__cv_pj_has_entry_bool
+  { \cventryseparator }
+  { \vspace*{-\cvprojectfirstlinecorrection} }
   \bool_gset_true:N \g__cv_pj_has_entry_bool
   \__cv_pj_linkicon_display_set:
   \__cv_pj_head_render:

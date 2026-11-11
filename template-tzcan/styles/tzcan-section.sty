@@ -15,9 +15,9 @@
 % 想更紧就调小（可以用负值），想更松就调大。
 \newlength{\cvsectiontitlesep}   % 标题文字 ↕ 分割线
 \newlength{\cvsectionrulesep}    % 分割线 ↕ 正文内容
-% 1.2ex ≈ 5.6pt。参考：0.6ex 偏挤；纯靠自动行距时等效约 2.7ex
+% 标题到分隔线保留 1.2ex；分隔线到模块首行统一为 3.9pt。
 \setlength{\cvsectiontitlesep}{1.2ex}
-\setlength{\cvsectionrulesep}{1ex}
+\setlength{\cvsectionrulesep}{\cventryseparatorgap}
 
 % 模块标题：图标 + 文字 + 可选下划线
 % 图标放进固定宽度（1.3em）的盒子里居中放置 —— FontAwesome 各图标占位宽度不同
