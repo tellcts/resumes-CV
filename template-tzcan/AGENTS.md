@@ -2,11 +2,26 @@
 1. 项目采用`TexLive`制作简历模板
 
 # 目录结构
-1. `./.latexmkrc`作为`latexmk`命令的配置文件，自定义编译行为。
-2. `./main.tex`作为编写简历内容的主文件，通过`latexmk main.tex`命令进行编译生成。
-3. `./assets/badges/`用于存放校徽图片；`./assets/images/`用于存放个人证件照等；`./assets/examples/`用于存放效果图和 Overleaf 操作截图。
-4. `./styles/`存放文档类和各类简历模板组件，组件与`resume-tzcan.cls`同级。
-5. `./styles/resume-tzcan.cls`作为文档类控制简历的总体结构，并作为导出包提供`./styles/`中的所有组件。
+
+```text
+template-tzcan/                    # tzcan 简历模板根目录
+├── .latexmkrc                    # latexmk 配置：自定义编译行为
+├── main.tex                      # 简历内容入口：通过 latexmk main.tex 编译
+├── USAGE.md                      # 面向使用者的完整中文手册
+├── AGENTS.md                     # 该模板的开发约定和接口规范
+├── CLAUDE.md                     # 指向 AGENTS.md 的模板约定入口
+├── assets/
+│   ├── badges/                   # 校徽图片
+│   ├── examples/                 # 效果图与 Overleaf 操作截图
+│   │   └── overleaf/             # Overleaf 分步操作截图
+│   └── images/                   # 个人证件照等图片素材
+├── scripts/
+│   ├── docker-build.ps1          # Windows PowerShell Docker 编译入口
+│   └── docker-build.sh           # macOS / Linux Docker 编译入口
+└── styles/
+    ├── resume-tzcan.cls          # 文档类：控制简历总体结构并导出全部组件
+    └── tzcan-*.sty               # 各类简历组件，与 resume-tzcan.cls 同级
+```
 
 # 组件生成
 1. 项目LaTeX发行版采用`TexLive-2026`，注意语法的版本兼容性。
