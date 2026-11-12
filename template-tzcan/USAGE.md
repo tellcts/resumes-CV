@@ -195,7 +195,7 @@ latexmk another_resume.tex
   link     = {https://github.com/your-name | GitHub},
   age      = {21岁},
   gender   = {男},
-  identity = {应届生 | 硕士在读},
+  identity = {27应届生}, % 或者：在校生、中共党员
   target   = {数字化工程师},
 }
 ```
@@ -207,7 +207,7 @@ latexmk another_resume.tex
 | `link`     | 个人主页 | 是         | 写作 `{URL \| 显示文字}`；只写 URL 时直接显示规范化后的网址 |
 | `age`      | 年龄     | 是         | 显示在第二行                                                |
 | `gender`   | 性别     | 是         | 显示在第二行                                                |
-| `identity` | 身份     | 是         | 显示在第二行；可用 `\|` 分隔多个身份                        |
+| `identity` | 身份     | 是         | 显示在第二行                                                |
 | `target`   | 求职目标 | 是         | 显示在第二行                                                |
 
 第一行固定显示电话和邮箱，第二行按年龄、性别、身份、求职目标、个人主页的顺序排列；
@@ -454,7 +454,7 @@ latexmk another_resume.tex
 | 命令                | 用法与说明                                                        |
 | ------------------- | ----------------------------------------------------------------- |
 | `\midbullet`        | 行内圆点分隔符，例如 `Python~\midbullet~Pandas~\midbullet~SQLite` |
-| `\cvseparatorrule`  | 全模板统一的全宽水平分隔线；章节与经历条目均共用此样式          |
+| `\cvseparatorrule`  | 全模板统一的全宽水平分隔线；章节与经历条目均共用此样式            |
 | `\cventryseparator` | 项目、实习、工作条目的自动分隔线；通常不需要手动调用              |
 | `\cvphoto`          | 把照片插入正文流：`\cvphoto[2.5cm]{图片路径}`                     |
 | `\vspace{-1.2em}`   | 临时收紧上下间距，例如照片之后与第一个章节之间                    |
@@ -466,17 +466,17 @@ latexmk another_resume.tex
 
 只修改内容时不需要打开 `styles/`。需要调整版式时，可参考下面的位置：
 
-| 目标                         | 文件                            | 主要配置                                                     |
-| ---------------------------- | ------------------------------- | ------------------------------------------------------------ |
-| 字号、纸张、页边距           | `styles/resume-tzcan.cls`       | `\LoadClass`、`geometry`                                     |
-| 字体                         | `styles/resume-tzcan.cls`       | `ctex` 的 `fontset=fandol`                                   |
-| 主题颜色                     | `styles/tzcan-common.sty`       | `cvsection`、`cvicon`、`cvrule`、`cvtext`                    |
-| 边框粗细与间距               | `styles/tzcan-border.sty`       | `\cvborderouterwidth`、`\cvborderinnerwidth`、`\cvbordergap` |
-| 章节标题间距                 | `styles/tzcan-section.sty`      | `\cvsectiontitlesep`、`\cvsectionrulesep`（3.9pt）           |
-| 所有水平分隔线               | `styles/tzcan-common.sty`       | `\cvseparatorrule`、`\cvseparatorthickness`                  |
-| 条目分隔线上下间距           | `styles/tzcan-common.sty`       | `\cventryseparatorgap`（3.9pt）                              |
-| 照片位置                     | `styles/tzcan-personalinfo.sty` | `\cvphototop`、`\cvphotoright`                               |
-| 列表缩进                     | `styles/tzcan-common.sty`       | `\cvbulletlist` 的 `leftmargin`                              |
+| 目标               | 文件                            | 主要配置                                                     |
+| ------------------ | ------------------------------- | ------------------------------------------------------------ |
+| 字号、纸张、页边距 | `styles/resume-tzcan.cls`       | `\LoadClass`、`geometry`                                     |
+| 字体               | `styles/resume-tzcan.cls`       | `ctex` 的 `fontset=fandol`                                   |
+| 主题颜色           | `styles/tzcan-common.sty`       | `cvsection`、`cvicon`、`cvrule`、`cvtext`                    |
+| 边框粗细与间距     | `styles/tzcan-border.sty`       | `\cvborderouterwidth`、`\cvborderinnerwidth`、`\cvbordergap` |
+| 章节标题间距       | `styles/tzcan-section.sty`      | `\cvsectiontitlesep`、`\cvsectionrulesep`（3.9pt）           |
+| 所有水平分隔线     | `styles/tzcan-common.sty`       | `\cvseparatorrule`、`\cvseparatorthickness`                  |
+| 条目分隔线上下间距 | `styles/tzcan-common.sty`       | `\cventryseparatorgap`（3.9pt）                              |
+| 照片位置           | `styles/tzcan-personalinfo.sty` | `\cvphototop`、`\cvphotoright`                               |
+| 列表缩进           | `styles/tzcan-common.sty`       | `\cvbulletlist` 的 `leftmargin`                              |
 
 主题颜色使用 HTML 十六进制值，例如：
 
