@@ -15,7 +15,10 @@
 % 名字不含 "_" 和 ":"，必须留在下面的 \ExplSyntaxOn 之外。
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{tzcan-personalinfo}[2026/10/29 个人信息区]
+\ProvidesPackage{tzcan-personalinfo}[2026/11/14 个人信息区]
+
+% 用 let 语法计算「页顶照片上边距」到「信息栏末行底边」的可用高度
+\usetikzlibrary{calc}
 
 % 姓名：居中、Huge、加粗
 % 顶部使用负间距抵消 center 环境的默认间距
@@ -43,17 +46,62 @@
 \setlength{\cvphototop}{0.65cm}   % ⚠ 不能小于内框线带下沿(cm)，否则照片会压住边框
 \newsavebox{\cvphotobox}
 
+% 个人信息栏末行的底边信息（由 \cvpersonalinfo 写入，供照片对齐使用）
+\newlength{\cvinfobottomshift}    % 末行底边相对该行基线的下移量（行深）
+\newlength{\cvphotoheight}        % 照片按可用空间缩放后的实际高度
+\newcommand{\cvinfoanchorname}{}    % 末行底边的 TikZ 坐标名；空 = 没有可对齐的行
+\newcommand{\cvinfoanchorempty}{}   % 与上一条同为 \newcommand 生成的空宏，供 \ifx 判空
+
+% 在当前位置记录一个 TikZ 坐标（基线处）。\cvpersonalinfo 内部每写完一行调用一次。
+% 单独封装是因为 \cvpersonalinfo 在 \ExplSyntaxOn 中定义，而 expl3 会忽略空格，
+% 直接写 tikz 的 [remember picture, overlay] 选项会因选项名粘连而失效。
+\newcommand{\cvinfomark}[1]{%
+  \tikz[remember picture, overlay]{\coordinate (#1) at (0,0);}%
+}
+
 % 右上角放置照片（页面坐标定位，位置不受正文间距影响）
+%
+% 定位规则：
+%   · 右边界绝对固定在「页面右边缘 - \cvphotoright」，与正文 / 内容无关；
+%   · 下边界与 \cvpersonalinfo 最后一行的文字底边齐平；
+%   · 上边界仍受 \cvphototop 约束，避免压住内框线。
+% 三个约束同时成立时照片高度由可用空间反推，宽度按原图比例随之收缩，
+% 因此 [宽度] 是上限而非固定值（2.5cm 的一寸照实际会收窄到约 2.26cm）。
 %
 % 注意 [inner sep=0pt]：tikz node 默认有 0.3333em 的内边距，会把照片四周撑开约
 % 0.13cm —— 照片实际边界因此与外框锚点错位。归零后，
 % 「照片边界」就等于「锚点 + 下面这几个长度」，几何变得干净且与字号无关。
 \newcommand{\cvphototopright}[2][2.5cm]{%
+  \ifx\cvinfoanchorname\cvinfoanchorempty
+  % 没有个人信息行可对齐：退回旧行为，按上边距定位
   \sbox{\cvphotobox}{\includegraphics[width=#1]{#2}}%
   \begin{tikzpicture}[remember picture, overlay]
     \node[anchor=north east, inner sep=0pt] at ([xshift=-\cvphotoright,
     yshift=-\cvphototop]current page.north east) {\usebox{\cvphotobox}};
   \end{tikzpicture}%
+  \else
+  \begin{tikzpicture}[remember picture, overlay]
+    % 底边锚点：末行基线再下移该行行深，得到文字墨迹的下边界
+    \coordinate (cv-photo-bottom) at ([yshift=-\cvinfobottomshift]\cvinfoanchorname);
+    % 右边界锚点：只取页面右上角的 x，位置绝对固定
+    \coordinate (cv-photo-right) at ([xshift=-\cvphotoright]current page.north east);
+    % 可用高度 = 页顶到 \cvphototop 之间的空间
+    % （\pgfextra 内的赋值是局部的，故再做一次全局赋值供后面的 \sbox 使用）
+    \path let \p1 = ($(current page.north east) - (cv-photo-bottom)$) in
+    \pgfextra{%
+      \pgfmathsetlength{\cvphotoheight}{\y1}%
+      \advance\cvphotoheight by -\cvphototop
+      \global\cvphotoheight=\cvphotoheight
+    };
+    % 宽度与高度同时给出 + keepaspectratio：取两者都放得下的最大尺寸
+    \sbox{\cvphotobox}{%
+      \includegraphics[width=#1,height=\cvphotoheight,keepaspectratio]{#2}%
+    }%
+    % (cv-photo-bottom -| cv-photo-right) = 右边界锚点的 x + 底边锚点的 y
+    \node[anchor=south east, inner sep=0pt]
+    at (cv-photo-bottom -| cv-photo-right) {\usebox{\cvphotobox}};
+  \end{tikzpicture}%
+  \fi
 }
 
 % 图标+文字（原子组件，不可断行）
@@ -249,7 +297,12 @@
     \seq_if_empty:NF \l__cv_pi_contact_seq
     {
       \seq_use:Nn \l__cv_pi_contact_seq { \hspace{1em}|\hspace{1em} }
-      \par\vspace{0.2em}
+      % 记录本行基线；\par 之后 \prevdepth 即为该行行深
+      \cvinfomark{cv-info-bottom-1}
+      \par
+      \global\cvinfobottomshift=\prevdepth
+      \gdef\cvinfoanchorname{cv-info-bottom-1}
+      \vspace{0.2em}
     }
     % --- 第二行：个人详情 ---
     \seq_clear:N \l__cv_pi_detail_seq
@@ -265,8 +318,15 @@
     { \exp_args:NV \hrefhomepage \l__cv_pi_link_input_tl }
     \l__cv_pi_detail_seq
     \seq_if_empty:NF \l__cv_pi_detail_seq
-    { \seq_use:Nn \l__cv_pi_detail_seq {
-    \hspace{0.8em}\midbullet\hspace{0.8em} } }
+    {
+      \seq_use:Nn \l__cv_pi_detail_seq {
+      \hspace{0.8em}\midbullet\hspace{0.8em} }
+      % 第二行存在时覆盖第一行的锚点：照片与第二行底边对齐
+      \cvinfomark{cv-info-bottom-2}
+      \par
+      \global\cvinfobottomshift=\prevdepth
+      \gdef\cvinfoanchorname{cv-info-bottom-2}
+    }
   \end{center}
   \group_end:
 }
