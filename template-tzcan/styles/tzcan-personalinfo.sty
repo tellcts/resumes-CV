@@ -21,13 +21,25 @@
 \usetikzlibrary{calc}
 
 % 姓名：居中、Huge、加粗
-% 顶部使用负间距抵消 center 环境的默认间距
+%
+% 垂直位置：姓名在「上方内侧边框的下沿」与「电话邮箱行上沿」之间居中，
+% 即姓名到两者的留白相等。
+%
+% 实现方式：顶部负间距少收 \cvnamedownshift、底部负间距多收同样多，
+% 姓名整体下移，而两处间距之和不变；因此其后的个人信息行与
+% 右上角证件照的绝对位置都不受影响。
+% 数值来历（按当前字体实测的墨迹边界）：
+%   内框下沿 17.72pt，电话邮箱行上沿 77.04pt；
+%   姓名墨迹上沿 29.76pt、下沿 52.92pt；
+%   上方留白 12.04pt，下方留白 24.12pt，两者相差 12.08pt，下移一半即 6.04pt。
+\newlength{\cvnamedownshift}
+\setlength{\cvnamedownshift}{6.04pt}
 \newcommand{\cvname}[1]{%
-  \vspace*{-0.8em}%
+  \vspace*{\dimexpr-0.8em+\cvnamedownshift\relax}%
   \begin{center}%
     {\Huge\bfseries #1}%
   \end{center}%
-  \vspace{-0.3em}%
+  \vspace{\dimexpr-0.3em-\cvnamedownshift\relax}%
 }
 
 % 照片：带细边框，默认宽度 2.5cm（标准一寸照）
